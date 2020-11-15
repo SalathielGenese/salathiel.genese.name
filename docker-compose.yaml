@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+    web:
+        volumes:
+            - /opt/app/node_modules
+            - .:/opt/app
+        build:
+            target: development
+            context: .
+        ports:
+            - 1000:8080
