@@ -1,11 +1,12 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+const defaultTheme = require( 'tailwindcss/defaultTheme' );
 
 // const variants = ['responsive', 'group-hover', 'focus-within', 'first', 'last', 'odd', 'even', 'hover', 'focus', 'active', 'visited', 'disabled', 'motion-safe', 'motion-reduce'];
 
 module.exports = {
     future: {
-        // removeDeprecatedGapUtilities: true,
-        // purgeLayersByDefault: true,
+        removeDeprecatedGapUtilities: true,
+        purgeLayersByDefault: true,
+        standardFontWeights: true,
     },
     purge: [
         './public/**/*.html',
@@ -14,7 +15,7 @@ module.exports = {
     theme: {
         extend: {},
         fontFamily: {
-            sans: ['Inter', ...defaultTheme.fontFamily.sans],
+            sans: [ 'Inter', ...defaultTheme.fontFamily.sans ],
         },
     },
     plugins: [],
