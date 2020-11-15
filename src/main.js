@@ -1,5 +1,8 @@
+import { router } from '@/app/routed';
+import { createApp } from 'vue';
 import './assets/tailwind.css';
-import {createApp} from 'vue';
 import App from './app.vue';
 
-createApp(App).mount('main');
+createApp( App )
+    .use( router )
+    .mount( 'main' );
