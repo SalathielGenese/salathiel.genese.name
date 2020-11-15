@@ -1,0 +1,27 @@
+steps:
+    # Build container image with Docker
+    - name: gcr.io/cloud-builders/docker
+      args:
+          - build
+          - --tag
+          - gcr.io/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA
+          - .
+    # Push docker image to container registry
+    - name: gcr.io/cloud-builders/docker
+      args:
+          - push
+          - gcr.io/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA
+    # Deploy container image to Cloud Run
+    - name: gcr.io/cloud-builders/gcloud
+      args:
+          - run
+          - deploy
+          - $_SERVICE_NAME
+          - --image
+          - gcr.io/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA
+          - --region
+          - $_REGION
+          - --platform
+          - managed
+images:
+    - gcr.io/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA

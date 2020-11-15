@@ -1,0 +1,22 @@
+.DS_Store
+
+# Editor directories and files
+*.iml
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+**/node_modules
+**/dist
+
+/docker-compose.yaml
+/docker-compose.yml
+/cloudbuild.yaml
+/cloudbuild.yml
+/readme.md
+/LICENSE
+**/*.log
