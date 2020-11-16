@@ -1,3 +1,4 @@
+import 'remixicon/fonts/remixicon.css';
 import { router } from '@/app/routed';
 import { createApp } from 'vue';
 import './assets/tailwind.css';
