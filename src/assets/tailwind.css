@@ -4,5 +4,11 @@
 
 [class^="ri-"], [class*=" ri-"]
 {
-    vertical-align: bottom;
+    vertical-align : bottom;
+}
+
+a[target="_blank"].external
+{
+    border-bottom-width: 1px;
+    border-bottom-style: dotted;
 }

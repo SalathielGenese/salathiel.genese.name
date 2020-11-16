@@ -2,30 +2,30 @@
     <footer class="bg-gradient-to-b from-purple-900 to-gray-900 text-gray-300">
         <FooterInsight title="Recipe">
             <p class="text-justify">
-                My recipe holds into <a href="https://v3.vuejs.org" target="_blank">
+                My recipe holds into <a href="https://v3.vuejs.org" target="_blank" class="external">
                 <i class="ri-vuejs-fill"/>
                 <span>Vue.js 3</span>
-            </a>, <a href="https://v3.vuejs.org" target="_blank">
+            </a>, <a href="https://v3.vuejs.org" target="_blank" class="external">
                 <i class="ri-remixicon-fill"/>
                 <span>Remix Icon</span>
-            </a>, <a href="https://docker.com" target="_blank">
+            </a>, <a href="https://docker.com" target="_blank" class="external">
                 <i class="ri-anchor-fill"/>
                 <span>Docker</span>
-            </a>, <a href="https://git-scm.com" target="_blank">
+            </a>, <a href="https://git-scm.com" target="_blank" class="external">
                 <i class="ri-git-pull-request-fill"/>
                 <span>Git</span>
-            </a>, <a href="https://github.com" target="_blank">
+            </a>, <a href="https://github.com" target="_blank" class="external">
                 <i class="ri-github-fill"/>
                 <span>GitHub</span>
-            </a>, <a href="https://cloud.google.com" target="_blank">
+            </a>, <a href="https://cloud.google.com" target="_blank" class="external">
                 <i class="ri-cloud-fill"/>
                 <span>Google Cloud Build & Google Cloud Run</span>
-            </a> and, as Cal Newport puts it, a combination of <a href="https://www.calnewport.com/blog/2011/08/11/the-career-craftsman-manifesto/" target="_blank">
+            </a> and, as Cal Newport puts it, a combination of <a href="https://www.calnewport.com/blog/2011/08/11/the-career-craftsman-manifesto/" target="_blank" class="external">
                 the craftsman mindset and passion
-            </a>: lot of <a href="" target="_blank">
+            </a>: lot of <a href="" target="_blank" class="external">
                 <i class="ri-heart-pulse-fill"/>
                 <span>love</span>
-            </a> + <a href="" target="_blank">
+            </a> + <a href="" target="_blank" class="external">
                 <i class="ri-line-chart-fill"/>
                 <span>consistent work</span>
             </a> + much luck.
