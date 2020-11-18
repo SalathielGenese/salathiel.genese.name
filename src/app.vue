@@ -1,6 +1,6 @@
 <template>
     <Nav class="bg-gray-200"/>
-    <section class="p-4 pt-10">
+    <section class="flex-grow p-4 pt-10">
         <router-view/>
     </section>
     <Footer class="px-4 py-8"/>
