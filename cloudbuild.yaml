@@ -5,6 +5,8 @@ steps:
           - build
           - --tag
           - gcr.io/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA
+          - --build-arg
+          - API_ENDPOINT=$_API_ENDPOINT
           - .
     # Push docker image to container registry
     - name: gcr.io/cloud-builders/docker
