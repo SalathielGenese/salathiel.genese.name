@@ -31,7 +31,6 @@ RUN yarn build
 FROM nginx:alpine AS production
 WORKDIR /opt/app
 EXPOSE 8080
-USER nginx
 
 COPY --from=build /opt/app/dist ./
 COPY --from=build /opt/nginx.conf /etc/nginx/conf.d
