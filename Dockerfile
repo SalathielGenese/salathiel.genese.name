@@ -18,7 +18,8 @@ WORKDIR /opt/app
 ARG API_ENDPOINT=http://api:8080/
 
 COPY nginx.conf .
-RUN sed -i -e "s#proxy_pass http://api/;#proxy_pass $API_ENDPOINT/;#" nginx.conf
+RUN mv nginx.conf /opt
+RUN sed -i -e "s#proxy_pass http://api/;#proxy_pass $API_ENDPOINT/;#" /opt/nginx.conf
 
 COPY --from=development /opt/app ./
 RUN yarn build
@@ -33,4 +34,4 @@ EXPOSE 8080
 USER nginx
 
 COPY --from=build /opt/app/dist ./
-COPY --from=build /opt/app/nginx.conf /etc/nginx/conf.d
+COPY --from=build /opt/nginx.conf /etc/nginx/conf.d
