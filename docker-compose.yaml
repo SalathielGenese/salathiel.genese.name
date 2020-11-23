@@ -8,5 +8,26 @@ services:
         build:
             target: development
             context: .
+
+    api:
+        volumes:
+            - /opt/app/node_modules
+            - ${API_SOURCE_PATH:-../api.salathiel.genese.name}:/opt/app
+        build:
+            target: development
+            context: ${API_SOURCE_PATH:-../api.salathiel.genese.name}
+        env_file:
+            - ${API_SOURCE_PATH:-../api.salathiel.genese.name}/.env
+
+    app:
+        volumes:
+            - ${PWD}/nginx.dev.conf:/etc/nginx/conf.d/nginx.dev.conf
+        image: nginx:alpine
         ports:
-            - 1000:8080
+            - 80:8080
+        depends_on:
+            - api
+            - web
+        links:
+            - api
+            - web

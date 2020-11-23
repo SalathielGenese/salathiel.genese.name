@@ -17,6 +17,7 @@
 /docker-compose.yml
 /cloudbuild.yaml
 /cloudbuild.yml
+/nginx.dev.conf
 /readme.md
 /LICENSE
 **/*.log
