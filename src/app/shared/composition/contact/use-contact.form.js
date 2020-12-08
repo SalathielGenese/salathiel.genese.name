@@ -11,9 +11,9 @@ export function useContactForm() {
     };
 
     const state = {
-        lastname: ref( '' ),
-        content: ref( '' ),
-        email: ref( '' ),
+        lastname: ref( null ),
+        content: ref( null ),
+        email: ref( null ),
     };
 
     const form = useVuelidate( rules, state );
