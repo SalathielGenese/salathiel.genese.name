@@ -1,64 +1,35 @@
 <template>
     <article>
-        <!--        <aside>-->
-        <!--            Contact Card-->
-        <!--        </aside>-->
-        <formfield>
-            <legend>
-                <h4 class="text-xl font-bold">
-                    Drop Me An Email
-                </h4>
-            </legend>
-
-            <form @submit.prevent="submit">
-                <label class="flex flex-col-reverse relative">
-                    <input type="text" v-model="form.email.$model"
-                           class="text-gray-600 focus:outline-none"/>
-                    <div v-if="form.email.$error"
-                         class="pointer-events-none invisible +focus:visible absolute top-full text-xs z-10 flex-col flex">
-                        <span style="clip-path: polygon(50% 13.34%, 100% 100%, 0 100%)"
-                              class="inline-block bg-red-600 h-2 w-2 origin-center rotate-90 ml-1"/>
-                        <span class="border-red-600 bg-red-600 text-red-200 text-xs shadow-md rounded-sm border p-1">
-                            {{ form.email.$errors?.[ 0 ]?.$message }}
-                        </span>
-                    </div>
-                    <p class="font-bold text-sm">Email</p>
-                </label>
-                <label class="flex flex-col-reverse relative">
-                    <input type="text" v-model="form.lastname.$model"
-                           class="text-gray-600 focus:outline-none"/>
-                    <div v-if="form.lastname.$error"
-                         class="pointer-events-none invisible +focus:visible absolute top-full text-xs z-10 flex-col flex">
-                        <span style="clip-path: polygon(50% 13.34%, 100% 100%, 0 100%)"
-                              class="inline-block bg-red-600 h-2 w-2 origin-center rotate-90 ml-1"/>
-                        <span class="border-red-600 bg-gray-100 text-red-500 text-xs shadow border p-1">
-                            {{ form.lastname.$errors?.[ 0 ]?.$message }}
-                        </span>
-                    </div>
-                    <p class="font-bold text-sm">Lastname</p>
-                </label>
-                <label class="flex flex-col-reverse relative">
-                    <textarea v-model="form.content.$model"
-                              class="text-gray-600 focus:outline-none"/>
-                    <div v-if="form.content.$error"
-                         class="pointer-events-none invisible +focus:visible absolute top-full text-xs z-10 flex-col flex">
-                            <span style="clip-path: polygon(50% 13.34%, 100% 100%, 0 100%)"
-                                  class="inline-block bg-red-600 h-2 w-2 origin-center rotate-90 ml-1">
-                            </span>
-                        <span class="border-red-600 bg-gray-100 text-red-500 text-xs shadow border p-1">
-                                {{ form.content.$errors?.[ 0 ]?.$message }}
-                            </span>
-                    </div>
-                    <p class="font-bold text-sm">Content</p>
-                </label>
-
-                <footer>
-                    <button type="submit" :disabled="!form.email.$model || form.$invalid || meta.isSubmitting">
-                        Send
-                    </button>
-                </footer>
-            </form>
-        </formfield>
+        <form @submit.prevent="submit" class="max-w-md">
+            <Label description="Email" :field="form.email" class="py-2">
+                <template v-slot:default="{ field }">
+                    <input type="text" v-model="field.$model"
+                           :class="{'border-red-600': !!field.$errors?.length}"
+                           class="text-gray-600 border px-1 rounded-sm focus:outline-none"/>
+                </template>
+            </Label>
+            <Label description="Lastname" :field="form.lastname">
+                <template v-slot:default="{ field }">
+                    <input type="text" v-model="field.$model"
+                           :class="{'border-red-600': !!field.$errors?.length}"
+                           class="text-gray-600 border px-1 rounded-sm focus:outline-none"/>
+                </template>
+            </Label>
+            <Label description="Content" :field="form.content">
+                <template v-slot:default="{ field }">
+                        <textarea v-model="field.$model"
+                                  :class="{'border-red-600': !!field.$errors?.length}"
+                                  class="text-gray-600 border px-1 rounded-sm focus:outline-none"/>
+                </template>
+            </Label>
+            <footer class="mt-4">
+                <button type="submit" :disabled="!form.email.$model || form.$invalid || meta.isSubmitting"
+                        :class="{ 'bg-red-700 text-red-200': !form.$invalid, 'bg-gray-300 text-gray-400': form.$invalid }"
+                        class="inline-block rounded-sm uppercase shadow-lg text-sm px-3 py-1">
+                    Send
+                </button>
+            </footer>
+        </form>
     </article>
     <!--    Contact / Available / Hire-->
 </template>
@@ -66,13 +37,14 @@
 <script>
 import { useContactForm } from '@/app/shared/composition/contact/use-contact.form';
 import { reactive } from 'vue';
+import Label from '@/app/shared/components/form/label';
 
 export default {
     name: 'contact',
+    components: { Label },
     setup() {
         const { reset, form, submit: doSubmit } = useContactForm();
         let meta = reactive( { isSubmitting: false } );
-        form.value.$validate();
 
         return {
             form,
