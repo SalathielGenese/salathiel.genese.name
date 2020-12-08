@@ -17,6 +17,9 @@ export function useContactForm() {
 
     const form = useVuelidate( rules, state );
 
+    const reset = () => Object.keys( state )
+                              .forEach( key => state[ key ].value = null );
+
     const submit = () => {
         if ( !form.value.$invalid ) {
             const value = Object.keys( state )
@@ -26,5 +29,5 @@ export function useContactForm() {
         }
     };
 
-    return { form, state, submit };
+    return { reset, form, state, submit };
 }

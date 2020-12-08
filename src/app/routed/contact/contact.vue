@@ -53,7 +53,7 @@
                 </label>
 
                 <footer>
-                    <button type="submit">
+                    <button type="submit" :disabled="!form.email.$model || form.$invalid || meta.isSubmitting">
                         Send
                     </button>
                 </footer>
@@ -65,11 +65,33 @@
 
 <script>
 import { useContactForm } from '@/app/shared/composition/contact/use-contact.form';
+import { reactive } from 'vue';
 
 export default {
     name: 'contact',
     setup() {
-        return useContactForm();
+        const { reset, form, submit: doSubmit } = useContactForm();
+        let meta = reactive( { isSubmitting: false } );
+
+        return {
+            form,
+            meta,
+            submit: async () => {
+                meta.isSubmitting = true;
+
+                try {
+                    await doSubmit();
+                    form.value.$reset();
+                    reset();
+                    // TODO: Toast success
+                } catch ( _ ) {
+                    console.error( _ );
+                    // TODO: Toast failure
+                } finally {
+                    meta.isSubmitting = false;
+                }
+            },
+        };
     },
 };
 </script>
