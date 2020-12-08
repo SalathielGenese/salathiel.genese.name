@@ -18,7 +18,7 @@
                          class="pointer-events-none invisible +focus:visible absolute top-full text-xs z-10 flex-col flex">
                         <span style="clip-path: polygon(50% 13.34%, 100% 100%, 0 100%)"
                               class="inline-block bg-red-600 h-2 w-2 origin-center rotate-90 ml-1"/>
-                        <span class="border-red-600 bg-gray-100 text-red-500 text-xs shadow border p-1">
+                        <span class="border-red-600 bg-red-600 text-red-200 text-xs shadow-md rounded-sm border p-1">
                             {{ form.email.$errors?.[ 0 ]?.$message }}
                         </span>
                     </div>
@@ -72,6 +72,7 @@ export default {
     setup() {
         const { reset, form, submit: doSubmit } = useContactForm();
         let meta = reactive( { isSubmitting: false } );
+        form.value.$validate();
 
         return {
             form,
