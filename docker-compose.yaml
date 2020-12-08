@@ -8,6 +8,7 @@ services:
         build:
             target: development
             context: .
+        tty: true
 
     api:
         volumes:
@@ -18,6 +19,7 @@ services:
             context: ${API_SOURCE_PATH:-../api.salathiel.genese.name}
         env_file:
             - ${API_SOURCE_PATH:-../api.salathiel.genese.name}/.env
+        tty: true
 
     app:
         volumes:
