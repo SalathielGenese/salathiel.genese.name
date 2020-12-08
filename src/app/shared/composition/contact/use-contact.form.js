@@ -1,6 +1,7 @@
 import { email, required } from '@vuelidate/validators';
 import useVuelidate from '@vuelidate/core';
 import { ref } from 'vue';
+import { configuration } from '@/app/shared/configuration';
 
 export function useContactForm() {
     const rules = {
@@ -22,10 +23,13 @@ export function useContactForm() {
 
     const submit = () => {
         if ( !form.value.$invalid ) {
-            const value = Object.keys( state )
-                                .reduce( ( hay, key ) =>
-                                    ({ ...hay, [ key ]: state[ key ].value }), {} );
-            console.log( value );
+            const data = Object.keys( state )
+                               .reduce( ( hay, key ) => ({
+                                   ...hay,
+                                   [ key ]: state[ key ].value,
+                               }), {} );
+
+            return configuration.axios.post( '/api/contact/email', data );
         }
     };
 
