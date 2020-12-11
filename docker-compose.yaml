@@ -23,7 +23,7 @@ services:
 
     app:
         volumes:
-            - ${PWD}/nginx.dev.conf:/etc/nginx/conf.d/nginx.dev.conf
+            - ${PWD}/nginx.conf:/etc/nginx/conf.d/nginx.conf
         image: nginx:alpine
         ports:
             - 80:8080

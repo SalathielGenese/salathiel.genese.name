@@ -19,7 +19,7 @@ ARG API_ENDPOINT=http://api:8080/
 
 COPY nginx.conf .
 RUN mv nginx.conf /opt
-RUN sed -i -e "s#proxy_pass http://api/;#proxy_pass $API_ENDPOINT/;#" /opt/nginx.conf
+RUN sed -i -e "s#http://api:8080/#$API_ENDPOINT#g" /opt/nginx.conf
 
 COPY --from=development /opt/app ./
 RUN yarn build
