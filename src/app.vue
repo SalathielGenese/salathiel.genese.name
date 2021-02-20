@@ -1,16 +1,16 @@
 <template>
-    <Nav class="bg-gray-200"/>
-    <section class="flex-grow p-4 pt-10">
-        <router-view/>
-    </section>
-    <Footer class="px-4 py-8"/>
+<!--    <Nav class="bg-gray-200"/>-->
+<!--    <section>-->
+        <router-view class="flex-grow"/>
+<!--    </section>-->
+<!--    <Footer class="px-4 py-8"/>-->
 </template>
 
 <script>
-import Footer from '@/app/shared/components/footer';
-import Nav from '@/app/shared/components/nav';
+// import Footer from '@/app/shared/components/footer';
+// import Nav from '@/app/shared/components/nav';
 export default {
     name: 'App',
-    components: { Nav, Footer },
+    // components: { Nav, Footer },
 };
 </script>

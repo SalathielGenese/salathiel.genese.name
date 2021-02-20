@@ -1,5 +1,6 @@
 const defaultTheme = require( 'tailwindcss/defaultTheme' );
 const plugin = require( 'tailwindcss/plugin' );
+const colors = require('tailwindcss/colors');
 
 const variants = [
     'responsive',
@@ -40,7 +41,12 @@ module.exports = {
     theme: {
         extend: {},
         fontFamily: {
-            sans: [ 'Inter', ...defaultTheme.fontFamily.sans ],
+            sans: [ 'Rosario', 'Inter', ...defaultTheme.fontFamily.sans ],
+            handwriting: [ 'Dancing Script' ],
+        },
+        colors: {
+            gray: colors.warmGray,
+            red: colors.red,
         },
     },
     plugins: [

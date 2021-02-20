@@ -12,3 +12,13 @@ a[target="_blank"].external
     border-bottom-width: 1px;
     border-bottom-style: dotted;
 }
+
+@font-face {
+    font-family: 'Rosario';
+    src: url('font/Rosario/Rosario-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: 'Dancing Script';
+    src: url('font/Dancing_Script/DancingScript-VariableFont_wght.ttf');
+}
