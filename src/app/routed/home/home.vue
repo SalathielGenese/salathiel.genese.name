@@ -41,7 +41,29 @@
 
 
     <DialogBox title="Contact" ref="contactDialog">
-      YYY
+      <section class="my-2 md:my-4">
+        <ul class="text-sm font-monospace">
+          <li class="my-3">
+            <strong>GSM & Signal</strong>
+            <br>
+            <a href="tel:+23054929511">+230 5492 9511</a>
+          </li>
+          <li class="my-3">
+            <strong>Twitter</strong>
+            <br>
+            <a href="https://twitter.com/SalathielGenese" target="_blank">
+              https://twitter.com/SalathielGenese
+            </a>
+          </li>
+          <li class="my-3">
+            <strong>LinkedIn</strong>
+            <br>
+            <a href="https://www.linkedin.com/in/salathielgenese" target="_blank">
+              https://www.linkedin.com/in/salathielgenese
+            </a>
+          </li>
+        </ul>
+      </section>
     </DialogBox>
   </section>
 </template>

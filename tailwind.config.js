@@ -42,6 +42,7 @@ module.exports = {
         extend: {},
         fontFamily: {
             sans: [ 'Rosario', 'Inter', ...defaultTheme.fontFamily.sans ],
+            monospace: [ 'JetBrains Mono' ],
             handwriting: [ 'Dancing Script' ],
         },
         colors: {transparent: 'transparent',
