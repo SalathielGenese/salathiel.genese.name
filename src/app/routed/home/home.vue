@@ -35,12 +35,19 @@
       </figure>
     </article>
     <div class="flex-grow border-none bg-gray-800"/>
+
+
+    <DialogBox title="Reach Out">
+      yyy
+    </DialogBox>
   </section>
 </template>
 
 <script>
+import DialogBox from "@/app/shared/components/dialog-box";
 export default {
-  name: 'Home'
+  name: 'Home',
+  components: {DialogBox}
 };
 </script>
 
