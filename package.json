@@ -28,6 +28,13 @@
     "vue": "^3.0.4",
     "vue-router": "^4.0.0-rc.6"
   },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
+    "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/eslint-config-typescript": "^5.0.2",
+    "typescript": "~3.9.3"
+  },
   "eslintConfig": {
     "root": true,
     "env": {
@@ -35,10 +42,11 @@
     },
     "extends": [
       "plugin:vue/vue3-essential",
-      "eslint:recommended"
+      "eslint:recommended",
+      "@vue/typescript"
     ],
     "parserOptions": {
-      "parser": "babel-eslint"
+      "parser": "@typescript-eslint/parser"
     },
     "rules": {}
   },
