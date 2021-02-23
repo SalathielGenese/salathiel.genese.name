@@ -1,16 +1,11 @@
 <template>
-<!--    <Nav class="bg-gray-200"/>-->
-<!--    <section>-->
-        <router-view class="flex-grow"/>
-<!--    </section>-->
-<!--    <Footer class="px-4 py-8"/>-->
+  <router-view class="flex-grow"/>
 </template>
 
-<script>
-// import Footer from '@/app/shared/components/footer';
-// import Nav from '@/app/shared/components/nav';
-export default {
-    name: 'App',
-    // components: { Nav, Footer },
-};
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent( {
+  name: 'App',
+} );
 </script>
