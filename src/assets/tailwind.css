@@ -1,29 +1,5 @@
 @tailwind base;
+
 @tailwind components;
+
 @tailwind utilities;
-
-[class^="ri-"], [class*=" ri-"]
-{
-    vertical-align : bottom;
-}
-
-a[target="_blank"].external
-{
-    border-bottom-width: 1px;
-    border-bottom-style: dotted;
-}
-
-@font-face {
-    font-family: 'Rosario';
-    src: url('font/Rosario/Rosario-VariableFont_wght.ttf');
-}
-
-@font-face {
-    font-family: 'Dancing Script';
-    src: url('font/Dancing_Script/DancingScript-VariableFont_wght.ttf');
-}
-
-@font-face {
-    font-family: 'JetBrains Mono';
-    src: url('font/JetBrains_Mono/JetBrainsMono-VariableFont_wght.ttf');
-}

@@ -1,7 +1,6 @@
 import { SSR_ENV } from '@/app/env';
 import { router } from '@/app/routed';
 import { VuelidatePlugin } from '@vuelidate/core';
-import 'remixicon/fonts/remixicon.css';
 import { createApp, createSSRApp } from 'vue';
 import App from './app.vue';
 import './assets/tailwind.css';
