@@ -18,7 +18,9 @@ module.exports = {
             wc.plugin( 'manifest' ).use( new WebpackManifestPlugin( { fileName: 'ssr-manifest.json' } ) );
             wc.externals( nodeExternals( { allowlist: /\.(css|vue)$/ } ) );
             wc.optimization.splitChunks( false ).minimize( false );
-            wc.entry( 'app' ).clear().add( './src/ssr.ts' );
+            wc.entryPoints.delete('app');
+
+            wc.entry( 'ssr' ).clear().add( './src/ssr.ts' );
             wc.output.libraryTarget( 'commonjs2' );
             wc.target( 'node' );
         },
