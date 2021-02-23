@@ -15,22 +15,24 @@ COPY . ./
 FROM node:alpine AS build
 WORKDIR /opt/app
 
-ARG API_ENDPOINT=http://api:8080/
+COPY --from=development /opt/app .
 
-COPY nginx.conf .
-RUN mv nginx.conf /opt
-RUN sed -i -e "s#http://api:8080/#$API_ENDPOINT#g" /opt/nginx.conf
-
-COPY --from=development /opt/app ./
-RUN yarn build
+RUN SSR=1 yarn build --mode production --dest dist-ssr
+RUN yarn build --mode production
+RUN cp dist-ssr/js/ssr* dist
 
 
 #
 # {{ production }}
 #
-FROM nginx:alpine AS production
+FROM node:alpine AS production
+CMD node --enable-source-maps --trace-warnings \
+    "$(find . -type f -name 'ssr*.js')"
+ENV NODE_ENV production
+EXPOSE ${PORT:-8080}
 WORKDIR /opt/app
-EXPOSE 8080
+
+COPY package.json yarn[.]lock ./
+RUN yarn install
 
 COPY --from=build /opt/app/dist ./
-COPY --from=build /opt/nginx.conf /etc/nginx/conf.d
