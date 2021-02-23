@@ -2,6 +2,7 @@
   <section class="flex flex-col align-middle justify-items-center">
     <article class="flex-grow"></article>
     <article>
+      <slot/>
       <figure class="text-center">
         <div class="flex flex-row relative text-red-700 font-bold">
           <div class="flex-grow relative grid grid-rows-2">
