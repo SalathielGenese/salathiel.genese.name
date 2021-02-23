@@ -2,4 +2,25 @@ module.exports = {
     devServer: {
         disableHostCheck: true,
     },
+    ...'SSR' === process.env.NODE_ENV ? {
+        chainWebpack: ( wc ) => {
+            const { WebpackManifestPlugin } = require( 'webpack-manifest-plugin' );
+            const nodeExternals = require( 'webpack-node-externals' );
+
+            for (const plugin of [ 'friendly-errors', 'progress', 'prefetch', 'preload', 'hmr' ]) {
+                wc.plugins.delete( plugin );
+            }
+
+            for (const rule of [ 'tsx', 'vue', 'ts', 'js' ]) {
+                wc.module.rule( rule ).uses.delete( 'cache-loader' );
+            }
+
+            wc.plugin( 'manifest' ).use( new WebpackManifestPlugin( { fileName: 'ssr-manifest.json' } ) );
+            wc.externals( nodeExternals( { allowlist: /\.(css|vue)$/ } ) );
+            wc.optimization.splitChunks( false ).minimize( false );
+            wc.entry( 'app' ).clear().add( './src/ssr.ts' );
+            wc.output.libraryTarget( 'commonjs2' );
+            wc.target( 'node' );
+        },
+    } : {},
 };
