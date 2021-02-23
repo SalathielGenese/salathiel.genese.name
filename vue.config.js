@@ -2,7 +2,7 @@ module.exports = {
     devServer: {
         disableHostCheck: true,
     },
-    ...'production' === process.env.NODE_ENV ? {
+    ...process.env.SSR ? {
         chainWebpack: ( wc ) => {
             const { WebpackManifestPlugin } = require( 'webpack-manifest-plugin' );
             const nodeExternals = require( 'webpack-node-externals' );
