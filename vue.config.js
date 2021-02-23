@@ -7,7 +7,7 @@ module.exports = {
             const { WebpackManifestPlugin } = require( 'webpack-manifest-plugin' );
             const nodeExternals = require( 'webpack-node-externals' );
 
-            for (const plugin of [ 'friendly-errors', 'progress', 'prefetch', 'preload', 'hmr' ]) {
+            for (const plugin of [ 'friendly-errors', 'progress', 'prefetch', 'preload', 'define', 'hmr' ]) {
                 wc.plugins.delete( plugin );
             }
 
