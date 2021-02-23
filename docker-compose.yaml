@@ -1,35 +1,24 @@
 version: '3.8'
 
 services:
-    web:
-        volumes:
-            - /opt/app/node_modules
-            - .:/opt/app
-        build:
-            target: development
-            context: .
-        tty: true
+  web:
+    volumes:
+      - /opt/app/node_modules
+      - .:/opt/app
+    build:
+      target: development
+      context: .
+    ports:
+      - 80:8080
+    tty: true
 
-    api:
-        volumes:
-            - /opt/app/node_modules
-            - ${API_SOURCE_PATH:-../api.salathiel.genese.name}:/opt/app
-        build:
-            target: development
-            context: ${API_SOURCE_PATH:-../api.salathiel.genese.name}
-        env_file:
-            - ${API_SOURCE_PATH:-../api.salathiel.genese.name}/.env
-        tty: true
-
-    app:
-        volumes:
-            - ${PWD}/nginx.conf:/etc/nginx/conf.d/nginx.conf
-        image: nginx:alpine
-        ports:
-            - 80:8080
-        depends_on:
-            - api
-            - web
-        links:
-            - api
-            - web
+  api:
+    volumes:
+      - /opt/app/node_modules
+      - ${API_SOURCE_PATH:-../api.salathiel.genese.name}:/opt/app
+    build:
+      target: development
+      context: ${API_SOURCE_PATH:-../api.salathiel.genese.name}
+    env_file:
+      - ${API_SOURCE_PATH:-../api.salathiel.genese.name}/.env
+    tty: true
