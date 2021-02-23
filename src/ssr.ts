@@ -1,4 +1,5 @@
 import { router } from '@/app/routed';
+import NotFound from '@/app/routed/not-found/not-found.vue';
 import { renderToString } from '@vue/server-renderer';
 import Express from 'express';
 import { promises as fs } from 'fs';
@@ -21,6 +22,10 @@ server.get( '*', async ( request, response ) => {
 
     const wrap = await maybeWrap;
     const content = await renderToString( app );
+
+    if ( router.currentRoute.value.matched[ 0 ]?.components?.default.name === NotFound.name ) {
+        response.status( 404 );
+    }
 
     response.end( wrap( content ) );
 } );
