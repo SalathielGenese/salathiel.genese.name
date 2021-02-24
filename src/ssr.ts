@@ -1,4 +1,4 @@
-import { router } from '@/app/routed';
+import { router } from '@/app/shared/configuration/router';
 import NotFound from '@/app/routed/not-found/not-found.vue';
 import { useMeta } from '@/app/shared/plugins/meta';
 import { renderToString } from '@vue/server-renderer';
