@@ -18,10 +18,16 @@
 
 <script lang="ts">
 import Home from '@/app/routed/home/home.vue';
-import { defineComponent } from 'vue';
+import { useMeta } from '@/app/shared/plugins/meta';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent( {
   name: 'NotFound',
   components: { Home },
+  setup() {
+    useMeta()( {
+      title: ref( 'Oops! Page Not Found' ),
+    } );
+  },
 } );
 </script>

@@ -70,16 +70,18 @@
 </template>
 
 <script lang="ts">
-import DialogBox from "@/app/shared/components/dialog-box.vue";
-import {defineComponent, ref} from "vue";
+import DialogBox from '@/app/shared/components/dialog-box.vue';
+import { useMeta } from '@/app/shared/plugins/meta';
+import { defineComponent, ref } from 'vue';
 
-export default defineComponent({
+export default defineComponent( {
   name: 'Home',
-  components: {DialogBox},
+  components: { DialogBox },
   setup() {
+    useMeta()( { title: 'DevOps, Fullstack - TypeScript, JavaScript, Java, Rust' } );
     return {
       contactDialog: ref(),
     };
   },
-});
+} );
 </script>
