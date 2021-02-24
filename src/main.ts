@@ -1,6 +1,6 @@
 import { SSR_ENV } from '@/app/env';
-import { router } from '@/app/shared/configuration/router';
 import { metaOptions } from '@/app/shared/configuration/meta';
+import { router } from '@/app/shared/configuration/router';
 import { MetaPlugin } from '@/app/shared/plugins/meta';
 import { VuelidatePlugin } from '@vuelidate/core';
 import { createApp, createSSRApp } from 'vue';
