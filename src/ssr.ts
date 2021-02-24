@@ -1,5 +1,6 @@
 import { router } from '@/app/routed';
 import NotFound from '@/app/routed/not-found/not-found.vue';
+import { useMeta } from '@/app/shared/plugins/meta';
 import { renderToString } from '@vue/server-renderer';
 import Express from 'express';
 import { promises as fs } from 'fs';
@@ -21,12 +22,18 @@ server.get( '*', async ( request, response ) => {
     await router.push( request.url );
 
     const wrap = await maybeWrap;
-    const content = await renderToString( app );
+    const { get, computeTitle } = useMeta;
+    const document = await renderToString( app ).then( content => {
+        const title = computeTitle.apply( void 0, get( app )! );
+        const document = wrap( content ).replace( /<title>.*<\/title>/, `<title>${ title }</title>` );
+
+        return document;
+    } );
 
     if ( router.currentRoute.value.matched[ 0 ]?.components?.default.name === NotFound.name ) {
         response.status( 404 );
     }
 
-    response.end( wrap( content ) );
+    response.end( document );
 } );
 server.listen( PORT, () => console.log( `Server started at 0.0.0.0:${ PORT }` ) );
