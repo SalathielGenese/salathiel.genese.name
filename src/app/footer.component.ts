@@ -43,7 +43,7 @@ import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
             <label class="form-field">
                 <span>MESSAGE</span>
                 <small>I'm all ears, sir/ma'am</small>
-                <textarea cols="10"></textarea>
+                <textarea rows="5"></textarea>
                 <del>Requi...</del>
             </label>
             
