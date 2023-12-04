@@ -12,27 +12,15 @@
              md:[--max-width:calc(768px-16rem)]
              sm:[--max-width:calc(640px-16rem)]
              [--max-width:calc(100%-16rem)]
-             min-h-screen flex-col flex">
-<nav class="sm:px-[calc(50vw-var(--max-width)/2)]
-            box-content
-            relative
-            px-8"
-     sg-nav></nav>
-<header class="sm:px-[calc(50vw-var(--max-width)/2)]
-               box-content
-               relative
-               px-8"
-        sg-header></header>
-<main class="sm:px-[calc(50vw-var(--max-width)/2)]
-             box-content
-             flex-grow
-             relative
-             px-8"
-      sg-main></main>
-<footer class="sm:px-[calc(50vw-var(--max-width)/2)]
-               box-content
-               relative
-               px-8"
-        sg-footer></footer>
+             md:[--nav-h:8rem]
+             [--nav-h:4rem]
+             min-h-screen
+             flex-col
+             flex">
+<nav class="sm:px-[calc(50vw-var(--max-width)/2)] px-8" sg-nav></nav>
+<aside class="h-[var(--nav-h)]"></aside>
+<header class="sm:px-[calc(50vw-var(--max-width)/2)] relative px-8" sg-header></header>
+<main class="sm:px-[calc(50vw-var(--max-width)/2)] flex-grow relative px-8" sg-main></main>
+<footer class="sm:px-[calc(50vw-var(--max-width)/2)] relative px-8" sg-footer></footer>
 </body>
 </html>
