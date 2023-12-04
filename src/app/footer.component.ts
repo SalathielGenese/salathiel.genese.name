@@ -4,14 +4,16 @@ import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
-    host: {'[class]': `'text-grey-400 min-h-[50vh] bg-grey-800 sm:grid-cols-2 grid-cols-1 gap-4 grid'`},
+    host: {'[class]': `'text-grey-400 min-h-[50vh] bg-grey-800 sm:grid-cols-2 grid-cols-1 gap-4 grid py-16'`},
     selector: 'footer[sg-footer]',
     template: `
         <div>
-            <h4 sgHeader>Credits</h4>
-            
+            <h4 sgHeader>Data Privacy</h4>
+            <p>I collect no particular data of yours save through Google Analytics to understand my audience.</p>
+
+            <h4 sgHeader class="mt-8">Credits</h4>
             <p>Made with &hearts; and:</p>
-            <ul class="list-disc ml-5">
+            <ul class="ml-[1.05rem] list-disc">
                 <li>Git</li>
                 <li>GitHub</li>
                 <li>Angular</li>
@@ -26,19 +28,19 @@ import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
         <form>
             <h4 sgHeader>Contact</h4>
             
-            <label>
+            <label class="form-field">
                 <span>EMAIL</span>
                 <small>How do I reach you out?</small>
                 <input type="email">
                 <del>req...</del>
             </label>
-            <label>
+            <label class="form-field">
                 <span>NAME</span>
                 <small>How should I call to you?</small>
                 <input type="text">
                 <del>Too shorts</del>
             </label>
-            <label>
+            <label class="form-field">
                 <span>MESSAGE</span>
                 <small>I'm all ears, sir/ma'am</small>
                 <textarea cols="10"></textarea>

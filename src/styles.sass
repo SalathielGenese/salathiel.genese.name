@@ -1,3 +1,13 @@
 @tailwind base
 @tailwind components
 @tailwind utilities
+
+@layer utilities
+  label.form-field
+    @apply flex-col flex
+
+    > input, > textarea
+      @apply leading-relaxed bg-transparent border-grey-700 border
+
+    > del
+      @apply text-red-600 no-underline text-xs
