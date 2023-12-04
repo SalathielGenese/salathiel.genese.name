@@ -47,10 +47,14 @@ import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
                 <del>Requi...</del>
             </label>
             
-            <div>
-                <button type="submit">
+            <div class="mt-6 flex">
+                <hr class="pointer-events-none opacity-0 flex-grow">
+                <button [class.bg-grey-600]="false"
+                        [class.bg-brown]="true"
+                        class="px-6 p-2"
+                        type="submit">
                     <fa-icon [icon]="faPaperPlane"></fa-icon>
-                    <span>send</span>
+                    <span class="uppercase ml-1">send</span>
                 </button>
             </div>
         </form>

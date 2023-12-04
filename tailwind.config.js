@@ -8,6 +8,7 @@ module.exports = {
     extend: {
         colors: {
             ...colors,
+            brown: '#a73109',
             grey: colors.neutral,
         },
     },
