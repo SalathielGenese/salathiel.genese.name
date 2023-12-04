@@ -4,7 +4,7 @@ import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
-    host: {'[class]': `'text-grey-400 min-h-[50vh] bg-grey-800 sm:grid-cols-2 grid-cols-1 gap-4 grid py-16'`},
+    host: {'[class]': `'text-grey-400 min-h-[50vh] bg-grey-800 lg:grid-cols-2 grid-cols-1 gap-8 grid py-16'`},
     selector: 'footer[sg-footer]',
     template: `
         <div>
