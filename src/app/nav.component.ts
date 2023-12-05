@@ -2,7 +2,7 @@ import {Component, OnDestroy} from "@angular/core";
 import {faBarsStaggered} from "@fortawesome/free-solid-svg-icons/faBarsStaggered";
 
 @Component({
-    host: {'[class]': `'place-items-center backdrop-blur-sm h-[var(--nav-h)] justify-center bg-white/50 w-full left-0 fixed top-0 z-10 flex'`},
+    host: {'[class]': `'place-items-center backdrop-blur-sm h-[var(--nav-h)] justify-center w-full left-0 fixed top-0 z-10 flex'`},
     selector: 'nav[sg-nav]',
     template: `
         <a routerLink="/" class="whitespace-nowrap py-3 pr-5">
