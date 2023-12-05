@@ -9,7 +9,7 @@ import {faBarsStaggered} from "@fortawesome/free-solid-svg-icons/faBarsStaggered
             Salathiel
         </a>
         <hr class="opacity-0 flex-grow">
-        <a routerLink="/hire-me"
+        <a routerLink="/hire"
            class="whitespace-nowrap sm:hidden rounded-full text-white bg-brown border py-2 px-5">
             hire
         </a>
@@ -30,7 +30,7 @@ import {faBarsStaggered} from "@fortawesome/free-solid-svg-icons/faBarsStaggered
             <a routerLink="/blog" class="whitespace-nowrap py-3 px-5">
                 BLOG
             </a>
-            <a routerLink="/blog" class="whitespace-nowrap py-3 px-5">
+            <a routerLink="/portfolio" class="whitespace-nowrap py-3 px-5">
                 PORTFOLIO
             </a>
         </div>
