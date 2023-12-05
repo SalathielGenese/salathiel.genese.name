@@ -19,7 +19,11 @@
              flex">
 <nav class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)]" sg-nav></nav>
 <header class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] relative" sg-header></header>
-<main class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] flex-grow relative" sg-main></main>
+<main class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)]
+             [&>section]:min-h-[calc(100vh-2*var(--nav-h))]
+             flex-grow
+             relative"
+      sg-main></main>
 <footer class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] relative" sg-footer></footer>
 </body>
 </html>

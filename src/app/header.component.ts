@@ -5,7 +5,12 @@ import {AppModule} from "./app.module";
     selector: 'header[sg-header]',
     host: {'[class]': `'grid'`},
     template: `
-        Header [{{home()}}]
+        <ng-container *ngIf="home()">Home Header</ng-container>
+        <ng-container *ngIf="!home()">
+            <h1 class="text-grey-700 text-center relative md:py-8 w-full py-3">
+                Other Header
+            </h1>
+        </ng-container>
     `,
 })
 export class HeaderComponent {
@@ -19,6 +24,8 @@ export class HeaderComponent {
     @HostBinding('class.justify-items-center')
     @HostBinding('class.place-items-end')
     @HostBinding('class.bg-brown/30')
+    @HostBinding('class.font-bold')
+    @HostBinding('class.text-xl')
     protected get notHomeClasses() {
         return !this.home();
     }
