@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {DestroyRef, NgModule, signal} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
@@ -13,6 +13,8 @@ import {NavComponent} from "./nav.component";
 import {BlogComponent} from "./pages/blog.component";
 import {PortfolioComponent} from "./pages/portfolio.component";
 import {HireComponent} from "./pages/hire.component";
+import {ActivationEnd, Router} from "@angular/router";
+import {filter} from "rxjs";
 
 @NgModule({
     declarations: [
@@ -43,4 +45,13 @@ import {HireComponent} from "./pages/hire.component";
     ]
 })
 export class AppModule {
+    readonly home = signal(false);
+
+    constructor(router: Router, destroyRef: DestroyRef) {
+        const subscription = router.events
+            .pipe(filter(_ => _ instanceof ActivationEnd))
+            .subscribe(_ =>
+                this.home.set((_ as ActivationEnd).snapshot.component === HomeComponent));
+        destroyRef.onDestroy(() => subscription.unsubscribe());
+    }
 }
