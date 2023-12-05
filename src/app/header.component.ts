@@ -1,4 +1,4 @@
-import {Component, Signal} from "@angular/core";
+import {Component, HostBinding, Signal} from "@angular/core";
 import {AppModule} from "./app.module";
 
 @Component({
@@ -12,5 +12,15 @@ export class HeaderComponent {
 
     constructor(appModule: AppModule) {
         this.home = appModule.home;
+    }
+
+    @HostBinding('class.min-h-[50vh]')
+    protected get notHomeHeight() {
+        return !this.home();
+    }
+
+    @HostBinding('class.min-h-[calc(100vh-var(--nav-h))]')
+    protected get homeHeight() {
+        return this.home();
     }
 }
