@@ -9,8 +9,7 @@ import {faBarsStaggered} from "@fortawesome/free-solid-svg-icons/faBarsStaggered
             Salathiel
         </a>
         <hr class="opacity-0 flex-grow">
-        <a routerLink="/hire"
-           class="whitespace-nowrap sm:hidden rounded-full text-white bg-brown border py-2 px-5">
+        <a routerLink="/hire" class="whitespace-nowrap sm:hidden rounded-full text-white bg-brown border py-1 px-5">
             hire
         </a>
         <button (click)="show()" (mouseenter)="show()" (mouseleave)="hide()" class="sm:hidden py-3 px-5">
