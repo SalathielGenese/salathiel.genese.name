@@ -7,20 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
-<body class="xl:[--max-width:calc(1280px-16rem)]
-             lg:[--max-width:calc(1024px-16rem)]
-             md:[--max-width:calc(768px-16rem)]
-             sm:[--max-width:calc(640px-16rem)]
-             [--max-width:calc(100%-16rem)]
+<body class="xl:[--max-width:1280px]
+             lg:[--max-width:1024px]
+             md:[--max-width:768px]
+             sm:[--max-width:640px]
+             [--max-width:100%]
              md:[--nav-h:8rem]
              [--nav-h:4rem]
              min-h-screen
              flex-col
              flex">
-<nav class="sm:px-[calc(50vw-var(--max-width)/2)] px-8" sg-nav></nav>
+<nav class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)]" sg-nav></nav>
 <aside class="h-[var(--nav-h)]"></aside>
-<header class="sm:px-[calc(50vw-var(--max-width)/2)] relative px-8" sg-header></header>
-<main class="sm:px-[calc(50vw-var(--max-width)/2)] flex-grow relative px-8" sg-main></main>
-<footer class="sm:px-[calc(50vw-var(--max-width)/2)] relative px-8" sg-footer></footer>
+<header class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] relative" sg-header></header>
+<main class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] flex-grow relative" sg-main></main>
+<footer class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] relative" sg-footer></footer>
 </body>
 </html>
