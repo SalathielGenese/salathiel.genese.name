@@ -2,6 +2,7 @@ import {Component, HostBinding, Signal} from "@angular/core";
 import {AppModule} from "./app.module";
 
 @Component({
+    host: {'[class]': `'mt-[var(--nav-h)]'`},
     selector: 'header[sg-header]',
     template: `
         Header [{{home()}}]
