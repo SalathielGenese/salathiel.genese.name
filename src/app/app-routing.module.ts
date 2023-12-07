@@ -5,12 +5,19 @@ import {NotFoundComponent} from "./pages/not-found.component";
 import {BlogComponent} from "./pages/blog.component";
 import {PortfolioComponent} from "./pages/portfolio.component";
 import {HireComponent} from "./pages/hire.component";
+import {RootComponent} from "./pages/root.component";
 
 const routes: Routes = [
-    {path: '', pathMatch: 'prefix', component: HomeComponent},
-    {path: 'portfolio', component: PortfolioComponent,},
-    {path: 'hire', component: HireComponent},
-    {path: 'blog', component: BlogComponent},
+    {
+        path: ':locale',
+        component: RootComponent,
+        children: [
+            {path: '', pathMatch: 'full', component: HomeComponent},
+            {path: 'portfolio', component: PortfolioComponent,},
+            {path: 'hire', component: HireComponent},
+            {path: 'blog', component: BlogComponent},
+        ],
+    },
     {path: '**', component: NotFoundComponent},
 ];
 

@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 
 @Component({
-    selector: 'section[path="/hire"]',
+    selector: 'article[path="/hire"]',
     template: `
         Hire
     `,

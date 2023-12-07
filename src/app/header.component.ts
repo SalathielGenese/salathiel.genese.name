@@ -1,5 +1,5 @@
-import {Component, HostBinding, Signal} from "@angular/core";
-import {AppModule} from "./app.module";
+import {Component, HostBinding, Inject, Signal} from "@angular/core";
+import {IS_HOME} from "./token";
 
 @Component({
     selector: 'header[sg-header]',
@@ -14,10 +14,7 @@ import {AppModule} from "./app.module";
     `,
 })
 export class HeaderComponent {
-    protected readonly home: Signal<boolean>;
-
-    constructor(appModule: AppModule) {
-        this.home = appModule.home;
+    constructor(@Inject(IS_HOME) protected readonly home: Signal<boolean>) {
     }
 
     @HostBinding('class.min-h-[calc(2*var(--nav-h))]')

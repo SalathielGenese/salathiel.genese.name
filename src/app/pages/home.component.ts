@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 
 @Component({
-    selector: 'section[path="/"]',
+    selector: 'article[path="/"]',
     template: `
         Home
     `,
