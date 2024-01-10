@@ -8,12 +8,12 @@ terraform {
 }
 
 locals {
-  random-uuid = uuid()
+  tfc-random-uuid = uuid()
 }
 
 resource "terraform_data" "echo" {
-  triggers_replace = local.random-uuid
+  triggers_replace = local.tfc-random-uuid
   provisioner "local-exec" {
-    command = "echo ${local.random-uuid}"
+    command = "echo ${local.tfc-random-uuid}"
   }
 }
