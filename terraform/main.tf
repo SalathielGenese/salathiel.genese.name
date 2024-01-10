@@ -12,9 +12,9 @@ locals {
 }
 
 resource "null_resource" "this" {
-  triggers = {this-uuid= uuid()}
+  triggers = {that-uuid= uuid()}
   provisioner "local-exec" {
-    command = "echo this-uuid = ${self.triggers.this-uuid}"
+    command = "echo this-uuid = ${self.triggers.that-uuid}"
   }
 }
 
