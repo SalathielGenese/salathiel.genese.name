@@ -15,6 +15,7 @@ terraform {
 }
 
 provider "google" {
+  credentials = var.google-cloud-platform-credentials
   project = local.project
   region  = local.region
 }
