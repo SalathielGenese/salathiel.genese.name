@@ -8,3 +8,4 @@ locals {
 # Variables
 
 variable "google-cloud-platform-credentials" { default = "" }
+variable "google-cloud-platform-github-connection-secret-name" { default = "" }
