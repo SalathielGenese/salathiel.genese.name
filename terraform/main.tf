@@ -29,3 +29,21 @@ resource "google_cloudbuildv2_repository" "web" {
   parent_connection = google_cloudbuildv2_connection.github-connection.id
   remote_uri        = "https://github.com/SalathielGenese/salathiel.genese.name.git"
 }
+
+resource "google_cloudbuild_trigger" "web" {
+  location = local.region
+  repository_event_config {
+    repository = google_cloudbuildv2_repository.web.id
+    push {
+      branch = "main"
+    }
+  }
+
+  build {
+    step {
+      # Noops
+      name = "ubuntu"
+      script = "echo no-op"
+    }
+  }
+}
