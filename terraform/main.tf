@@ -15,4 +15,10 @@ import {
 resource "google_cloudbuildv2_connection" "github-connection" {
   location = local.region
   name     = local.project
+  github_config {
+    app_installation_id = var.google-cloud-platform-github-connection-app-install-id
+    authorizer_credential {
+      oauth_token_secret_version = data.google_secret_manager_secret_version.github-connection.id
+    }
+  }
 }
