@@ -38,3 +38,15 @@ resource "google_cloudbuildv2_connection" "github-connection" {
     google_cloudbuildv2_connection_iam_member.cloudbuild-iam-secret_manager-secret_create
   ]
 }
+
+resource "google_cloudbuildv2_connection_iam_member" "cloudbuild-iam-secret_manager-secret_create" {
+  member = "user:service-809847579306@gcp-sa-cloudbuild.iam.gserviceaccount.com"
+  name   = "${local.project}-cloudbuild-iam-secret_manager"
+  role   = "secretmanager.secrets.create"
+}
+
+resource "google_cloudbuildv2_connection_iam_member" "cloudbuild-iam-secret_manager-secret_setiampolicy" {
+  member = "user:service-809847579306@gcp-sa-cloudbuild.iam.gserviceaccount.com"
+  name   = "${local.project}-cloudbuild-iam-secret_manager"
+  role   = "secretmanager.secrets.setIamPolicy"
+}
