@@ -9,20 +9,10 @@ data "google_secret_manager_secret_version" "github-connection" {
 }
 
 import {
-  #  id = "projects/${local.project}/locations/${local.region}/connections/${local.project}"
   id = "projects/${data.google_project.this.number}/locations/${local.region}/connections/${local.project}"
   to = google_cloudbuildv2_connection.github-connection
 }
 resource "google_cloudbuildv2_connection" "github-connection" {
-  #  name = local.project
-  #  location = local.region
-  #
-  #  github_config {
-  #    app_installation_id = var.google-cloud-platform-github-connection-app-install-id
-  #    authorizer_credential {
-  #      oauth_token_secret_version = data.google_secret_manager_secret_version.github-connection.id
-  #    }
-  #  }
-  location = ""
-  name     = ""
+  location = local.region
+  name     = local.project
 }
