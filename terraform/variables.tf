@@ -9,3 +9,4 @@ locals {
 
 variable "google-cloud-platform-credentials" { default = "" }
 variable "google-cloud-platform-github-connection-secret-name" { default = "" }
+variable "google-cloud-platform-github-connection-app-install-id" { default = "" }
