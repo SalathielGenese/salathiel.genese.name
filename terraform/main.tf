@@ -24,7 +24,7 @@ resource "google_cloudbuildv2_connection" "github-connection" {
 }
 
 resource "google_cloudbuildv2_repository" "web" {
-  name              = "salathiel.genese.name"
+  name              = "${local.project}-web"
   project           = data.google_project.this.number
   parent_connection = google_cloudbuildv2_connection.github-connection.id
   remote_uri        = "https://github.com/SalathielGenese/salathiel.genese.name.git"
