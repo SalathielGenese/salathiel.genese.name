@@ -8,18 +8,6 @@ data "google_secret_manager_secret_version" "github-connection" {
   secret = data.google_secret_manager_secret.github-connection.id
 }
 
-resource "google_cloudbuildv2_connection_iam_member" "cloudbuild-iam-secret_manager-secret_create" {
-  member = "user:service-809847579306@gcp-sa-cloudbuild.iam.gserviceaccount.com"
-  name   = "${local.project}-cloudbuild-iam-secret_manager"
-  role   = "secretmanager.secrets.create"
-}
-
-resource "google_cloudbuildv2_connection_iam_member" "cloudbuild-iam-secret_manager-secret_setiampolicy" {
-  member = "user:service-809847579306@gcp-sa-cloudbuild.iam.gserviceaccount.com"
-  name   = "${local.project}-cloudbuild-iam-secret_manager"
-  role   = "secretmanager.secrets.setIamPolicy"
-}
-
 import {
   id = "projects/${data.google_project.this.number}/locations/${local.region}/connections/${local.project}"
   to = google_cloudbuildv2_connection.github-connection
@@ -33,8 +21,29 @@ resource "google_cloudbuildv2_connection" "github-connection" {
       oauth_token_secret_version = data.google_secret_manager_secret_version.github-connection.id
     }
   }
-  depends_on = [
-    google_cloudbuildv2_connection_iam_member.cloudbuild-iam-secret_manager-secret_setiampolicy,
-    google_cloudbuildv2_connection_iam_member.cloudbuild-iam-secret_manager-secret_create
-  ]
+}
+
+resource "google_cloudbuildv2_repository" "web" {
+  name              = "${local.project}-web"
+  project           = data.google_project.this.number
+  parent_connection = google_cloudbuildv2_connection.github-connection.id
+  remote_uri        = "https://github.com/SalathielGenese/salathiel.genese.name.git"
+}
+
+resource "google_cloudbuild_trigger" "web" {
+  location = local.region
+  repository_event_config {
+    repository = google_cloudbuildv2_repository.web.id
+    push {
+      branch = "main"
+    }
+  }
+
+  build {
+    step {
+      # Noops
+      name = "ubuntu"
+      script = "echo no-op"
+    }
+  }
 }
