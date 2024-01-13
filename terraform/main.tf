@@ -48,3 +48,8 @@ resource "google_cloudbuild_trigger" "web-prod" {
     }
   }
 }
+
+resource "google_artifact_registry_repository" "web" {
+  format        = "DOCKER"
+  repository_id = "${local.project}-web"
+}
