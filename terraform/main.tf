@@ -42,9 +42,16 @@ resource "google_cloudbuild_trigger" "web-prod" {
 
   build {
     step {
-      # Noops
-      name   = "ubuntu"
-      script = "echo no-op"
+      # Build Docker image for PROD
+      name   = "gcr.io/cloud-builders/docker"
+      script = <<END_OF_SCRIPT
+        repo="${local.project}-web"
+        tag="$( date +"%Y-%m-%dT%H:%M:%SZ" )-$COMMIT_SHA"
+        image="${local.region}.pkg.dev/${data.google_project.this.number}/$repo/$repo-prod:$tag"
+
+        docker build --tag "$image" .
+        docker push "$image"
+      END_OF_SCRIPT
     }
   }
 }
