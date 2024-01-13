@@ -23,18 +23,18 @@ resource "google_cloudbuildv2_connection" "github-connection" {
   }
 }
 
-resource "google_cloudbuildv2_repository" "web" {
+resource "google_cloudbuildv2_repository" "web-prod" {
   name              = "${local.project}-web"
   project           = data.google_project.this.number
   parent_connection = google_cloudbuildv2_connection.github-connection.id
   remote_uri        = "https://github.com/SalathielGenese/salathiel.genese.name.git"
 }
 
-resource "google_cloudbuild_trigger" "web" {
+resource "google_cloudbuild_trigger" "web-prod" {
   location = local.region
   name = "${local.project}-web-prod"
   repository_event_config {
-    repository = google_cloudbuildv2_repository.web.id
+    repository = google_cloudbuildv2_repository.web-prod.id
     push {
       branch = "main"
     }
