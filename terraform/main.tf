@@ -77,3 +77,9 @@ resource "google_cloud_run_v2_service" "web-prod" {
     }
   }
 }
+
+resource "google_cloud_run_service_iam_binding" "web-prod" {
+  service  = google_cloud_run_v2_service.web-prod.name
+  role     = "roles/run.invoker"
+  members = ["allUsers"]
+}
