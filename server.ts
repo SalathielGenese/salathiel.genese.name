@@ -41,9 +41,14 @@ function run(): void {
 
   // Start up the Node server
   const server = app();
-  server.listen(port, () => {
+  const gracefulShutdown = () => listeningServer.close();
+  const listeningServer = server.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
+  process.on('SIGHUP', gracefulShutdown);
+  process.on('SIGINT', gracefulShutdown);
+  process.on('SIGQUIT', gracefulShutdown);
+  process.on('SIGTERM', gracefulShutdown);
 }
 
 // Webpack will replace 'require' with '__webpack_require__'

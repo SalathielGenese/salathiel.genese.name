@@ -23,18 +23,18 @@ resource "google_cloudbuildv2_connection" "github-connection" {
   }
 }
 
-resource "google_cloudbuildv2_repository" "web" {
+resource "google_cloudbuildv2_repository" "web-prod" {
   name              = "${local.project}-web"
   project           = data.google_project.this.number
   parent_connection = google_cloudbuildv2_connection.github-connection.id
   remote_uri        = "https://github.com/SalathielGenese/salathiel.genese.name.git"
 }
 
-resource "google_cloudbuild_trigger" "web" {
+resource "google_cloudbuild_trigger" "web-prod" {
   location = local.region
   name = "${local.project}-web-prod"
   repository_event_config {
-    repository = google_cloudbuildv2_repository.web.id
+    repository = google_cloudbuildv2_repository.web-prod.id
     push {
       branch = "main"
     }
@@ -42,9 +42,34 @@ resource "google_cloudbuild_trigger" "web" {
 
   build {
     step {
-      # Noops
-      name   = "ubuntu"
-      script = "echo no-op"
+      # Build Docker image for PROD
+      name   = "gcr.io/cloud-builders/docker"
+      script = <<END_OF_SCRIPT
+        repo="${local.project}-web"
+        tag="$( date +"%Y-%m-%dT%H:%M:%SZ" )-$COMMIT_SHA"
+        image="${local.region}.pkg.dev/${data.google_project.this.number}/$repo/$repo-prod:$tag"
+
+        docker build --tag "$image" .
+        docker push "$image"
+      END_OF_SCRIPT
+    }
+  }
+}
+
+resource "google_artifact_registry_repository" "web" {
+  format        = "DOCKER"
+  repository_id = "${local.project}-web"
+}
+
+resource "google_cloud_run_v2_service" "web-prod" {
+  launch_stage = "GA"
+  location = local.region
+  ingress = "INGRESS_TRAFFIC_ALL"
+  name = "${local.project}-web-prod"
+  template {
+    containers {
+#      image = "${local.region}.pkg.dev/${data.google_project.this.number}/${local.project}-web/${local.project}-web-prod"
+      image = "krys/echo-server"
     }
   }
 }
