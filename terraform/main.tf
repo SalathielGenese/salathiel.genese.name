@@ -50,10 +50,14 @@ resource "google_cloudbuild_trigger" "web-prod" {
       ]
       script = <<END_OF_SCRIPT
         target="${local.project}-web"
-        image="$LOCATION-docker.pkg.dev/${local.project}/$target/$target-prod:$( date +"%Y%m%dT%H%M%SZ" )-$COMMIT_SHA"
+        tag="$( date +"%Y%m%dT%H%M%SZ" )-$COMMIT_SHA"
+        image="$LOCATION-docker.pkg.dev/${local.project}/$target/$target-prod"
 
-        docker build --tag "$image" .
-        docker push "$image"
+        docker build --tag "$image:$tag" .
+        docker push "$image:$tag"
+
+        docker tag "$image:$tag" "$image:latest"
+        docker push "$image:latest"
       END_OF_SCRIPT
     }
   }
