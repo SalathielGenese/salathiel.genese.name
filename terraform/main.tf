@@ -71,8 +71,7 @@ resource "google_cloud_run_v2_service" "web-prod" {
   name         = "${local.project}-web-prod"
   template {
     containers {
-#      image = "${local.region}.pkg.dev/${data.google_project.this.number}/${local.project}-web/${local.project}-web-prod"
-      image = "krys/echo-server"
+      image = "${local.region}-docker.pkg.dev/${local.project}/${local.project}-web/${local.project}-web-prod:latest"
     }
   }
 }
