@@ -36,7 +36,7 @@ resource "google_cloudbuild_trigger" "web-prod" {
   repository_event_config {
     repository = google_cloudbuildv2_repository.web-prod.id
     push {
-      branch = "main"
+      branch = "^main$"
     }
   }
 
@@ -44,13 +44,14 @@ resource "google_cloudbuild_trigger" "web-prod" {
     step {
       # Build Docker image for PROD
       name   = "gcr.io/cloud-builders/docker"
+      env = ["COMMIT_SHA=$COMMIT_SHA"]
       script = <<END_OF_SCRIPT
-        repo="${local.project}-web"
-        tag="$( date +"%Y-%m-%dT%H:%M:%SZ" )-$COMMIT_SHA"
-        image="${local.region}.pkg.dev/${data.google_project.this.number}/$repo/$repo-prod:$tag"
+repo="${local.project}-web"
+tag="alpine-$( date +"%Y-%m-%dT%H:%M:%SZ" )-$COMMIT_SHA"
+image="${local.region}.pkg.dev/${data.google_project.this.number}/$repo/$repo-prod:$tag"
 
-        docker build --tag "$image" .
-        docker push "$image"
+docker build --tag "$image" .
+docker push "$image"
       END_OF_SCRIPT
     }
   }
