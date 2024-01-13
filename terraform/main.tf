@@ -53,3 +53,16 @@ resource "google_artifact_registry_repository" "web" {
   format        = "DOCKER"
   repository_id = "${local.project}-web"
 }
+
+resource "google_cloud_run_v2_service" "web-prod" {
+  launch_stage = "GA"
+  location = local.region
+  ingress = "INGRESS_TRAFFIC_ALL"
+  name = "${local.project}-web-prod"
+  template {
+    containers {
+#      image = "${local.region}.pkg.dev/${data.google_project.this.number}/${local.project}-web/${local.project}-web-prod"
+      image = "krys/echo-server"
+    }
+  }
+}
