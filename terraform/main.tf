@@ -32,7 +32,7 @@ resource "google_cloudbuildv2_repository" "web-prod" {
 
 resource "google_cloudbuild_trigger" "web-prod" {
   location = local.region
-  name = "${local.project}-web-prod"
+  name     = "${local.project}-web-prod"
   repository_event_config {
     repository = google_cloudbuildv2_repository.web-prod.id
     push {
@@ -43,19 +43,18 @@ resource "google_cloudbuild_trigger" "web-prod" {
   build {
     step {
       # Build Docker image for PROD
-      name   = "gcr.io/cloud-builders/docker"
-      env = [
-        "PROJECT_NUMBER=$PROJECT_NUMBER",
+      name = "gcr.io/cloud-builders/docker"
+      env  = [
         "COMMIT_SHA=$COMMIT_SHA",
         "LOCATION=$LOCATION",
       ]
       script = <<END_OF_SCRIPT
-target="${local.project}-web"
-image="$LOCATION-docker.pkg.dev/$PROJECT_NUMBER/$target/$target-prod:$( date +"%Y%m%dT%H%M%SZ" )-$COMMIT_SHA"
+        target="${local.project}-web"
+        image="$LOCATION-docker.pkg.dev/${local.project}/$target/$target-prod:$( date +"%Y%m%dT%H%M%SZ" )-$COMMIT_SHA"
 
-docker build --tag "$image" .
-docker push "$image"
-END_OF_SCRIPT
+        docker build --tag "$image" .
+        docker push "$image"
+      END_OF_SCRIPT
     }
   }
 }
@@ -67,9 +66,9 @@ resource "google_artifact_registry_repository" "web" {
 
 resource "google_cloud_run_v2_service" "web-prod" {
   launch_stage = "GA"
-  location = local.region
-  ingress = "INGRESS_TRAFFIC_ALL"
-  name = "${local.project}-web-prod"
+  location     = local.region
+  ingress      = "INGRESS_TRAFFIC_ALL"
+  name         = "${local.project}-web-prod"
   template {
     containers {
 #      image = "${local.region}.pkg.dev/${data.google_project.this.number}/${local.project}-web/${local.project}-web-prod"
@@ -79,7 +78,7 @@ resource "google_cloud_run_v2_service" "web-prod" {
 }
 
 resource "google_cloud_run_service_iam_binding" "web-prod" {
-  service  = google_cloud_run_v2_service.web-prod.name
-  role     = "roles/run.invoker"
+  service = google_cloud_run_v2_service.web-prod.name
+  role    = "roles/run.invoker"
   members = ["allUsers"]
 }
