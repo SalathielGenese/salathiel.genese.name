@@ -44,15 +44,18 @@ resource "google_cloudbuild_trigger" "web-prod" {
     step {
       # Build Docker image for PROD
       name   = "gcr.io/cloud-builders/docker"
-      env = ["COMMIT_SHA=$COMMIT_SHA"]
+      env = [
+        "PROJECT_NUMBER=$PROJECT_NUMBER",
+        "COMMIT_SHA=$COMMIT_SHA",
+        "LOCATION=$LOCATION",
+      ]
       script = <<END_OF_SCRIPT
-repo="${local.project}-web"
-tag="$( date +"%Y%m%dT%H%M%SZ" )-$COMMIT_SHA"
-image="${local.region}.pkg.dev/${data.google_project.this.number}/$repo/$repo-prod:$tag"
+target="${local.project}-web"
+image="$LOCATION.pkg.dev/$PROJECT_NUMBER/$target/$target-prod:$( date +"%Y%m%dT%H%M%SZ" )-$COMMIT_SHA"
 
 docker build --tag "$image" .
 docker push "$image"
-      END_OF_SCRIPT
+END_OF_SCRIPT
     }
   }
 }
