@@ -68,42 +68,11 @@ resource "google_artifact_registry_repository" "web" {
   repository_id = "${local.project}-web"
 }
 
-resource "google_cloud_run_v2_service" "web-prod" {
-  launch_stage = "GA"
-  location     = local.region
-  ingress      = "INGRESS_TRAFFIC_ALL"
-  name         = "${local.project}-web-prod"
-  template {
-    containers {
-      image = "${local.region}-docker.pkg.dev/${local.project}/${local.project}-web/${local.project}-web-prod:latest"
-    }
-  }
-}
-
-resource "google_cloud_run_service_iam_binding" "web-prod" {
-  service = google_cloud_run_v2_service.web-prod.name
-  role    = "roles/run.invoker"
-  members = ["allUsers"]
-}
-
-resource "google_cloud_run_domain_mapping" "web-prod-www" {
-  name     = "www.salathiel.genese.name"
-  location = local.region
-  spec {
-    route_name = google_cloud_run_v2_service.web-prod.name
-  }
-  metadata {
-    namespace = data.google_project.this.number
-  }
-}
-
-resource "google_cloud_run_domain_mapping" "web-prod" {
-  name     = "salathiel.genese.name"
-  location = local.region
-  spec {
-    route_name = google_cloud_run_v2_service.web-prod.name
-  }
-  metadata {
-    namespace = data.google_project.this.number
-  }
+module "prod" {
+  project-number       = data.google_project.this.number
+  domain               = "salathiel.genese.name"
+  source               = "./modules/cloud-run"
+  project-id           = local.project
+  region               = local.region
+  domain-www-subdomain = true
 }
