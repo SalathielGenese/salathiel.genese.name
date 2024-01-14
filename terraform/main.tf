@@ -23,7 +23,7 @@ resource "google_cloudbuildv2_connection" "github-connection" {
   }
 }
 
-resource "google_cloudbuildv2_repository" "web-prod" {
+resource "google_cloudbuildv2_repository" "this" {
   name              = "${local.project}-web"
   project           = data.google_project.this.number
   parent_connection = google_cloudbuildv2_connection.github-connection.id
@@ -34,7 +34,7 @@ resource "google_cloudbuild_trigger" "web-prod" {
   location = local.region
   name     = "${local.project}-web-${local.module-name-prod}"
   repository_event_config {
-    repository = google_cloudbuildv2_repository.web-prod.id
+    repository = google_cloudbuildv2_repository.this.id
     push {
       branch = "^main$"
     }
