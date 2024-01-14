@@ -30,6 +30,21 @@ resource "google_cloudbuildv2_repository" "web" {
   remote_uri        = "https://github.com/SalathielGenese/salathiel.genese.name.git"
 }
 
+resource "google_artifact_registry_repository" "web" {
+  format        = "DOCKER"
+  repository_id = "${local.project}-web"
+}
+
+module "prod" {
+  project-number       = data.google_project.this.number
+  domain               = "salathiel.genese.name"
+  source               = "./modules/cloud-run"
+  module-name          = local.module-prod
+  project-id           = local.project
+  region               = local.region
+  domain-www-subdomain = true
+}
+
 resource "google_cloudbuild_trigger" "web-prod" {
   location = local.region
   name     = "${local.project}-web-${local.module-prod}"
@@ -61,19 +76,4 @@ resource "google_cloudbuild_trigger" "web-prod" {
       END_OF_SCRIPT
     }
   }
-}
-
-resource "google_artifact_registry_repository" "web" {
-  format        = "DOCKER"
-  repository_id = "${local.project}-web"
-}
-
-module "prod" {
-  project-number       = data.google_project.this.number
-  domain               = "salathiel.genese.name"
-  source               = "./modules/cloud-run"
-  module-name          = local.module-prod
-  project-id           = local.project
-  region               = local.region
-  domain-www-subdomain = true
 }
