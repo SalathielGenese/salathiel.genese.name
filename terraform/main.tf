@@ -85,3 +85,25 @@ resource "google_cloud_run_service_iam_binding" "web-prod" {
   role    = "roles/run.invoker"
   members = ["allUsers"]
 }
+
+resource "google_cloud_run_domain_mapping" "web-prod-www" {
+  name     = "www.salathiel.genese.name"
+  location = local.region
+  spec {
+    route_name = google_cloud_run_v2_service.web-prod.name
+  }
+  metadata {
+    namespace = data.google_project.this.number
+  }
+}
+
+resource "google_cloud_run_domain_mapping" "web-prod" {
+  name     = "salathiel.genese.name"
+  location = local.region
+  spec {
+    route_name = google_cloud_run_v2_service.web-prod.name
+  }
+  metadata {
+    namespace = data.google_project.this.number
+  }
+}
