@@ -14,6 +14,7 @@ FROM node:alpine AS production
 CMD ["node", "dist/salathiel.genese.name/server/main.js"]
 ENV NODE_ENV=production
 WORKDIR /opt/app
+ENV PORT=8080
 USER node
 
 COPY package.json package-lock.json ./
