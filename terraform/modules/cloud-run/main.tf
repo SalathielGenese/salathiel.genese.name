@@ -2,10 +2,10 @@ resource "google_cloud_run_v2_service" "this" {
   launch_stage = "GA"
   location     = var.region
   ingress      = "INGRESS_TRAFFIC_ALL"
-  name         = "${var.project-id}-web-prod"
+  name         = "${var.project-id}-web-${var.module-name}"
   template {
     containers {
-      image = "${var.region}-docker.pkg.dev/${var.project-id}/${var.project-id}-web/${var.project-id}-web-prod:latest"
+      image = "${var.region}-docker.pkg.dev/${var.project-id}/${var.project-id}-web/${var.project-id}-web-${var.module-name}:latest"
     }
   }
 }

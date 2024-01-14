@@ -32,7 +32,7 @@ resource "google_cloudbuildv2_repository" "web-prod" {
 
 resource "google_cloudbuild_trigger" "web-prod" {
   location = local.region
-  name     = "${local.project}-web-prod"
+  name     = "${local.project}-web-${local.module-name-prod}"
   repository_event_config {
     repository = google_cloudbuildv2_repository.web-prod.id
     push {
@@ -71,6 +71,7 @@ resource "google_artifact_registry_repository" "web" {
 module "prod" {
   project-number       = data.google_project.this.number
   domain               = "salathiel.genese.name"
+  module-name          = local.module-name-prod
   source               = "./modules/cloud-run"
   project-id           = local.project
   region               = local.region
