@@ -1,9 +1,9 @@
 # Locals
 
 locals {
-  module-name-prod = "prod"
-  region           = "europe-west1"
-  project          = "salathiel-genese-name"
+  module-prod = "prod"
+  region      = "europe-west1"
+  project     = "salathiel-genese-name"
 }
 
 # Variables
