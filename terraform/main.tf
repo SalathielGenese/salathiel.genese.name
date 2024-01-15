@@ -35,38 +35,26 @@ resource "google_artifact_registry_repository" "web" {
   repository_id = "${local.project}-web"
 }
 
-module "prod" {
+module "staging" {
+  repository-id        = google_cloudbuildv2_repository.web.id
+  source               = "./modules/cloud-build-cloud-run"
   project-number       = data.google_project.this.number
-  domain               = "salathiel.genese.name"
-  source               = "./modules/cloud-run"
-  module-name          = local.module-prod
+  domain               = "staging.salathiel.genese.name"
   project-id           = local.project
   region               = local.region
-  domain-www-subdomain = true
+  branch               = "^staging$"
+  module-name          = "staging"
+  domain-www-subdomain = false
 }
 
-resource "google_cloudbuild_trigger" "web-prod" {
-  location = local.region
-  name     = "${local.project}-web-${local.module-prod}"
-  repository_event_config {
-    repository = google_cloudbuildv2_repository.web.id
-    push {
-      branch = "^main$"
-    }
-  }
-
-  build {
-    step {
-      # Build Docker image for PROD
-      name = "gcr.io/cloud-builders/docker"
-      env  = [
-        "COMMIT_SHA=$COMMIT_SHA",
-        "LOCATION=$LOCATION",
-      ]
-      script = templatefile("${path.module}/cloud-build.sh.tfpl", {
-        MODULE  = local.module-prod,
-        PROJECT = local.project,
-      })
-    }
-  }
+module "prod" {
+  repository-id        = google_cloudbuildv2_repository.web.id
+  source               = "./modules/cloud-build-cloud-run"
+  project-number       = data.google_project.this.number
+  domain               = "salathiel.genese.name"
+  project-id           = local.project
+  region               = local.region
+  branch               = "^main$"
+  module-name          = "prod"
+  domain-www-subdomain = true
 }

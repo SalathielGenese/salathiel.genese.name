@@ -1,7 +1,6 @@
 # Locals
 
 locals {
-  module-prod = "prod"
   region      = "europe-west1"
   project     = "salathiel-genese-name"
 }

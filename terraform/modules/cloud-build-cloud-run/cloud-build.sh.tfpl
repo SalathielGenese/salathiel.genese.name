@@ -14,7 +14,7 @@ apt-get install google-cloud-cli -y
 #
 
 tag="$( date +"%Y%m%dT%H%M%SZ" )-$COMMIT_SHA"
-image="$LOCATION-docker.pkg.dev/${PROJECT}/${PROJECT}-web/${PROJECT}-web-prod"
+image="$LOCATION-docker.pkg.dev/${PROJECT}/${PROJECT}-web/${PROJECT}-web-${MODULE}"
 
 docker build --tag "$image:$tag" .
 docker push "$image:$tag"
