@@ -35,14 +35,26 @@ resource "google_artifact_registry_repository" "web" {
   repository_id = "${local.project}-web"
 }
 
+module "staging" {
+  repository-id        = google_cloudbuildv2_repository.web.id
+  source               = "./modules/cloud-build-cloud-run"
+  project-number       = data.google_project.this.number
+  domain               = "staging.salathiel.genese.name"
+  project-id           = local.project
+  region               = local.region
+  branch               = "^staging$"
+  module-name          = "staging"
+  domain-www-subdomain = false
+}
+
 module "prod" {
   repository-id        = google_cloudbuildv2_repository.web.id
   source               = "./modules/cloud-build-cloud-run"
   project-number       = data.google_project.this.number
   domain               = "salathiel.genese.name"
-  module-name          = local.module-prod
   project-id           = local.project
   region               = local.region
   branch               = "^main$"
+  module-name          = "prod"
   domain-www-subdomain = true
 }
