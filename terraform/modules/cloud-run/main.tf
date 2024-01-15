@@ -6,10 +6,6 @@ resource "google_cloud_run_v2_service" "web" {
   template {
     containers {
       image = "${var.region}-docker.pkg.dev/${var.project-id}/${var.project-id}-web/${var.project-id}-web-${var.module-name}:latest"
-      ports {
-        container_port = 8080
-        name           = "h2c"
-      }
     }
   }
 }
