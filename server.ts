@@ -37,13 +37,14 @@ export function app(): express.Express {
 }
 
 function run(): void {
-  const port = process.env['PORT'] || 4000;
+  const port = +(process.env['PORT'] || 4000);
+  const host = process.env['HOST'] ?? '0.0.0.0';
 
   // Start up the Node server
   const server = app();
   const gracefulShutdown = () => listeningServer.close();
-  const listeningServer = server.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:${port}`);
+  const listeningServer = server.listen(port, host, 2**10, () => {
+    console.log(`Node Express server listening on http://${host}:${port}`);
   });
   process.on('SIGHUP', gracefulShutdown);
   process.on('SIGINT', gracefulShutdown);
