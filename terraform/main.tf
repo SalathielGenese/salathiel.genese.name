@@ -36,37 +36,13 @@ resource "google_artifact_registry_repository" "web" {
 }
 
 module "prod" {
+  repository-id        = google_cloudbuildv2_repository.web.id
+  source               = "./modules/cloud-build-cloud-run"
   project-number       = data.google_project.this.number
   domain               = "salathiel.genese.name"
-  source               = "./modules/cloud-run"
   module-name          = local.module-prod
   project-id           = local.project
   region               = local.region
+  branch               = "^main$"
   domain-www-subdomain = true
-}
-
-resource "google_cloudbuild_trigger" "web-prod" {
-  location = local.region
-  name     = "${local.project}-web-${local.module-prod}"
-  repository_event_config {
-    repository = google_cloudbuildv2_repository.web.id
-    push {
-      branch = "^main$"
-    }
-  }
-
-  build {
-    step {
-      # Build Docker image for PROD
-      name = "gcr.io/cloud-builders/docker"
-      env  = [
-        "COMMIT_SHA=$COMMIT_SHA",
-        "LOCATION=$LOCATION",
-      ]
-      script = templatefile("${path.module}/cloud-build.sh.tfpl", {
-        MODULE  = local.module-prod,
-        PROJECT = local.project,
-      })
-    }
-  }
 }

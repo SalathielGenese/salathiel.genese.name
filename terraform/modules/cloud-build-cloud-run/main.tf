@@ -38,3 +38,29 @@ resource "google_cloud_run_service_iam_binding" "web" {
 #    namespace = var.project-number
 #  }
 #}
+
+resource "google_cloudbuild_trigger" "web" {
+  location = var.region
+  name     = "${var.project-id}-web-${var.module-name}"
+  repository_event_config {
+    repository = var.repository-id
+    push {
+      branch = var.branch
+    }
+  }
+
+  build {
+    step {
+      # Build Docker image for PROD
+      name = "gcr.io/cloud-builders/docker"
+      env  = [
+        "COMMIT_SHA=$COMMIT_SHA",
+        "LOCATION=$LOCATION",
+      ]
+      script = templatefile("${path.module}/cloud-build.sh.tfpl", {
+        MODULE  = var.module-name,
+        PROJECT = var.project-id,
+      })
+    }
+  }
+}
