@@ -5,7 +5,7 @@ import {IS_HOME} from "./token";
     selector: 'header[sg-header]',
     host: {'[class]': `'grid'`},
     template: `
-        <ng-container *ngIf="home()">Home Header</ng-container>
+        <ng-container *ngIf="home()">Home Header (thought staging first)</ng-container>
         <ng-container *ngIf="!home()">
             <h1 class="text-grey-700 text-center relative md:py-8 w-full py-3">
                 Other Header
