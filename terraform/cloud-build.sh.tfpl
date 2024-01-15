@@ -26,4 +26,6 @@ docker push "$image:latest"
 # Deploy latest image to Google Cloud Run
 #
 
-gcloud run deploy "${PROJECT}-web-${MODULE}" --region "$LOCATION" --image "$image:$tag"
+gcloud run deploy "${PROJECT}-web-${MODULE}" \
+    --image "$image:$tag" \
+    --region "$LOCATION"
