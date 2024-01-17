@@ -47,15 +47,6 @@ module "staging" {
   domain-www-subdomain = false
 }
 
-resource "google_dns_managed_zone" "web" {
-  dns_name    = "salathiel.genese.name"
-  name        = "${local.project}-web"
-  description = "Root domain"
-  dnssec_config {
-    state = "on"
-  }
-}
-
 module "prod" {
   repository-id        = google_cloudbuildv2_repository.web.id
   source               = "./modules/cloud-build-cloud-run"
