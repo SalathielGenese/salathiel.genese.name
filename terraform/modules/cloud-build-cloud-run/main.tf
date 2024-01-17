@@ -64,3 +64,8 @@ resource "google_cloudbuild_trigger" "web" {
     }
   }
 }
+
+resource "google_dns_managed_zone" "web" {
+  name     = "${var.project-id}-web"
+  dns_name = var.domain
+}
