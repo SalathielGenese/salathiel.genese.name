@@ -11,8 +11,7 @@ RUN npm run build:ssr
 
 
 FROM node:alpine AS production
-#CMD ["node", "dist/salathiel.genese.name/server/main.js"]
-CMD echo -$PORT- && node dist/salathiel.genese.name/server/main.js
+CMD ["node", "dist/salathiel.genese.name/server/main.js"]
 ENV NODE_ENV=production
 WORKDIR /opt/app
 ENV PORT=80
