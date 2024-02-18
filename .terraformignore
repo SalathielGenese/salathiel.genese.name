@@ -1,6 +1,0 @@
-/*
-/.*
-!/terraform
-/terraform/.terraform
-/Dockerfile
-/.dockerignore
