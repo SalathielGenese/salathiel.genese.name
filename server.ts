@@ -6,6 +6,8 @@ import * as express from 'express';
 import {existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {AppServerModule} from './src/main.server';
+import * as cookieParser from "cookie-parser";
+import {ACCEPT_LANGUAGE_HEADER, COOKIE_LANGUAGE_TAG, LANGUAGES} from "./src/constant";
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -14,6 +16,7 @@ export function app(): express.Express {
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/main/modules/express-engine)
   return express()
+      .use(cookieParser())
       .engine('html', ngExpressEngine({
         bootstrap: AppServerModule
       }))
@@ -23,7 +26,53 @@ export function app(): express.Express {
         maxAge: '1y'
       }))
       .use((req, res, next) => {
-        '/' === req.path ? res.redirect('/en-GB') : next();
+        if ('/' === req.path) {
+          // NOTE: Resolve from cookies
+          let {[COOKIE_LANGUAGE_TAG]: languageTag} = req.cookies;
+          // NOTE: Resolve from browser headers
+          languageTag ??= (() => {
+            const {[ACCEPT_LANGUAGE_HEADER]: acceptLanguage = ';'} = req.headers;
+            const languages = [
+              // NOTE: Extract primary language tag and assign weight of 1
+              [acceptLanguage.substring(0, acceptLanguage.indexOf(',')), 1] as const,
+                // NOTE: Extract fallback language tags with their respective weights
+              ...acceptLanguage
+                  .substring(1 + acceptLanguage.indexOf(','))
+                  .split(',')
+                  .map(_ => _.trim().split(';'))
+                  .map(([languageTag, quantifier]) => [
+                    languageTag.trim(),
+                    parseFloat(quantifier.trim().substring(2)),
+                  ] as const)]
+                // NOTE: Filter out undefined language tags
+                .filter(([_]) => _)
+                // NOTE: Sort accepted language tags by descending weight order
+                .sort(([, a], [, b]) => b - a)
+                // NOTE: Only extract accepted language tags
+                .map(([_]) => _);
+
+            // NOTE: Iterate over language tags to find the best matches, starting with the highest weighted one
+            for (const languageTag of languages) {
+              if (LANGUAGES.some(({tag}) => tag === languageTag)) {
+                return languageTag;
+              } else {
+                const globalLanguageTag = LANGUAGES
+                    .find(({tag}) => tag.startsWith(languageTag + '-'))
+                    ?.tag;
+
+                if (globalLanguageTag) {
+                  return globalLanguageTag;
+                }
+              }
+            }
+
+            // NOTE: If everything failed, go for English (Great Britain)
+            return 'en-GB';
+          })();
+          res.redirect(`/${languageTag}`);
+        } else {
+          next();
+        }
       })
       .get('*', (req, res) => {
         res.render(INDEX_HTML, {req, providers: [{provide: APP_BASE_HREF, useValue: req.baseUrl}]});
