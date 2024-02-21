@@ -1,65 +1,38 @@
 import {Component} from "@angular/core";
-import {faBook} from "@fortawesome/free-solid-svg-icons/faBook";
-import {faEnvelope} from "@fortawesome/free-solid-svg-icons/faEnvelope";
-import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
+import {faLinkedinIn} from "@fortawesome/free-brands-svg-icons/faLinkedinIn";
+import {faFacebook} from "@fortawesome/free-brands-svg-icons/faFacebook";
+import {faTwitter} from "@fortawesome/free-brands-svg-icons/faTwitter";
+import {faGithub} from "@fortawesome/free-brands-svg-icons/faGithub";
+import {faTiktok} from "@fortawesome/free-brands-svg-icons/faTiktok";
+import {IconDefinition} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
-    host: {'[class]': `'text-grey-400 min-h-[50vh] bg-grey-800 lg:grid-cols-2 grid-cols-1 gap-8 grid py-16'`},
-    selector: 'footer[sg-footer]',
-    template: `
-        <div>
-            <h4 sgHeader>Data Privacy</h4>
-            <p>I collect no particular data of yours save through Google Analytics to understand my audience.</p>
+  host: {'[class]': `'justify-items-center place-items-center snap-always snap-center bg-grey-800 min-h-[50vh] grid p-8'`},
+  selector: 'footer[sg-footer]',
+  template: `
+      <div>
+          <p class="text-center">
+              <strong class="text-grey-600 font-extrabold">
+                  © 2024
+              </strong>
+          </p>
 
-            <h4 sgHeader class="mt-8">Credits</h4>
-            <p>Made with &hearts; and:</p>
-            <ul class="ml-[1.05rem] list-disc">
-                <li>Git</li>
-                <li>GitHub</li>
-                <li>Angular</li>
-                <li>Firebase</li>
-                <li>TailwindCSS</li>
-                <li>Font Awesome</li>
-                <li>Google Cloud Platform Run</li>
-                <li>Google Cloud Platform Build</li>
-            </ul>
-        </div>
-        
-        <form>
-            <h4 sgHeader>Contact</h4>
-            
-            <label class="form-field">
-                <span>EMAIL</span>
-                <small>How do I reach you out?</small>
-                <input type="email">
-                <del>req...</del>
-            </label>
-            <label class="form-field">
-                <span>NAME</span>
-                <small>How should I call to you?</small>
-                <input type="text">
-                <del>Too shorts</del>
-            </label>
-            <label class="form-field">
-                <span>MESSAGE</span>
-                <small>I'm all ears, sir/ma'am</small>
-                <textarea rows="5"></textarea>
-                <del>Requi...</del>
-            </label>
-            
-            <div class="mt-6 flex">
-                <hr class="pointer-events-none opacity-0 flex-grow">
-                <button [class.bg-grey-600]="false"
-                        [class.bg-brown]="true"
-                        class="px-6 p-2"
-                        type="submit">
-                    <fa-icon [icon]="faPaperPlane"></fa-icon>
-                    <span class="uppercase ml-1">send</span>
-                </button>
-            </div>
-        </form>
-    `,
+          <ul class="text-grey-400 text-center block my-8">
+              <li *ngFor="let social of socials" class="contents">
+                  <a class="m-1 p-3" [href]="social.uri" target="_blank">
+                      <fa-icon [icon]="social.icon" size="xl"></fa-icon>
+                  </a>
+              </li>
+          </ul>
+      </div>
+  `,
 })
 export class FooterComponent {
-    readonly faPaperPlane = faPaperPlane;
+  protected readonly socials: { icon: IconDefinition, uri: string }[] = [
+    {icon: faGithub, uri: 'https://github.com/SalathielGenese'},
+    {icon: faLinkedinIn, uri: 'https://www.linkedin.com/in/salathielgenese'},
+    {icon: faTwitter, uri: 'https://x.com/@SalathielGenese'},
+    {icon: faTiktok, uri: 'https://www.tiktok.com/@salathielgenese'},
+    {icon: faFacebook, uri: 'https://www.facebook.com/SalathielGenese'},
+  ];
 }

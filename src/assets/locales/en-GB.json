@@ -1,0 +1,16 @@
+{
+  "pages": {
+    "home": {
+      "title": "Salathiel's"
+    },
+    "blog": {
+      "title": "Blog"
+    },
+    "hire": {
+      "title": "Hire"
+    },
+    "portfolio": {
+      "title": "Portfolio"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 
 @Component({
-    selector: 'article[error="not-found"]',
+    selector: 'section[error="not-found"]',
     template: `
         Not Found
     `,

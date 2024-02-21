@@ -1,23 +1,24 @@
 import {computed, inject, InjectionToken, NgModule, Signal} from '@angular/core';
+import {toSignal} from "@angular/core/rxjs-interop";
 import {BrowserModule} from '@angular/platform-browser';
+import {ActivatedRoute, ActivationEnd, Router} from "@angular/router";
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
+import {filter} from "rxjs";
+
+import {IS_HOME, LANGUAGE_TAG} from "./token";
+
 import {HeaderComponent as HComponent} from "./components/header.component";
-import {NotFoundComponent} from "./pages/not-found.component";
 import {AppRoutingModule} from './app-routing.module';
-import {HomeComponent} from "./pages/home.component";
 import {HeaderComponent} from "./header.component";
 import {FooterComponent} from "./footer.component";
 import {MainComponent} from './main.component';
 import {NavComponent} from "./nav.component";
+
+import {NotFoundComponent} from "./pages/not-found.component";
 import {BlogComponent} from "./pages/blog.component";
-import {PortfolioComponent} from "./pages/portfolio.component";
 import {HireComponent} from "./pages/hire.component";
-import {ActivatedRoute, ActivationEnd, Router} from "@angular/router";
-import {filter} from "rxjs";
-import {RootComponent} from "./pages/root.component";
-import {IS_HOME, LANGUAGE_TAG} from "./token";
-import {toSignal} from "@angular/core/rxjs-interop";
+import {HomeComponent} from "./pages/home.component";
 
 @NgModule({
   declarations: [
@@ -28,12 +29,10 @@ import {toSignal} from "@angular/core/rxjs-interop";
     HeaderComponent,
     FooterComponent,
 
-    RootComponent,
     HomeComponent,
     HireComponent,
     BlogComponent,
     NotFoundComponent,
-    PortfolioComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,7 +46,7 @@ import {toSignal} from "@angular/core/rxjs-interop";
   bootstrap: [
     NavComponent,
     MainComponent,
-    HeaderComponent,
+    // HeaderComponent,
     FooterComponent,
   ]
 })
@@ -60,8 +59,9 @@ export class AppModule {
         .pipe(filter(_ => _ instanceof ActivationEnd))) as Signal<ActivationEnd>;
     this.#isHome = computed(() =>
         activationEnd() && // NOTE: Re-compute when signal change
-        RootComponent === activatedRoute.children[0].component &&
-        HomeComponent === activatedRoute.children[0].children[0].component);
+        // RootComponent === activatedRoute.children[0].component &&
+        // HomeComponent === activatedRoute.children[0].children[0].component);
+        HomeComponent === activatedRoute.children[0].component);
     this.#languageTag = computed(() => activationEnd()?.snapshot.params?.['locale'] ?? 'en-GB');
   }
 

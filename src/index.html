@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth scroll-m-0 scroll-p-0 h-full w-full overflow-hidden">
 <head>
     <meta charset="utf-8">
     <title>SalathielGeneseName</title>
@@ -7,23 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
-<body class="xl:[--max-width:1280px]
-             lg:[--max-width:1024px]
-             md:[--max-width:768px]
-             sm:[--max-width:640px]
-             [--max-width:100%]
-             md:[--nav-h:8rem]
-             [--nav-h:4rem]
-             min-h-screen
-             flex-col
-             flex">
+<body class="lg:[--max-width:1024px] md:[--max-width:768px] sm:[--max-width:640px] [--max-width:100%] md:[--nav-h:8rem] [--nav-h:4rem]
+             h-full w-full overflow-y-scroll
+             min-h-screen flex-col flex
+             snap-y snap-mandatory
+             scroll-smooth">
 <nav class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)]" sg-nav></nav>
-<header class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] relative" sg-header></header>
-<main class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)]
-             [&>section]:min-h-[calc(100vh-2*var(--nav-h))]
-             flex-grow
-             relative"
-      sg-main></main>
-<footer class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] relative" sg-footer></footer>
+<main sg-main></main>
+<footer class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)]" sg-footer></footer>
 </body>
 </html>

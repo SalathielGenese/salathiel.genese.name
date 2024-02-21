@@ -2,28 +2,31 @@
 @tailwind components
 @tailwind utilities
 
-@layer utilities
-  label.form-field
-    @apply flex-col flex
-
-    > input, > textarea
-      @apply leading-relaxed bg-transparent border-grey-700 border
-
-    > del
-      @apply text-red-800 no-underline text-xs italic
-
-    + label.form-field
-      @apply mt-3
-
 *
-  scrollbar-width: thin
-  scrollbar-color: #BE3C0B lightgrey
+  @apply scroll-smooth
 
+::-webkit-scrollbar
+  @apply h-[1px] w-[2px]
+::-webkit-scrollbar-track
+  @apply bg-white
+  &.no-scrollbar
+    @apply bg-transparent
+::-webkit-scrollbar-thumb
+  @apply bg-grey-400
+  &.no-scrollbar
+    @apply bg-transparent
+::-webkit-scrollbar-thumb:hover
+  @apply bg-brown
+  &.no-scrollbar
+    @apply bg-transparent
 
-  &::-webkit-scrollbar
-    width: 2px
-    height: 2px
-  &::-webkit-scrollbar-track
-    background: lightgrey
-  &::-webkit-scrollbar-thumb
-    background-color: #BE3C0B
+router-outlet
+  @apply hidden
+
+body > main
+  @apply flex-grow
+
+  > section[path]:not([path="/"])
+    @apply min-h-screen snap-start
+    @apply sm:pt-[5.70rem] pt-[4.70rem]
+    @apply px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)]
