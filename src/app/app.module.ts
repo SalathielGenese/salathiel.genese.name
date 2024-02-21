@@ -59,8 +59,6 @@ export class AppModule {
         .pipe(filter(_ => _ instanceof ActivationEnd))) as Signal<ActivationEnd>;
     this.#isHome = computed(() =>
         activationEnd() && // NOTE: Re-compute when signal change
-        // RootComponent === activatedRoute.children[0].component &&
-        // HomeComponent === activatedRoute.children[0].children[0].component);
         HomeComponent === activatedRoute.children[0].component);
     this.#languageTag = computed(() => activationEnd()?.snapshot.params?.['locale'] ?? 'en-GB');
   }
