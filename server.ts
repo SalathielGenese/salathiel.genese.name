@@ -22,6 +22,9 @@ export function app(): express.Express {
       .get('*.*', express.static(DIST_FOLDER, {
         maxAge: '1y'
       }))
+      .use((req, res, next) => {
+        '/' === req.path ? res.redirect('/en-GB') : next();
+      })
       .get('*', (req, res) => {
         res.render(INDEX_HTML, {req, providers: [{provide: APP_BASE_HREF, useValue: req.baseUrl}]});
       });
