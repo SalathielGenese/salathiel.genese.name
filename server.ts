@@ -1,55 +1,43 @@
 import 'zone.js/node';
 
-import { APP_BASE_HREF } from '@angular/common';
-import { ngExpressEngine } from '@nguniversal/express-engine';
+import {APP_BASE_HREF} from '@angular/common';
+import {ngExpressEngine} from '@nguniversal/express-engine';
 import * as express from 'express';
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
-import { AppServerModule } from './src/main.server';
+import {existsSync} from 'node:fs';
+import {join} from 'node:path';
+import {AppServerModule} from './src/main.server';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
-  const server = express();
-  const distFolder = join(process.cwd(), 'dist/salathiel.genese.name/browser');
-  const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
+  const DIST_FOLDER = join(process.cwd(), 'dist/salathiel.genese.name/browser');
+  const INDEX_HTML = existsSync(join(DIST_FOLDER, 'index.original.html')) ? 'index.original.html' : 'index';
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/main/modules/express-engine)
-  server.engine('html', ngExpressEngine({
-    bootstrap: AppServerModule
-  }));
-
-  server.set('view engine', 'html');
-  server.set('views', distFolder);
-
-  // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { });
-  // Serve static files from /browser
-  server.get('*.*', express.static(distFolder, {
-    maxAge: '1y'
-  }));
-
-  // All regular routes use the Universal engine
-  server.get('*', (req, res) => {
-    res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
-  });
-
-  return server;
+  return express()
+      .engine('html', ngExpressEngine({
+        bootstrap: AppServerModule
+      }))
+      .set('view engine', 'html')
+      .set('views', DIST_FOLDER)
+      .get('*.*', express.static(DIST_FOLDER, {
+        maxAge: '1y'
+      }))
+      .get('*', (req, res) => {
+        res.render(INDEX_HTML, {req, providers: [{provide: APP_BASE_HREF, useValue: req.baseUrl}]});
+      });
 }
 
 function run(): void {
+  const backlog = 2 ** 10;
   const port = +(process.env['PORT'] || 4000);
   const host = process.env['HOST'] ?? '0.0.0.0';
+  process.on('SIGHUP', () => listeningServer.close());
+  process.on('SIGINT', () => listeningServer.close());
+  process.on('SIGQUIT', () => listeningServer.close());
+  process.on('SIGTERM', () => listeningServer.close());
 
-  // Start up the Node server
-  const server = app();
-  const gracefulShutdown = () => listeningServer.close();
-  const listeningServer = server.listen(port, host, 2**10, () => {
-    console.log(`Node Express server listening on http://${host}:${port}`);
-  });
-  process.on('SIGHUP', gracefulShutdown);
-  process.on('SIGINT', gracefulShutdown);
-  process.on('SIGQUIT', gracefulShutdown);
-  process.on('SIGTERM', gracefulShutdown);
+  const listeningServer = app()
+      .listen(port, host, backlog, () => console.log(`STARTED http://${host}:${port}`));
 }
 
 // Webpack will replace 'require' with '__webpack_require__'
