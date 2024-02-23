@@ -76,7 +76,7 @@ export function app(): express.Express {
           next();
         }
       })
-      .use('/:languageTag/~', (req, res, next) => {
+      .use('/~/:languageTag', (req, res, next) => {
         const {languageTag} = req.params;
 
         if (LANGUAGES.some(({tag}) => tag === languageTag)) {

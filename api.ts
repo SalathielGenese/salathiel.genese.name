@@ -21,7 +21,7 @@ export const api = Router({strict: true, mergeParams: true, caseSensitive: true}
       })();
       const scoped = messages[languageTag] ?? {};
       res.json(success(
-          jsonNest(req.path.substring(6).split(',')
+          jsonNest(decodeURIComponent(req.path.substring(6)).split(',')
               .reduce((projection, key) => ({
                 [key]: scoped[key],
                 ...projection,
@@ -31,8 +31,8 @@ export const api = Router({strict: true, mergeParams: true, caseSensitive: true}
               self: req.originalUrl,
               localized: LANGUAGES.map(({tag}) => tag)
                   .filter(tag => languageTag !== tag)
-                  .reduce((links, tag) => ({
-                    [tag]: `/${tag}/${req.originalUrl.substring(2 + languageTag.length)}`,
+                  .reduce((links, otherLanguageTag) => ({
+                    [otherLanguageTag]: `/~/${otherLanguageTag}/${req.path.substring(6)}`,
                     ...links,
                   }), {}),
             },
