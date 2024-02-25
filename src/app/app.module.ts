@@ -30,6 +30,7 @@ import {NotFoundComponent} from "./pages/not-found.component";
 import {BlogComponent} from "./pages/blog.component";
 import {HireComponent} from "./pages/hire.component";
 import {HomeComponent} from "./pages/home.component";
+import {I18nService} from "./services/i18n.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {TargetInterceptor} from "./services/target.interceptor";
 import {REQUEST} from "@nguniversal/express-engine/tokens";
@@ -54,6 +55,7 @@ import {LANGUAGES} from "../constant";
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     FontAwesomeModule
   ],
   providers: [
@@ -61,6 +63,7 @@ import {LANGUAGES} from "../constant";
     {provide: IS_HOME, useFactory: () => inject(AppModule).resolve(IS_HOME)},
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TargetInterceptor},
     provideClientHydration(),
+    I18nService,
   ],
   bootstrap: [
     NavComponent,
