@@ -23,8 +23,8 @@ import {isPlatformBrowser} from "@angular/common";
                                         inline-flex text-sm rounded border-2 shadow m-1"
                      *ngFor="let certification of certifications">
                       <fa-icon [icon]="icons.faAward" class="m-1"></fa-icon>
-                      <span class="p-1">{{ certification.name }}</span>
-                      <small class="border-grey-600 bg-grey-700 border-l p-1">
+                      <span class="whitespace-nowrap p-1">{{ certification.name }}</span>
+                      <small class="whitespace-nowrap border-grey-600 bg-grey-700 border-l p-1">
                           {{ certification.date }}
                       </small>
                   </p>
