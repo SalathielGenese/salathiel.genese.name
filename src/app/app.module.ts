@@ -31,7 +31,7 @@ import {BlogComponent} from "./pages/blog.component";
 import {HireComponent} from "./pages/hire.component";
 import {HomeComponent} from "./pages/home.component";
 import {I18nService} from "./services/i18n.service";
-import {TranslatePipe} from "./pipe/translate.pipe";
+import {TranslatePipe} from "./pipes/translate.pipe";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {TargetInterceptor} from "./services/target.interceptor";
 import {REQUEST} from "@nguniversal/express-engine/tokens";
