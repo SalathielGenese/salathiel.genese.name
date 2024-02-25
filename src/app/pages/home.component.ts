@@ -8,16 +8,20 @@ import {isPlatformBrowser} from "@angular/common";
       <article class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] justify-items-center grid
                             place-items-center min-h-screen snap-always snap-center">
           <header class="text-center flex-col flex">
-              <h1 class="font-serif font-bold text-3xl mb-8">Salathiel G.</h1>
-              <h2>Freelancer · Individual Contributor</h2>
-              <h3 class="italic my-2">Cloud · Data · DevOps · Architect · Full-Stack</h3>
-              <small>13 years in Computer Sciences</small>
+              <h1 class="font-serif font-bold text-3xl mb-8">Salathiel</h1>
+              <h2 translate="pages.home.sections.landing.jobTitle"></h2>
+              <h3 translate="pages.home.sections.landing.crafts"
+                  class="italic my-2"
+              ></h3>
+              <small translate="pages.home.sections.landing.experience"></small>
           </header>
       </article>
       <article class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] justify-items-center grid
                             place-items-center min-h-screen snap-always snap-center sm:pt-[5.70rem] pt-[4.70rem]">
           <div class="text-center flex-col flex">
-              <h2 class="font-serif font-bold text-3xl mb-8">Certified</h2>
+              <h2 translate="pages.home.sections.certified.title"
+                  class="font-serif font-bold text-3xl mb-8"
+              ></h2>
               <div class="max-w-screen-md">
                   <p class="place-items-center overflow-hidden text-grey-400 border-white bg-grey-800
                                         inline-flex text-sm rounded border-2 shadow m-1"
@@ -41,77 +45,68 @@ import {isPlatformBrowser} from "@angular/common";
           </div>
           <div class="overflow-x-scroll snap-mandatory no-scrollbar relative w-full snap-x" #craftsRef>
               <div class="w-[400%]">
-                  <figure class="sm:grid-cols-2 inline-grid grid-cols-1 snap-always snap-start gap-4 w-1/4">
-                      <header class="max-sm:mb-8">
+                  <figure class="sm:grid-cols-4 inline-grid grid-cols-1 snap-always snap-start gap-4 w-1/4">
+                      <header class="sm:col-span-1 md:col-span-2 max-sm:mb-8">
                           <h3 class="font-serif font-bold text-2xl">Cloud</h3>
                           <small class="mb-8 mt-4">
                               Google Cloud Platform (GCP) · Amazon Web Service (AWS) · Private Cloud · Cloud Native ·
                               Kubernetes · Terraform · Docker
                           </small>
                       </header>
-                      <figcaption>
-                          <p>I do:</p>
+                      <figcaption class="sm:col-span-3 md:col-span-2">
                           <ul class="list-disc pl-5">
-                              <li>Design cloud architectures</li>
-                              <li>Provision cloud infrastructure</li>
-                              <li>Set up, maintain, troubleshoot Kubernetes clusters</li>
-                              <li>Review security, logging, monitoring and alerting</li>
+                              <li *ngFor="let value of (('pages.home.sections.crafts.cloud.values' | translate) ?? '').split('\f')">
+                                  {{ value }}
+                              </li>
                           </ul>
                       </figcaption>
                   </figure>
-                  <figure class="sm:grid-cols-2 inline-grid grid-cols-1 snap-always snap-start gap-4 w-1/4">
-                      <header class="max-sm:mb-8">
+                  <figure class="sm:grid-cols-4 inline-grid grid-cols-1 snap-always snap-start gap-4 w-1/4">
+                      <header class="sm:col-span-1 md:col-span-2 max-sm:mb-8">
                           <h3 class="font-serif font-bold text-2xl">Data</h3>
                           <small class="mb-8 mt-4">
                               Apache Flink · Apache Druid · Apache Kafka · Rabbit MQ · Influx DB · Grafana
                           </small>
                       </header>
-                      <figcaption>
-                          <p>I help:</p>
+                      <figcaption class="sm:col-span-3 md:col-span-2">
                           <ul class="list-disc pl-5">
-                              <li>Ingest data into warehouses</li>
-                              <li>Architecture data pipelines</li>
-                              <li>Implement data pipelines in real-time</li>
-                              <li>Aggregate custom metrics for insights</li>
-                              <li>Build dashboard for lively perspectives at glance</li>
+                              <li *ngFor="let value of (('pages.home.sections.crafts.data.values' | translate) ?? '').split('\f')">
+                                  {{ value }}
+                              </li>
                           </ul>
                       </figcaption>
                   </figure>
-                  <figure class="sm:grid-cols-2 inline-grid grid-cols-1 snap-always snap-start gap-4 w-1/4">
-                      <header class="max-sm:mb-8">
+                  <figure class="sm:grid-cols-4 inline-grid grid-cols-1 snap-always snap-start gap-4 w-1/4">
+                      <header class="sm:col-span-1 md:col-span-2 max-sm:mb-8">
                           <h3 class="font-serif font-bold text-2xl">DevOps</h3>
                           <small class="mb-8 mt-4">
                               Linters · Sonar Qube · CI/CD · Jenkins · Cloud Build · GitHub Actions · Docker ·
                               Kubernetes · Helm · Terraform
                           </small>
                       </header>
-                      <figcaption>
-                          <p>I design, implement and audit:</p>
+                      <figcaption class="sm:col-span-3 md:col-span-2">
+                          <p translate="pages.home.sections.crafts.devops.intro"></p>
                           <ul class="list-disc pl-5">
-                              <li>Code quality & security audits</li>
-                              <li>Automated software versioning</li>
-                              <li>Automated testing of software versions</li>
-                              <li>Automated software version deliveries</li>
+                              <li *ngFor="let value of (('pages.home.sections.crafts.devops.values' | translate) ?? '').split('\f')">
+                                  {{ value }}
+                              </li>
                           </ul>
                       </figcaption>
                   </figure>
-                  <figure class="sm:grid-cols-2 inline-grid grid-cols-1 snap-always snap-start gap-4 w-1/4">
-                      <header class="max-sm:mb-8">
+                  <figure class="sm:grid-cols-4 inline-grid grid-cols-1 snap-always snap-start gap-4 w-1/4">
+                      <header class="sm:col-span-1 md:col-span-2 max-sm:mb-8">
                           <h3 class="font-serif font-bold text-2xl">Full-Stack</h3>
                           <small class="mb-8 mt-4">
                               Java · JavaScript · Python · Spring Framework · Quarkus · Angular · React · Vue · Flask ·
                               NodeJS · Maven · Gradle · PiP · NPM · Yarn · PnP
                           </small>
                       </header>
-                      <figcaption>
-                          <p>I am crafted with:</p>
+                      <figcaption class="sm:col-span-3 md:col-span-2">
+                          <p translate="pages.home.sections.crafts.full-stack.intro"></p>
                           <ul class="list-disc pl-5">
-                              <li>Software architecture</li>
-                              <li>Enforcing & practicing design patterns</li>
-                              <li>Implements UI components from designs</li>
-                              <li>Integrating API</li>
-                              <li>Developing APIs & document them</li>
-                              <li>Writing automated software testing: unit, integration, end-to-end</li>
+                              <li *ngFor="let value of (('pages.home.sections.crafts.full-stack.values' | translate) ?? '').split('\f')">
+                                  {{ value }}
+                              </li>
                           </ul>
                       </figcaption>
                   </figure>
@@ -142,6 +137,7 @@ export class HomeComponent implements OnInit {
   protected readonly icons = {
     faAward,
   };
+  protected readonly FORM_FEED = '\f';
   protected activeCraft = 'cloud';
 
   #activeCraftHandler?: any;
