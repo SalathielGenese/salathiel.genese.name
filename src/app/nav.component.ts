@@ -8,11 +8,11 @@ import {LANGUAGE_TAG} from "./token";
       <a class="text-grey-400 bg-grey-100 origin-center -rotate-45 text-center normal-case -left-16 fixed w-48"
          href="https://github.com/SalathielGenese/salathiel.genese.name"
          target="_blank">
-         <small>GitHub</small>
+          <small>GitHub</small>
       </a>
       <a [routerLink]="[languageTag()]"
          class="sm:pr-8 sm:py-4 pr-4 py-2">
-          Salathiel
+          {{ 'pages.home.title' | translate }}
       </a>
       <hr class="pointer-events-none opacity-0 flex-grow">
       <a [routerLink]="[languageTag(), 'blog']"
