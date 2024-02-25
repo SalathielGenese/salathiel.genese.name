@@ -1,16 +1,13 @@
 {
   "pages": {
     "home": {
-      "title": "Salathiel's"
+      "title": "Salathiel (en-GB)"
     },
     "blog": {
       "title": "Blog"
     },
     "hire": {
       "title": "Hire"
-    },
-    "portfolio": {
-      "title": "Portfolio"
     }
   }
 }

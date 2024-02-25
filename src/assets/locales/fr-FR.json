@@ -1,16 +1,13 @@
 {
   "pages": {
     "home": {
-      "title": "Salathiel's (fr)"
+      "title": "Salathiel (fr-FR)"
     },
     "blog": {
-      "title": "Blog (fr)"
+      "title": "Blog"
     },
     "hire": {
-      "title": "Hire (fr)"
-    },
-    "portfolio": {
-      "title": "Portfolio (fr)"
+      "title": "Hire"
     }
   }
 }
