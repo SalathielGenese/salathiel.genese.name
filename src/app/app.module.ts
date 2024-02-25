@@ -1,7 +1,7 @@
 import {computed, inject, InjectionToken, NgModule, Signal} from '@angular/core';
 import {toSignal} from "@angular/core/rxjs-interop";
-import {BrowserModule} from '@angular/platform-browser';
-import {ActivatedRoute, ActivationEnd, Router} from "@angular/router";
+import {BrowserModule, provideClientHydration} from '@angular/platform-browser';
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 import {filter} from "rxjs";
@@ -45,6 +45,7 @@ import {TargetInterceptor} from "./services/target.interceptor";
     {provide: LANGUAGE_TAG, useFactory: () => inject(AppModule).resolve(LANGUAGE_TAG)},
     {provide: IS_HOME, useFactory: () => inject(AppModule).resolve(IS_HOME)},
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TargetInterceptor},
+    provideClientHydration(),
   ],
   bootstrap: [
     NavComponent,
