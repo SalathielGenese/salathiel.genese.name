@@ -6,9 +6,9 @@ import {BlogComponent} from "./pages/blog.component";
 import {HireComponent} from "./pages/hire.component";
 
 const routes: Routes = [
-  {path: ':locale', pathMatch: 'full', component: HomeComponent},
-  {path: ':locale/blog', component: BlogComponent},
-  {path: ':locale/hire', component: HireComponent},
+  {path: ':languageTag', pathMatch: 'full', component: HomeComponent},
+  {path: ':languageTag/blog', component: BlogComponent},
+  {path: ':languageTag/hire', component: HireComponent},
   {path: '**', component: NotFoundComponent},
 ];
 
