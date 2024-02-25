@@ -69,10 +69,8 @@ import {LANGUAGES} from "../constant";
     I18nService,
   ],
   bootstrap: [
-    NavComponent,
     MainComponent,
     // HeaderComponent,
-    FooterComponent,
   ]
 })
 export class AppModule {
