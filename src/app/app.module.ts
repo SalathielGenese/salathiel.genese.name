@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BrowserModule, provideClientHydration} from '@angular/platform-browser';
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, Router, TitleStrategy} from "@angular/router";
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 import {filter} from "rxjs";
@@ -39,6 +39,7 @@ import {Request} from "express";
 import {isPlatformServer} from "@angular/common";
 import {LANGUAGES} from "../constant";
 import {TranslateComponent} from "./components/translate.component";
+import {SalathielTitleStrategy} from "./services/salathiel.title-strategy";
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import {TranslateComponent} from "./components/translate.component";
     {provide: LANGUAGE_TAG, useFactory: () => inject(AppModule).resolve(LANGUAGE_TAG)},
     {provide: IS_HOME, useFactory: () => inject(AppModule).resolve(IS_HOME)},
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TargetInterceptor},
+    {provide: TitleStrategy, useClass: SalathielTitleStrategy},
     provideClientHydration(),
     I18nService,
   ],
