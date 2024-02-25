@@ -1,7 +1,18 @@
-import {computed, inject, InjectionToken, NgModule, Signal} from '@angular/core';
+import {
+  effect,
+  Inject,
+  inject,
+  InjectionToken,
+  NgModule,
+  Optional,
+  PLATFORM_ID,
+  signal,
+  Signal,
+  WritableSignal
+} from '@angular/core';
 import {toSignal} from "@angular/core/rxjs-interop";
-import {BrowserModule} from '@angular/platform-browser';
-import {ActivatedRoute, ActivationEnd, Router} from "@angular/router";
+import {BrowserModule, provideClientHydration} from '@angular/platform-browser';
+import {ActivatedRoute, NavigationEnd, Router, TitleStrategy} from "@angular/router";
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 import {filter} from "rxjs";
@@ -19,9 +30,22 @@ import {NotFoundComponent} from "./pages/not-found.component";
 import {BlogComponent} from "./pages/blog.component";
 import {HireComponent} from "./pages/hire.component";
 import {HomeComponent} from "./pages/home.component";
+import {I18nService} from "./services/i18n.service";
+import {TranslatePipe} from "./pipes/translate.pipe";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {TargetInterceptor} from "./services/target.interceptor";
+import {REQUEST} from "@nguniversal/express-engine/tokens";
+import {Request} from "express";
+import {isPlatformServer} from "@angular/common";
+import {LANGUAGES} from "../constant";
+import {TranslateComponent} from "./components/translate.component";
+import {SalathielTitleStrategy} from "./services/salathiel.title-strategy";
 
 @NgModule({
   declarations: [
+    TranslatePipe,
+    TranslateComponent,
+
     HComponent,
 
     NavComponent,
@@ -37,30 +61,39 @@ import {HomeComponent} from "./pages/home.component";
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     FontAwesomeModule
   ],
   providers: [
     {provide: LANGUAGE_TAG, useFactory: () => inject(AppModule).resolve(LANGUAGE_TAG)},
     {provide: IS_HOME, useFactory: () => inject(AppModule).resolve(IS_HOME)},
+    {provide: HTTP_INTERCEPTORS, multi: true, useClass: TargetInterceptor},
+    {provide: TitleStrategy, useClass: SalathielTitleStrategy},
+    provideClientHydration(),
+    I18nService,
   ],
   bootstrap: [
-    NavComponent,
     MainComponent,
     // HeaderComponent,
-    FooterComponent,
   ]
 })
 export class AppModule {
-  readonly #languageTag: Signal<string>;
-  readonly #isHome: Signal<boolean>;
+  readonly #isHome: WritableSignal<boolean>;
+  readonly #languageTag: WritableSignal<string>;
 
-  constructor(router: Router, activatedRoute: ActivatedRoute) {
-    const activationEnd = toSignal(router.events
-        .pipe(filter(_ => _ instanceof ActivationEnd))) as Signal<ActivationEnd>;
-    this.#isHome = computed(() =>
-        activationEnd() && // NOTE: Re-compute when signal change
-        HomeComponent === activatedRoute.children[0].component);
-    this.#languageTag = computed(() => activationEnd()?.snapshot.params?.['locale'] ?? 'en-GB');
+  constructor(router: Router,
+              activatedRoute: ActivatedRoute,
+              @Inject(PLATFORM_ID) private readonly platformId: object,
+              @Inject(REQUEST) @Optional() private readonly request: Request) {
+    const navigationEnd = toSignal(
+        router.events.pipe(filter(_ => _ instanceof NavigationEnd))) as Signal<NavigationEnd>;
+    effect(() => {
+      this.#isHome.set(HomeComponent === activatedRoute.children[0]?.component);
+      this.#languageTag.set(this.#resolveLanguageTag());
+      navigationEnd();
+    }, {allowSignalWrites: true});
+    this.#isHome = signal(HomeComponent === activatedRoute.children[0]?.component);
+    this.#languageTag = signal(this.#resolveLanguageTag());
   }
 
   resolve<T>(token: InjectionToken<T>): T | void {
@@ -69,6 +102,14 @@ export class AppModule {
         return this.#isHome as any;
       case LANGUAGE_TAG:
         return this.#languageTag as any;
+    }
+  }
+
+  #resolveLanguageTag(): string {
+    if (isPlatformServer(this.platformId)) {
+      return LANGUAGES.find(({tag}) => this.request.url.startsWith(`/${tag}`))?.tag ?? 'en-GB';
+    } else {
+      return LANGUAGES.find(({tag}) => location.pathname.startsWith(`/${tag}`))?.tag ?? 'en-GB';
     }
   }
 }

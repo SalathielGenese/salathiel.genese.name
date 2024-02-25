@@ -1,16 +1,39 @@
 {
   "pages": {
     "home": {
-      "title": "Salathiel's"
+      "title": "At Salathiel's",
+      "sections": {
+        "landing": {
+          "jobTitle": "Software Engineer · Individual Contributor · Freelancer",
+          "crafts": "Cloud · Data · DevOps · Architect · Full-Stack",
+          "experience": "13 years in the Software Development"
+        },
+        "certified": {
+          "title": "Certified"
+        },
+        "crafts": {
+          "cloud": {
+            "values": "Design cloud architectures\fProvision cloud infrastructure\fSet up, maintain, troubleshoot Kubernetes clustersReview security, logging, monitoring and alerting"
+          },
+          "data": {
+            "values": "Ingest data into warehouses\fArchitecture data pipelines\fImplement data pipelines in real-time\fAggregate custom metrics for insights\fBuild dashboard for lively perspectives at glance"
+          },
+          "devops": {
+            "intro": "I design, implement and audit:",
+            "values": "Code quality & security audits\fAutomated software versioning\fAutomated testing of software versions\fAutomated software version deliveries"
+          },
+          "full-stack": {
+            "intro": "I am crafted with",
+            "values": "Software architecture\fEnforcing & practicing design patterns\fImplements UI components from designs\fIntegrating API\fDeveloping APIs & document them\fWriting automated software testing: unit, integration, end-to-end\fDistributed systems"
+          }
+        }
+      }
     },
     "blog": {
       "title": "Blog"
     },
     "hire": {
-      "title": "Hire"
-    },
-    "portfolio": {
-      "title": "Portfolio"
+      "title": "Hire Me"
     }
   }
 }

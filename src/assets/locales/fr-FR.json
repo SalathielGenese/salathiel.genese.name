@@ -1,16 +1,39 @@
 {
   "pages": {
     "home": {
-      "title": "Salathiel's (fr)"
+      "title": "Chez Salathiel",
+      "sections": {
+        "landing": {
+          "jobTitle": "Ingénieur Logiciel · Contributeur Individuel · Indépendant",
+          "crafts": "Cloud · Data · DevOps · Architecte · Full-Stack",
+          "experience": "13 années en Dévelopment Logiciel"
+        },
+        "certified": {
+          "title": "Certifié"
+        },
+        "crafts": {
+          "cloud": {
+            "values": "Concevoir des architectures cloud\fApprovisionner l'infrastructure cloud\fConfigurer, maintenir et dépanner les clusters Kubernetes\fExaminer la sécurité, la journalisation, la supervision et les alertes"
+          },
+          "data": {
+            "values": "Ingestion de données dans les entrepôts de données\fConception de pipelines de données\fImplémentation de pipelines de données en temps réel\fAgrégation de métriques personnalisées pour obtenir des informations\fCréation de tableaux de bord pour une vision globale et dynamique"
+          },
+          "devops": {
+            "intro": "Je conçois, implémente et j'audite :",
+            "values": "La qualité et la sécurité du code\fLe versionnement automatisé des logiciels\fLes tests automatisés des versions logicielles\fLes livraisons automatisées de versions d'applications"
+          },
+          "full-stack": {
+            "intro": "J'ai de l'expérience en:",
+            "values": "Architecture logicielle\fApplication et respect des patrons de conception\fImplémentation des composants d'interface utilisateur à partir de conceptions\fIntégration d'API\fDéveloppement et documentation d'API\fÉcriture de tests automatisés : unitaires, d'intégration et de bout en bout\fSystèmes distribués"
+          }
+        }
+      }
     },
     "blog": {
-      "title": "Blog (fr)"
+      "title": "Blog"
     },
     "hire": {
-      "title": "Hire (fr)"
-    },
-    "portfolio": {
-      "title": "Portfolio (fr)"
+      "title": "Me Recruter"
     }
   }
 }

@@ -7,7 +7,8 @@ import {existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {AppServerModule} from './src/main.server';
 import * as cookieParser from "cookie-parser";
-import {ACCEPT_LANGUAGE_HEADER, COOKIE_LANGUAGE_TAG, LANGUAGES} from "./src/constant";
+import {ACCEPT_LANGUAGE_HEADER, COOKIE_LANGUAGE_TAG, KEY_DIST_FOLDER, LANGUAGES} from "./src/constant";
+import {api} from "./api";
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -17,6 +18,7 @@ export function app(): express.Express {
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/main/modules/express-engine)
   return express()
       .use(cookieParser())
+      .set(KEY_DIST_FOLDER, DIST_FOLDER)
       .engine('html', ngExpressEngine({
         bootstrap: AppServerModule
       }))
@@ -35,7 +37,7 @@ export function app(): express.Express {
             const languages = [
               // NOTE: Extract primary language tag and assign weight of 1
               [acceptLanguage.substring(0, acceptLanguage.indexOf(',')), 1] as const,
-                // NOTE: Extract fallback language tags with their respective weights
+              // NOTE: Extract fallback language tags with their respective weights
               ...acceptLanguage
                   .substring(1 + acceptLanguage.indexOf(','))
                   .split(',')
@@ -74,6 +76,20 @@ export function app(): express.Express {
           next();
         }
       })
+      .use('/~/:languageTag', (req, res, next) => {
+        const {languageTag} = req.params;
+
+        if (LANGUAGES.some(({tag}) => tag === languageTag)) {
+          next();
+        } else {
+          res.status(400).json({
+            message: `Unsupported language tag: '${languageTag}'`,
+            routeParam: 'languageTag',
+            status: 'ERROR',
+            context: 'PATH',
+          });
+        }
+      }, api)
       .get('*', (req, res) => {
         res.render(INDEX_HTML, {req, providers: [{provide: APP_BASE_HREF, useValue: req.baseUrl}]});
       });
