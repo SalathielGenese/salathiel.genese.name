@@ -38,10 +38,12 @@ import {REQUEST} from "@nguniversal/express-engine/tokens";
 import {Request} from "express";
 import {isPlatformServer} from "@angular/common";
 import {LANGUAGES} from "../constant";
+import {TranslateComponent} from "./components/translate.component";
 
 @NgModule({
   declarations: [
     TranslatePipe,
+    TranslateComponent,
 
     HComponent,
 

@@ -11,9 +11,9 @@ import {LANGUAGE_TAG} from "./token";
           <small>GitHub</small>
       </a>
       <a class="sm:pr-8 sm:py-4 pr-4 py-2"
-         [routerLink]="[languageTag()]">
-          {{ 'pages.home.title' | translate }}
-      </a>
+         [routerLink]="[languageTag()]"
+         translate="pages.home.title"
+      ></a>
       <hr class="pointer-events-none opacity-0 flex-grow">
       <a [routerLink]="[languageTag(), 'blog']"
          class="sm:px-8 sm:py-4 px-4 py-2">
