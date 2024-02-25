@@ -19,6 +19,8 @@ import {NotFoundComponent} from "./pages/not-found.component";
 import {BlogComponent} from "./pages/blog.component";
 import {HireComponent} from "./pages/hire.component";
 import {HomeComponent} from "./pages/home.component";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {TargetInterceptor} from "./services/target.interceptor";
 
 @NgModule({
   declarations: [
@@ -42,6 +44,7 @@ import {HomeComponent} from "./pages/home.component";
   providers: [
     {provide: LANGUAGE_TAG, useFactory: () => inject(AppModule).resolve(LANGUAGE_TAG)},
     {provide: IS_HOME, useFactory: () => inject(AppModule).resolve(IS_HOME)},
+    {provide: HTTP_INTERCEPTORS, multi: true, useClass: TargetInterceptor},
   ],
   bootstrap: [
     NavComponent,
