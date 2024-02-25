@@ -132,7 +132,7 @@ export class HomeComponent implements OnInit {
     {name: 'Certified Kubernetes Administrator', date: '2024-02'},
     {name: 'Hashicorp Terraform', date: '2024-01'},
     {name: 'Spring Application Developer', date: '2022-08'},
-    {name: 'Oracle Certified Professional · Java', date: '2021-03'},
+    {name: 'Oracle Certified Professional · Java', date: '2021-04'},
     {name: 'Redis Data Structures', date: '2021-03'},
     {name: 'Redis Security', date: '2021-03'},
     {name: 'Redis Stream', date: '2021-03'},
