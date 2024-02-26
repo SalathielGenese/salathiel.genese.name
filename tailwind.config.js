@@ -1,3 +1,4 @@
+const defaultConfig = require("tailwindcss/defaultConfig");
 const colors = require("tailwindcss/colors");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -6,6 +7,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+        fontFamily: {
+            'serif': ['Domine', 'serif'],
+            'sans': ['Signika', 'sans-serif'],
+            'handwriting': ['Dancing Script'],
+        },
         colors: {
             ...colors,
             brown: '#a73109',

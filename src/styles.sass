@@ -2,6 +2,17 @@
 @tailwind components
 @tailwind utilities
 
+@layer base
+  @font-face
+    font-family: Domine
+    src: url("/assets/fonts/Domine-VariableFont_wght.ttf")
+  @font-face
+    font-family: 'Dancing Script'
+    src: url("/assets/fonts/DancingScript-VariableFont_wght.ttf")
+  @font-face
+    font-family: Signika
+    src: url("/assets/fonts/Signika-VariableFont_GRAD,wght.ttf")
+
 *
   @apply scroll-smooth
 
@@ -23,8 +34,11 @@
 router-outlet
   @apply hidden
 
-body > main > section[path]:not([path="/"])
-  @apply flex-grow
-  @apply min-h-screen snap-start
-  @apply sm:pt-[5.70rem] pt-[4.70rem]
-  @apply px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)]
+body
+  @apply text-grey-600 font-sans
+
+  > main > section[path]:not([path="/"])
+    @apply flex-grow
+    @apply min-h-screen snap-start
+    @apply sm:pt-[5.70rem] pt-[4.70rem]
+    @apply px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)]
