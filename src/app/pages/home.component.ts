@@ -8,7 +8,9 @@ import {isPlatformBrowser} from "@angular/common";
       <article class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] justify-items-center grid
                             place-items-center min-h-screen snap-always snap-center">
           <header class="text-center flex-col flex">
-              <h1 class="font-handwriting font-bold text-black text-3xl mb-8">Salathiel</h1>
+              <h1 class="font-handwriting font-bold text-black text-3xl mb-8">
+                  <img class="aspect-square inline-block w-24" src="/assets/images/favicon.png">
+              </h1>
               <h2 translate="pages.home.sections.landing.jobTitle" class="font-bold"></h2>
               <h3 translate="pages.home.sections.landing.crafts" class="text-grey-500 my-2"></h3>
               <small translate="pages.home.sections.landing.experience" class="text-grey-500"></small>
