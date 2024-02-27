@@ -5,16 +5,33 @@ import {isPlatformBrowser} from "@angular/common";
 @Component({
   selector: 'section[path="/"]',
   template: `
-      <article class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] justify-items-center grid
-                            place-items-center min-h-screen snap-always snap-center">
+      <article class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] justify-items-center
+                      place-items-center overflow-hidden h-screen snap-always snap-center relative
+                      grid-cols-1 grid-rows-1 grid">
           <header class="text-center flex-col flex">
-              <h1 class="font-handwriting font-bold text-black text-3xl mb-8">
-                  <img class="aspect-square inline-block w-24" src="/assets/images/favicon.png">
-              </h1>
+              <picture class="contents">
+                  <img class="pointer-events-none aspect-square inline-block mx-auto w-24"
+                       src="/assets/images/favicon.png"
+                       [alt]="'alt.icon' | translate">
+              </picture>
               <h2 translate="pages.home.sections.landing.jobTitle" class="font-bold"></h2>
               <h3 translate="pages.home.sections.landing.crafts" class="text-grey-500 my-2"></h3>
               <small translate="pages.home.sections.landing.experience" class="text-grey-500"></small>
           </header>
+          
+          <picture class="contents">
+              <source srcset="/assets/images/landing/splash/eberhard-grossgasteiger-kD3NrRWlV6A-unsplash-2986.jpg"
+                      media="(min-width: 2986px)">
+              <source srcset="/assets/images/landing/splash/eberhard-grossgasteiger-kD3NrRWlV6A-unsplash-2400.jpg"
+                      media="(min-width: 2400px)">
+              <source srcset="/assets/images/landing/splash/eberhard-grossgasteiger-kD3NrRWlV6A-unsplash-1920.jpg"
+                      media="(min-width: 1920px)">
+              <source srcset="/assets/images/landing/splash/eberhard-grossgasteiger-kD3NrRWlV6A-unsplash-640.jpg"
+                      media="(min-width: 640px)">
+              <img class="pointer-events-none object-cover object-top min-h-full min-w-full absolute left-0 top-0 -z-10"
+                   src="/assets/images/landing/splash/eberhard-grossgasteiger-kD3NrRWlV6A-unsplash-640.jpg"
+                   [alt]="'alt.landing.splash' | translate">
+          </picture>
       </article>
       <article class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] justify-items-center grid
                             place-items-center min-h-screen snap-always snap-center sm:pt-[5.70rem] pt-[4.70rem]">
@@ -23,14 +40,14 @@ import {isPlatformBrowser} from "@angular/common";
                   translate="pages.home.sections.certified.title"
               ></h2>
               <div class="max-w-screen-md">
-                  <p class="place-items-center overflow-hidden text-grey-400 border-white bg-grey-800
-                            inline-flex rounded border-2 shadow m-1"
+                  <p class="justify-items-center overflow-hidden text-grey-400 border-white bg-grey-800
+                            inline-flex rounded border-2 shadow mx-0.5 my-1"
                      *ngFor="let certification of certifications">
-                      <fa-icon [icon]="icons.faAward" class="m-1"></fa-icon>
-                      <span class="whitespace-nowrap p-1">{{ certification.name }}</span>
-                      <small class="whitespace-nowrap border-grey-600 bg-grey-700 border-l p-1">
+                      <fa-icon [icon]="icons.faAward" class="py-0.5 px-1"></fa-icon>
+                      <span class="whitespace-nowrap py-0.5 px-1">{{ certification.name }}</span>
+                      <span class="whitespace-nowrap border-grey-600 text-grey-500 bg-grey-700 border-l py-0.5 px-1">
                           {{ certification.date }}
-                      </small>
+                      </span>
                   </p>
               </div>
           </div>
@@ -38,8 +55,8 @@ import {isPlatformBrowser} from "@angular/common";
       <article class="px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)] place-content-center min-h-screen
                       snap-always snap-center sm:pt-[5.70rem] pt-[4.70rem] flex-col flex">
           <div class="place-items-stretch grid-cols-4 sm:pb-8 gap-4 pb-2 grid">
-              <label [ngClass]="{'bg-brown': craft === activeCraft, 'bg-grey-200': craft !== activeCraft}"
-                     class="cursor-pointer transition-all aspect-square rounded h-1"
+              <label [ngClass]="{'bg-brown': craft === activeCraft, 'bg-grey-100': craft !== activeCraft}"
+                     class="cursor-pointer transition-all aspect-square ring-white rounded h-1"
                      (click)="setActiveCraft(craft)"
                      *ngFor="let craft of crafts"></label>
           </div>

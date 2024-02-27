@@ -37,8 +37,13 @@ router-outlet
 body
   @apply text-grey-600 font-sans
 
-  > main > section[path]:not([path="/"])
-    @apply flex-grow
-    @apply min-h-screen snap-start
-    @apply sm:pt-[5.70rem] pt-[4.70rem]
-    @apply px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)]
+  > main
+    > section[path]:not([path="/"]),
+    > section[path="/"] > article + article
+      background-color: #dfdee0
+
+    > section[path]:not([path="/"])
+      @apply flex-grow
+      @apply min-h-screen snap-start
+      @apply sm:pt-[5.70rem] pt-[4.70rem]
+      @apply px-[clamp(max(calc((100vw-var(--max-width))/2),2rem),2rem,2rem)]
