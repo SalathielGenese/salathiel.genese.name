@@ -5,7 +5,7 @@ import {isPlatformBrowser} from "@angular/common";
 @Component({
   selector: 'section[path="/"]',
   template: `
-      <article class="px-[max(2rem,calc((100vw-var(--max-width))/2))] justify-items-center
+      <article class="px-center justify-items-center
                       place-items-center overflow-hidden h-screen snap-always snap-center relative
                       grid-cols-1 grid-rows-1 grid">
           <header class="text-center flex-col flex">
@@ -33,7 +33,7 @@ import {isPlatformBrowser} from "@angular/common";
                    [alt]="'alt.landing.splash' | translate">
           </picture>
       </article>
-      <article class="px-[max(2rem,calc((100vw-var(--max-width))/2))] justify-items-center place-items-center
+      <article class="px-center justify-items-center place-items-center
                       sm:pt-[5.70rem] pt-[4.70rem] min-h-screen snap-always snap-center grid">
           <div class="text-center flex-col flex">
               <h2 class="font-handwriting font-bold text-4xl mb-8"
@@ -52,7 +52,7 @@ import {isPlatformBrowser} from "@angular/common";
               </div>
           </div>
       </article>
-      <article class="px-[max(2rem,calc((100vw-var(--max-width))/2))] place-content-center min-h-screen
+      <article class="px-center place-content-center min-h-screen
                       snap-always snap-center sm:pt-[5.70rem] pt-[4.70rem] flex-col flex">
           <div class="place-items-stretch grid-cols-4 sm:pb-8 gap-4 pb-2 grid">
               <label [ngClass]="{'bg-brown': craft === activeCraft, 'bg-grey-100': craft !== activeCraft}"

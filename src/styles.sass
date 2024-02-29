@@ -13,6 +13,10 @@
     font-family: Signika
     src: url("/assets/fonts/Signika-VariableFont_GRAD,wght.ttf")
 
+@layer utilities
+  .px-center
+    @apply px-[max(2rem,calc((100vw-var(--max-width))/2))]
+
 *
   @apply scroll-smooth
 
@@ -43,5 +47,4 @@ body
       background-color: #dfdee0
 
     > section[path]:not([path="/"])
-      @apply flex-grow snap-start
-      @apply px-[max(2rem,calc((100vw-var(--max-width))/2))]
+      @apply px-center snap-start flex-grow
