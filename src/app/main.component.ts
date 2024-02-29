@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, effect, HostBinding, Inject, Signal} from '@angular/core';
+import {IS_HOME} from "./token";
 
 @Component({
   selector: 'main[sg-main]',
@@ -9,4 +10,11 @@ import {Component} from '@angular/core';
   `,
 })
 export class MainComponent {
+  @HostBinding('class.snap-y')
+  @HostBinding('class.snap-mandatory')
+  protected isHome: boolean;
+  constructor(@Inject(IS_HOME) isHome: Signal<boolean>) {
+    effect(() => this.isHome = isHome());
+    this.isHome = isHome();
+  }
 }
