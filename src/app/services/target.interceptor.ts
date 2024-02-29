@@ -13,12 +13,11 @@ export class TargetInterceptor implements HttpInterceptor {
               @Inject(PLATFORM_ID) platformId: object) {
     if (request) {
       const {
-        'x-forwarded-proto': protocol,
-        'x-forwarded-host': host,
+        'x-forwarded-proto': xForwardedProtocol,
+        'x-forwarded-host': xForwardedHost,
+        host,
       } = request.headers;
-      host || console.error(request.headers); // TODO: Remove after the root issue has been identified
-      host || console.error(request); // TODO: Remove after the root issue has been identified
-      this.#origin = `${protocol}://${host}`;
+      this.#origin = `${xForwardedProtocol}://${xForwardedHost ?? host}`;
     } else if (isPlatformBrowser(platformId)) {
       this.#origin = location.origin;
     } else {
