@@ -16,6 +16,7 @@ export class TargetInterceptor implements HttpInterceptor {
         'x-forwarded-proto': protocol,
         'x-forwarded-host': host,
       } = request.headers;
+      host || console.error(request); // TODO: Remove after the root issue has been identified
       this.#origin = `${protocol}://${host}`;
     } else if (isPlatformBrowser(platformId)) {
       this.#origin = location.origin;
