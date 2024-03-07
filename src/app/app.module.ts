@@ -40,6 +40,7 @@ import {isPlatformServer} from "@angular/common";
 import {LANGUAGES} from "../constant";
 import {TranslateComponent} from "./components/translate.component";
 import {SalathielTitleStrategy} from "./services/salathiel.title-strategy";
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import {SalathielTitleStrategy} from "./services/salathiel.title-strategy";
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    ReactiveFormsModule,
   ],
   providers: [
     {provide: LANGUAGE_TAG, useFactory: () => inject(AppModule).resolve(LANGUAGE_TAG)},
