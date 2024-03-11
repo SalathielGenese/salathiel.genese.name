@@ -27,6 +27,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@google-cloud/datastore": "^8.5.0",
     "@nguniversal/express-engine": "^16.2.0",
     "cookie-parser": "^1.4.6",
     "express": "^4.15.2",
