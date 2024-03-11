@@ -7,26 +7,24 @@ import {existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {AppServerModule} from './src/main.server';
 import * as cookieParser from "cookie-parser";
-import {ACCEPT_LANGUAGE_HEADER, COOKIE_LANGUAGE_TAG, KEY_DIST_FOLDER, LANGUAGES} from "./src/constant";
+import {ACCEPT_LANGUAGE_HEADER, COOKIE_LANGUAGE_TAG, LANGUAGES} from "./src/constant";
+import {DIST_FOLDER} from "./env";
 import {api} from "./api";
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
-  const DIST_FOLDER = join(process.cwd(), 'dist/salathiel.genese.name/browser');
   const INDEX_HTML = existsSync(join(DIST_FOLDER, 'index.original.html')) ? 'index.original.html' : 'index';
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/main/modules/express-engine)
   return express()
       .use(cookieParser())
-      .set(KEY_DIST_FOLDER, DIST_FOLDER)
+      .use(express.json())
       .engine('html', ngExpressEngine({
         bootstrap: AppServerModule
       }))
       .set('view engine', 'html')
       .set('views', DIST_FOLDER)
-      .get('*.*', express.static(DIST_FOLDER, {
-        maxAge: '1y'
-      }))
+      .get('*.*', express.static(DIST_FOLDER, {maxAge: '1y'}))
       .use((req, res, next) => {
         if ('/' === req.path) {
           // NOTE: Resolve from cookies

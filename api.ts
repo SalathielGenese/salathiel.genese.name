@@ -1,16 +1,48 @@
 import {join} from "node:path";
-import {existsSync, readFileSync} from "node:fs";
+import {existsSync, readFileSync, statSync, symlinkSync} from "node:fs";
+
+import {Datastore} from "@google-cloud/datastore";
 import {Router} from "express";
-import {KEY_DIST_FOLDER, LANGUAGES} from "./src/constant";
+
+import {DIST_FOLDER, GCP_CREDENTIALS, GCP_DATASTORE_DATABASE, GCP_PROJECT_ID} from "./env";
 import {jsonFlatten, jsonNest} from "./src/util";
+import {LANGUAGES} from "./src/constant";
+
+try {
+  // NOTE: Link Google Cloud Firestore/Datastore proto files at the expected path, before Datastore instantiation
+  symlinkSync(join(DIST_FOLDER, 'protos'), join(DIST_FOLDER, '..', 'protos'));
+} catch (ignored) {
+}
 
 const messages: Record<string, Record<string, string>> = {};
+const datastore = new Datastore({
+  credentials: JSON.parse(existsSync(GCP_CREDENTIALS) && statSync(GCP_CREDENTIALS).isFile()
+      ? readFileSync(GCP_CREDENTIALS).toString()
+      : GCP_CREDENTIALS),
+  databaseId: GCP_DATASTORE_DATABASE,
+  projectId: GCP_PROJECT_ID,
+});
 
 export const api = Router({strict: true, mergeParams: true, caseSensitive: true})
+    .post('/hires', async (req, res) => {
+      const now = new Date();
+      const metadata = {links: {self: req.originalUrl}};
+      const {contactPhoneNumber, contactEmail, contactName, proposal, company} = req.body;
+      const data = {contactPhoneNumber, contactEmail, contactName, proposal, company};
+
+      datastore.upsert({
+        key: datastore.key(['hires', `${contactEmail}-${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, '0')}`]),
+        data: {...data, now: now.toISOString(), responded: false, '@': metadata.links.self},
+      })
+          .then(result => res.json(success(null, metadata)))
+          .catch(err => {
+            console.error(err);
+            return res.status(500).json(error('Internal Server Error', null, metadata));
+          });
+    })
     .get('/i18n/*', (req, res) => {
       const {languageTag} = req.params as Record<string, string>;
       messages[languageTag] ??= (() => {
-        const DIST_FOLDER = req.app.get(KEY_DIST_FOLDER);
         const LOCALE_ASSET = join(DIST_FOLDER, 'assets', 'locales', `${languageTag}.json`);
 
         if (existsSync(LOCALE_ASSET)) {
@@ -44,5 +76,13 @@ function success(content: any, metadata?: any) {
     status: 'SUCCESS',
     metadata,
     content,
+  };
+}
+
+function error(message: string, error: any, metadata?: any) {
+  return {
+    status: 'ERROR',
+    metadata,
+    error,
   };
 }
