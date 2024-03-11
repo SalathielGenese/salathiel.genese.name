@@ -15,6 +15,13 @@ try {
 }
 
 const messages: Record<string, Record<string, string>> = {};
+const datastore = new Datastore({
+  credentials: JSON.parse(existsSync(GCP_CREDENTIALS) && statSync(GCP_CREDENTIALS).isFile()
+      ? readFileSync(GCP_CREDENTIALS).toString()
+      : GCP_CREDENTIALS),
+  databaseId: GCP_DATASTORE_DATABASE,
+  projectId: GCP_PROJECT_ID,
+});
 
 export const api = Router({strict: true, mergeParams: true, caseSensitive: true})
     .get('/i18n/*', (req, res) => {
