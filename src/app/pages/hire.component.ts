@@ -177,7 +177,14 @@ export class HireComponent implements OnInit {
         .subscribe({
           error: console.error,
           next: () => {
-            this.form.setValue({
+            Object.assign(this.touched, {
+              contactPhoneNumber: false,
+              contactEmail: false,
+              contactName: false,
+              proposal: false,
+              company: false,
+            });
+            this.form.reset({
               contactPhoneNumber: null,
               contactEmail: null,
               contactName: null,
