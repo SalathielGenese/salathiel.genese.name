@@ -54,7 +54,11 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "sass",
             "assets": [
-              "src/favicon.ico",
+              {
+                "input": "node_modules/@google-cloud/datastore/build/protos",
+                "glob": "**/*.proto",
+                "output": "protos/"
+              },
               "src/assets"
             ],
             "styles": [
