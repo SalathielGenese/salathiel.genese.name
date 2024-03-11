@@ -1,5 +1,7 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, Inject, OnInit, Signal} from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {HttpClient} from "@angular/common/http";
+import {LANGUAGE_TAG} from "../token";
 
 @Component({
   selector: 'section[path="/hire"]',
@@ -25,7 +27,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
               <h1 translate="pages.hire.title"></h1>
           </header>
 
-          <form [formGroup]="form" class="sm:max-w-[50%]">
+          <form [formGroup]="form" class="sm:max-w-[50%]" (submit)="submit()">
               <label class="flex-col flex my-2">
                   <span translate="pages.hire.forms.hire.company.label"></span>
                   <input [placeholder]="'pages.hire.forms.hire.company.placeholder' | translate"
@@ -132,9 +134,9 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
               <div class="text-right mt-12">
                   <button class="disabled:bg-grey-300 transition-all ring-white text-white
-                                 bg-brown rounded border shadow py-1 px-2"
+                                 cursor-pointer bg-brown rounded border shadow py-1 px-2"
                           translate="pages.hire.forms.hire.submit.label"
-                          [disabled]="form.invalid"
+                          [disabled]="form.invalid || form.disabled"
                           type="submit"></button>
               </div>
           </form>
@@ -143,18 +145,20 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class HireComponent implements OnInit {
   protected readonly touched = {} as Partial<Record<
-      'contactPhoneNumber'|'contactEmail'|'contactName'|'proposal'|'company', boolean
+      'contactPhoneNumber' | 'contactEmail' | 'contactName' | 'proposal' | 'company', boolean
   >>;
   protected form!: FormGroup<{
-    contactPhoneNumber: FormControl<string|null>;
-    contactEmail: FormControl<string|null>;
-    contactName: FormControl<string|null>;
-    proposal: FormControl<string|null>;
-    company: FormControl<string|null>;
+    contactPhoneNumber: FormControl<string | null>;
+    contactEmail: FormControl<string | null>;
+    contactName: FormControl<string | null>;
+    proposal: FormControl<string | null>;
+    company: FormControl<string | null>;
   }>;
   protected readonly MAX_PROPOSAL_LENGTH = 3_000;
 
-  constructor(private readonly fb: FormBuilder) {
+  constructor(private readonly fb: FormBuilder,
+              private readonly http: HttpClient,
+              @Inject(LANGUAGE_TAG) private readonly languageTag: Signal<string>) {
   }
 
   ngOnInit() {
@@ -165,5 +169,23 @@ export class HireComponent implements OnInit {
       proposal: [null as any, [Validators.required, Validators.minLength(100), Validators.maxLength(this.MAX_PROPOSAL_LENGTH)]],
       contactPhoneNumber: [null as any, [Validators.required, Validators.maxLength(19), Validators.pattern(/^\+\d{2,3}[ -](\d{1,3}[ -]?){5}$/)]],
     });
+  }
+
+  submit() {
+    this.form.disable();
+    this.http.post(`@api/${this.languageTag()}/hires`, this.form.value)
+        .subscribe({
+          error: console.error,
+          next: () => {
+            this.form.setValue({
+              contactPhoneNumber: null,
+              contactEmail: null,
+              contactName: null,
+              proposal: null,
+              company: null,
+            });
+            this.form.enable();
+          }
+        });
   }
 }
