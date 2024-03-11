@@ -24,6 +24,22 @@ const datastore = new Datastore({
 });
 
 export const api = Router({strict: true, mergeParams: true, caseSensitive: true})
+    .post('/hires', async (req, res) => {
+      const now = new Date();
+      const metadata = {links: {self: req.originalUrl}};
+      const {contactPhoneNumber, contactEmail, contactName, proposal, company} = req.body;
+      const data = {contactPhoneNumber, contactEmail, contactName, proposal, company};
+
+      datastore.upsert({
+        key: datastore.key(['hires', `${contactEmail}-${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, '0')}`]),
+        data: {...data, now: now.toISOString(), responded: false, '@': metadata.links.self},
+      })
+          .then(result => res.json(success(null, metadata)))
+          .catch(err => {
+            console.error(err);
+            return res.status(500).json(error('Internal Server Error', null, metadata));
+          });
+    })
     .get('/i18n/*', (req, res) => {
       const {languageTag} = req.params as Record<string, string>;
       messages[languageTag] ??= (() => {
@@ -60,5 +76,13 @@ function success(content: any, metadata?: any) {
     status: 'SUCCESS',
     metadata,
     content,
+  };
+}
+
+function error(message: string, error: any, metadata?: any) {
+  return {
+    status: 'ERROR',
+    metadata,
+    error,
   };
 }
