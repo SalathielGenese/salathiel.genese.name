@@ -1,8 +1,18 @@
 import {join} from "node:path";
-import {existsSync, readFileSync} from "node:fs";
+import {existsSync, readFileSync, statSync, symlinkSync} from "node:fs";
+
+import {Datastore} from "@google-cloud/datastore";
 import {Router} from "express";
-import {KEY_DIST_FOLDER, LANGUAGES} from "./src/constant";
+
+import {DIST_FOLDER, GCP_CREDENTIALS, GCP_DATASTORE_DATABASE, GCP_PROJECT_ID} from "./env";
 import {jsonFlatten, jsonNest} from "./src/util";
+import {LANGUAGES} from "./src/constant";
+
+try {
+  // NOTE: Link Google Cloud Firestore/Datastore proto files at the expected path, before Datastore instantiation
+  symlinkSync(join(DIST_FOLDER, 'protos'), join(DIST_FOLDER, '..', 'protos'));
+} catch (ignored) {
+}
 
 const messages: Record<string, Record<string, string>> = {};
 
@@ -10,7 +20,6 @@ export const api = Router({strict: true, mergeParams: true, caseSensitive: true}
     .get('/i18n/*', (req, res) => {
       const {languageTag} = req.params as Record<string, string>;
       messages[languageTag] ??= (() => {
-        const DIST_FOLDER = req.app.get(KEY_DIST_FOLDER);
         const LOCALE_ASSET = join(DIST_FOLDER, 'assets', 'locales', `${languageTag}.json`);
 
         if (existsSync(LOCALE_ASSET)) {
