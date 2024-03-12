@@ -41,18 +41,21 @@ export class I18nService {
               .pipe(map(content => [languageTag, keys, content] as const));
         }))
         .pipe(takeUntilDestroyed(destroyRef))
-        .subscribe(([languageTag, keys, content]) => {
-          // NOTE: Update #pending with missing keys
-          const missingKeys = keys.filter(key => !(key in content));
-          missingKeys.length && this.#pending.next({
-            ...this.#pending.value,
-            [languageTag]: new Set([
-              ...this.#pending.value[languageTag] ?? new Set(),
-              ...missingKeys,
-            ]),
-          });
-          // NOTE: Update translation to target signals
-          this.#updateCacheWithTranslation(content, languageTag);
+        .subscribe({
+          next: ([languageTag, keys, content]) => {
+            // NOTE: Update #pending with missing keys
+            const missingKeys = keys.filter(key => !(key in content));
+            missingKeys.length && this.#pending.next({
+              ...this.#pending.value,
+              [languageTag]: new Set([
+                ...this.#pending.value[languageTag] ?? new Set(),
+                ...missingKeys,
+              ]),
+            });
+            // NOTE: Update translation to target signals
+            this.#updateCacheWithTranslation(content, languageTag);
+          },
+          error: console.error,
         });
   }
 
