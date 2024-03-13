@@ -4,13 +4,13 @@ import {existsSync, readFileSync, statSync, symlinkSync} from "node:fs";
 import {Datastore} from "@google-cloud/datastore";
 import {Router} from "express";
 
-import {DIST_FOLDER, GCP_CREDENTIALS, GCP_DATASTORE_DATABASE, GCP_PROJECT_ID} from "./env";
+import {DIST_FOLDER, GCP_CREDENTIALS, GCP_DATASTORE_DATABASE, GCP_PROJECT_ID, NODE_ENV} from "./env";
 import {jsonFlatten, jsonNest} from "./src/util";
 import {LANGUAGES} from "./src/constant";
 
 try {
   // NOTE: Link Google Cloud Firestore/Datastore proto files at the expected path, before Datastore instantiation
-  symlinkSync(join(DIST_FOLDER, 'protos'), join(DIST_FOLDER, '..', 'protos'));
+  'development' === NODE_ENV && symlinkSync(join(DIST_FOLDER, 'protos'), join(DIST_FOLDER, '..', 'protos'));
 } catch (ignored) {
 }
 
