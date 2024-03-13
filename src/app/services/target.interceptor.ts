@@ -7,21 +7,15 @@ import {isPlatformBrowser} from "@angular/common";
 
 @Injectable()
 export class TargetInterceptor implements HttpInterceptor {
-  readonly #origin: string;
+  readonly #origin!: string;
 
   constructor(@Inject(REQUEST) @Optional() request: Request,
               @Inject(PLATFORM_ID) platformId: object) {
     if (request) {
-      const {
-        'x-forwarded-proto': xForwardedProtocol,
-        'x-forwarded-host': xForwardedHost,
-        host,
-      } = request.headers;
-      this.#origin = `${xForwardedProtocol}://${xForwardedHost ?? host}`;
+      const {headers: {'x-forwarded-host': xForwardedHost, host}, protocol} = request;
+      this.#origin = `${protocol}://${xForwardedHost ?? host}`;
     } else if (isPlatformBrowser(platformId)) {
       this.#origin = location.origin;
-    } else {
-      this.#origin = 'un://resolved';
     }
   }
 
