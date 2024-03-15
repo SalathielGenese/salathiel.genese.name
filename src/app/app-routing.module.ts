@@ -1,5 +1,5 @@
 import {computed, effect, inject, InjectionToken, NgModule, PLATFORM_ID, Signal, signal} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router, RouterModule, Routes} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router, RouterModule} from '@angular/router';
 import {HomeComponent} from "./pages/home.component";
 import {NotFoundComponent} from "./pages/not-found.component";
 import {BlogComponent} from "./pages/blog.component";
@@ -10,19 +10,31 @@ import {filter} from "rxjs";
 import {COOKIE_LANGUAGE_TAG, LANGUAGES} from "../constant";
 import {REQUEST} from "@nguniversal/express-engine/tokens";
 import {toSignal} from "@angular/core/rxjs-interop";
-
-const routes: Routes = [
-  {path: ':languageTag', pathMatch: 'full', component: HomeComponent, title: 'pages.home.title'},
-  {path: ':languageTag/blog', component: BlogComponent, title: 'pages.blog.title'},
-  {path: ':languageTag/hire', component: HireComponent, title: 'pages.hire.title'},
-  {path: '**', component: NotFoundComponent},
-];
+import {routes} from "./routes";
 
 const NAVIGATION_END = new InjectionToken<Signal<NavigationEnd>>('NAVIGATION_END');
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, {
+    RouterModule.forRoot([
+      ...LANGUAGES.map(({tag}) => ({
+        title: 'pages.home.title',
+        component: HomeComponent,
+        path: routes.home(tag),
+        pathMatch: 'full',
+      } as const)),
+      ...LANGUAGES.map(({tag}) => ({
+        title: 'pages.blog.title',
+        component: BlogComponent,
+        path: routes.blog(tag),
+      } as const)),
+      ...LANGUAGES.map(({tag}) => ({
+        title: 'pages.hire.title',
+        component: HireComponent,
+        path: routes.hire(tag),
+      } as const)),
+      {path: '**', component: NotFoundComponent},
+    ], {
       initialNavigation: 'enabledBlocking',
     }),
   ],

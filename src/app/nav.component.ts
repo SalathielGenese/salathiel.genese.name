@@ -1,5 +1,6 @@
 import {Component, Inject, Signal} from "@angular/core";
 import {LANGUAGE_TAG} from "./token";
+import {routes} from "./routes";
 
 @Component({
   host: {'[class]': `'backdrop-blur text-black w-full fixed py-4 z-10 flex'`},
@@ -13,23 +14,25 @@ import {LANGUAGE_TAG} from "./token";
       <a class="font-serif sm:pr-8 sm:py-4 pr-4 py-2"
          routerLinkActive="font-extrabold drop-shadow-md"
          [routerLinkActiveOptions]="{exact: true}"
-         [routerLink]="[languageTag()]"
+         [routerLink]="routes.home(languageTag())"
          translate="pages.home.title"
       ></a>
       <hr class="pointer-events-none opacity-0 flex-grow">
       <a routerLinkActive="font-extrabold drop-shadow-md"
          class="lowercase sm:px-8 sm:py-4 px-4 py-2"
-         [routerLink]="[languageTag(), 'blog']"
+         [routerLink]="routes.blog(languageTag())"
          translate="pages.blog.title"
       ></a>
       <a class="border-white text-white lowercase bg-brown rounded border sm:my-3 shadow px-4 py-0.5 my-1.5"
          routerLinkActive="font-extrabold drop-shadow-md"
-         [routerLink]="[languageTag(), 'hire']"
+         [routerLink]="routes.hire(languageTag())"
          translate="pages.hire.title"
       ></a>
   `,
 })
 export class NavComponent {
+  protected readonly routes = routes;
+
   constructor(@Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>) {
   }
 }
