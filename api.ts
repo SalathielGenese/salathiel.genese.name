@@ -29,10 +29,19 @@ export const api = Router({strict: true, mergeParams: true, caseSensitive: true}
       const metadata = {links: {self: req.originalUrl}};
       const {contactPhoneNumber, contactEmail, contactName, proposal, company} = req.body;
       const data = {contactPhoneNumber, contactEmail, contactName, proposal, company};
+      const {headers: {'x-forwarded-host': xForwardedHost, origin, host}, protocol} = req;
 
       datastore.upsert({
-        key: datastore.key(['hires', `${contactEmail}-${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, '0')}`]),
-        data: {...data, now: now.toISOString(), responded: false, '@': metadata.links.self},
+        data: {
+          ...data,
+          responded: false,
+          now: now.toISOString(),
+          '@': (origin ?? `${protocol}://${xForwardedHost ?? host}`) + metadata.links.self,
+        },
+        key: datastore.key([
+          'hires',
+          `${contactEmail}-${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, '0')}`,
+        ]),
       })
           .then(result => res.json(success(null, metadata)))
           .catch(err => {
