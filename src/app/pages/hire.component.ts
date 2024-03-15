@@ -5,23 +5,7 @@ import {HttpClient} from "@angular/common/http";
 @Component({
   selector: 'section[path="/hire"]',
   template: `
-      <header class="sm:min-h-[5.70rem] overflow-y-hidden drop-shadow-2xl
-                       min-h-[4.70rem] md:h-[33.33vh] h-[50vh] relative">
-          <picture class="contents">
-              <source srcset="/assets/images/hire/jj-ying-7JX0-bfiuxQ-unsplash-3905.jpg"
-                      media="(min-width: 3905px)">
-              <source srcset="/assets/images/hire/jj-ying-7JX0-bfiuxQ-unsplash-2400.jpg"
-                      media="(min-width: 2400px)">
-              <source srcset="/assets/images/hire/jj-ying-7JX0-bfiuxQ-unsplash-1920.jpg"
-                      media="(min-width: 1920px)">
-              <source srcset="/assets/images/hire/jj-ying-7JX0-bfiuxQ-unsplash-640.jpg"
-                      media="(min-width: 640px)">
-              <img class="pointer-events-none object-cover object-bottom min-w-full absolute left-0 h-full"
-                   src="/assets/images/hire/jj-ying-7JX0-bfiuxQ-unsplash-640.jpg"
-                   [alt]="'alt.hire' | translate">
-          </picture>
-      </header>
-      <article class="md:min-h-[66.67vh] min-h-[50vh] px-center md:py-64 py-24">
+      <article class="px-center md:pt-56 pt-36 pb-36">
           <header class="font-serif font-bold text-6xl mb-7">
               <h1 translate="pages.hire.title"></h1>
           </header>
