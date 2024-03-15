@@ -1,7 +1,6 @@
-import {Component, Inject, OnInit, Signal} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
-import {LANGUAGE_TAG} from "../token";
 
 @Component({
   selector: 'section[path="/hire"]',
@@ -156,9 +155,7 @@ export class HireComponent implements OnInit {
   }>;
   protected readonly MAX_PROPOSAL_LENGTH = 3_000;
 
-  constructor(private readonly fb: FormBuilder,
-              private readonly http: HttpClient,
-              @Inject(LANGUAGE_TAG) private readonly languageTag: Signal<string>) {
+  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient) {
   }
 
   ngOnInit() {
@@ -173,7 +170,7 @@ export class HireComponent implements OnInit {
 
   submit() {
     this.form.disable();
-    this.http.post(`@api/${this.languageTag()}/hires`, this.form.value)
+    this.http.post(`@api/hires`, this.form.value)
         .subscribe({
           error: console.error,
           next: () => {

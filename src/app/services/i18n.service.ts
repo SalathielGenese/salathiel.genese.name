@@ -36,7 +36,7 @@ export class I18nService {
         .pipe(mergeMap(pending => fromArrayLike(Object.entries(pending))))
         .pipe(map(([languageTag, keys]) => [languageTag, [...keys].sort()] as const))
         .pipe(mergeMap(([languageTag, keys]) => {
-          return http.get<{ content: object }>(`@api/${languageTag}/i18n/${encodeURIComponent(keys.join(','))}`)
+          return http.get<{ content: object }>(`@api/i18n/${languageTag}/${encodeURIComponent(keys.join(','))}`)
               .pipe(map(({content}) => jsonFlatten(content as Record<string, string>)))
               .pipe(map(content => [languageTag, keys, content] as const));
         }))
@@ -89,13 +89,14 @@ export class I18nService {
   #syncClientCache() {
     const script = document.querySelector('script#ng-state[type="application/json"]');
     const content = JSON.parse(script?.textContent!);
+    const {origin} = location;
 
     Object.entries(content ?? {})
         .filter(([key]) => key == `${+key}`)
         .map(([, value]) => value)
-        .filter((_: any) => LANGUAGES.some(({tag}) => _.url.startsWith(`${location.origin}/~/${tag}/`)))
+        .filter((_: any) => LANGUAGES.some(({tag}) => _.url.startsWith(`${origin}/${tag}/~/i18n`)))
         .forEach(({url, body: {content}}: any) => {
-          const languageTag = LANGUAGES.find(({tag}) => url.startsWith(`${location.origin}/~/${tag}/`))?.tag!;
+          const languageTag = LANGUAGES.find(({tag}) => url.startsWith(`${origin}/${tag}/~/i18n`))?.tag!;
           const localizedCache = this.#cache[languageTag] ??= {};
           Object.entries(jsonFlatten(content ?? {}))
               .forEach(([key, value]) => localizedCache[key] = signal(value as string));
