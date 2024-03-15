@@ -46,7 +46,7 @@ export function app(): express.Express {
           res.redirect(`/${resolvedLanguageTag}${url.substring(6)}`);
         }
       })
-      .use('/~/:languageTag', (req, res, next) => {
+      .use('/:languageTag/~', (req, res, next) => {
         const {languageTag} = req.params;
 
         if (LANGUAGES.some(({tag}) => tag === languageTag)) {
