@@ -26,6 +26,7 @@ import {FooterComponent} from "./footer.component";
 import {MainComponent} from './main.component';
 import {NavComponent} from "./nav.component";
 import {ArticleComponent} from "./pages/article.component";
+import {ArticleService} from "./services/article.service";
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import {ArticleComponent} from "./pages/article.component";
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TargetInterceptor},
     {provide: TitleStrategy, useClass: SalathielTitleStrategy},
     provideClientHydration(),
+    ArticleService,
     I18nService,
   ],
   bootstrap: [
