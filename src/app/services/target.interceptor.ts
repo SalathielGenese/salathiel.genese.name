@@ -32,6 +32,11 @@ export class TargetInterceptor implements HttpInterceptor {
           url: `${this.#origin}/${languageTag}/~/i18n/${url.substring(11 + languageTag.length)}`,
         });
         break;
+      case url.startsWith('@api/articles/'):
+        req = req.clone({
+          url: `${this.#origin}/${this.languageTag()}/~/articles/${url.substring(14)}`,
+        });
+        break;
       case url.startsWith('@api/'):
         req = req.clone({
           url: `${this.#origin}/${this.languageTag()}/~/${url.substring(5)}`,
