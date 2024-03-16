@@ -25,6 +25,7 @@ import {HeaderComponent} from "./header.component";
 import {FooterComponent} from "./footer.component";
 import {MainComponent} from './main.component';
 import {NavComponent} from "./nav.component";
+import {ArticleComponent} from "./pages/article.component";
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import {NavComponent} from "./nav.component";
     HomeComponent,
     HireComponent,
     BlogComponent,
+    ArticleComponent,
     NotFoundComponent,
   ],
   imports: [
