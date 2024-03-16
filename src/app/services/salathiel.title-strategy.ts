@@ -1,4 +1,4 @@
-import {DestroyRef, effect, EffectRef, Injectable, Injector, Signal} from "@angular/core";
+import {DestroyRef, effect, EffectRef, Injectable, Injector, signal, Signal} from "@angular/core";
 import {RouterStateSnapshot, TitleStrategy} from "@angular/router";
 import {Title} from "@angular/platform-browser";
 import {I18nService} from "./i18n.service";
@@ -21,7 +21,9 @@ export class SalathielTitleStrategy extends TitleStrategy {
     const common = this.#i18nService.fetch('pages.home.title');
     (title => {
       if (title) {
-        const fetch = this.#i18nService.fetch(`${title}`);
+        const fetch = title.startsWith('\f')
+            ? signal(title.substring(1))
+            : this.#i18nService.fetch(`${title}`);
         this.#effectRef = effect(() => this.#setTitle(fetch, common), {injector: this.injector});
         this.#setTitle(fetch, common);
       }
