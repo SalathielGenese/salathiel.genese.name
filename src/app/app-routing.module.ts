@@ -1,5 +1,12 @@
 import {computed, effect, inject, InjectionToken, NgModule, PLATFORM_ID, Signal, signal} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router, RouterModule} from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  NavigationEnd,
+  Router,
+  RouterModule,
+  RouterStateSnapshot
+} from '@angular/router';
 import {HomeComponent} from "./pages/home.component";
 import {NotFoundComponent} from "./pages/not-found.component";
 import {BlogComponent} from "./pages/blog.component";
@@ -12,6 +19,7 @@ import {REQUEST} from "@nguniversal/express-engine/tokens";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {routes} from "./routes";
 import {ArticleComponent} from "./pages/article.component";
+import {ArticleService} from "./services/article.service";
 
 const NAVIGATION_END = new InjectionToken<Signal<NavigationEnd>>('NAVIGATION_END');
 
@@ -36,7 +44,10 @@ const NAVIGATION_END = new InjectionToken<Signal<NavigationEnd>>('NAVIGATION_END
         path: routes.hire(tag),
       } as const)),
       ...LANGUAGES.map(({tag}) => ({
-        // title: 'pages.hire.title',
+        resolve: {
+          article: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
+              inject(ArticleService).find(route.params['slug']),
+        },
         component: ArticleComponent,
         path: routes.article(tag),
       } as const)),
