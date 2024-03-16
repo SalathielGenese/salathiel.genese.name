@@ -36,6 +36,8 @@
       "title": "Hire",
       "forms": {
         "hire": {
+          "failure": "Something went wrong. Try again later or report to me via X or LinkedIn.",
+          "success": "Your proposal made it through. I will reach back to you within 72H, latest.",
           "company": {
             "label": "Company",
             "placeholder": "Acme"

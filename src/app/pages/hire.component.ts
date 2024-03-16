@@ -116,6 +116,14 @@ import {HttpClient} from "@angular/common/http";
               </label>
 
               <div class="text-right mt-12">
+                  <p class="transition-all opacity-0 pb-2" [ngClass]="{'opacity-100': outcome}">
+                      <small translate="pages.hire.forms.hire.success"
+                             *ngIf="'SUCCESS' === outcome"
+                             class="text-green-600"></small>
+                      <small translate="pages.hire.forms.hire.failure"
+                             *ngIf="'ERROR' === outcome"
+                             class="text-brown"></small>
+                  </p>
                   <button class="disabled:bg-grey-300 transition-all ring-white text-white
                                  cursor-pointer bg-brown rounded border shadow py-1 px-2"
                           translate="pages.hire.forms.hire.submit.label"
@@ -138,6 +146,7 @@ export class HireComponent implements OnInit {
     company: FormControl<string | null>;
   }>;
   protected readonly MAX_PROPOSAL_LENGTH = 3_000;
+  protected outcome?: 'SUCCESS' | 'ERROR';
 
   constructor(private readonly fb: FormBuilder, private readonly http: HttpClient) {
   }
@@ -156,8 +165,8 @@ export class HireComponent implements OnInit {
     this.form.disable();
     this.http.post(`@api/hires`, this.form.value)
         .subscribe({
-          error: console.error,
           next: () => {
+            this.#updateOutcome('SUCCESS');
             Object.assign(this.touched, {
               contactPhoneNumber: false,
               contactEmail: false,
@@ -173,7 +182,16 @@ export class HireComponent implements OnInit {
               company: null,
             });
             this.form.enable();
-          }
+          },
+          error: err => {
+            this.#updateOutcome('ERROR');
+            console.error(err);
+          },
         });
+  }
+
+  #updateOutcome(outcome: 'SUCCESS' | 'ERROR') {
+    setTimeout(() => this.outcome = undefined, 5_000);
+    this.outcome = outcome;
   }
 }

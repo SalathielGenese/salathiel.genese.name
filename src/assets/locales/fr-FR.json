@@ -36,6 +36,8 @@
       "title": "Recruter",
       "forms": {
         "hire": {
+          "failure": "Something went wrong.",
+          "success": "Proposition bien reçue. Je vous reviendrai sous 72H tout au plus.",
           "company": {
             "label": "Organisation",
             "placeholder": "Acme"
