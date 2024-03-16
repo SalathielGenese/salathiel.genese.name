@@ -19,9 +19,13 @@ export class SalathielTitleStrategy extends TitleStrategy {
     this.#effectRef?.destroy();
     this.#i18nService ??= this.injector.get(I18nService);
     const common = this.#i18nService.fetch('pages.home.title');
-    const fetch = this.#i18nService.fetch(`${this.buildTitle(snapshot)}`);
-    this.#effectRef = effect(() => this.#setTitle(fetch, common), {injector: this.injector});
-    this.#setTitle(fetch, common);
+    (title => {
+      if (title) {
+        const fetch = this.#i18nService.fetch(`${title}`);
+        this.#effectRef = effect(() => this.#setTitle(fetch, common), {injector: this.injector});
+        this.#setTitle(fetch, common);
+      }
+    })(this.buildTitle(snapshot));
   }
 
   #setTitle(fetch: Signal<string | undefined>, common: Signal<string | undefined>) {
