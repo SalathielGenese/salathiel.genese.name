@@ -1,20 +1,52 @@
-import {Component} from "@angular/core";
+import {Component, DestroyRef, Injector, OnInit} from "@angular/core";
+import {ActivatedRoute, TitleStrategy} from "@angular/router";
+import {Article} from "../services/article.service";
+import {map} from "rxjs";
+import {SalathielTitleStrategy} from "../services/salathiel.title-strategy";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'section[path="/blog/:slug"]',
   template: `
       <article class="px-center md:pt-56 pt-36 pb-36">
           <header class="font-serif font-bold text-6xl mb-7">
-<!--              <h1 translate="pages.blog.title"></h1>-->
-              <h1>Lorem ipsum dolor sit amet, consectetur adipisicing elit</h1>
+              <h1>{{ article?.title }}</h1>
           </header>
 
-          <div>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi at, debitis et facere, fugiat id in ipsa
-              ipsum laudantium molestiae natus nihil numquam pariatur quod sapiente similique voluptatum. Omnis, quidem.
-          </div>
+          <div>{{ article?.content }}</div>
       </article>
   `,
 })
-export class ArticleComponent {
+export class ArticleComponent implements OnInit {
+  protected readonly titleStrategy: TitleStrategy;
+  protected article?: Article;
+
+  constructor(title: Title,
+              injector: Injector,
+              destroyRef: DestroyRef,
+              titleStrategy: TitleStrategy,
+              private readonly activatedRoute: ActivatedRoute) {
+    this.titleStrategy = new class extends SalathielTitleStrategy {
+      constructor() {
+        super(destroyRef, title, injector);
+      }
+
+      override buildTitle(): string | undefined {
+        return `\f${self.article?.title}`;
+      }
+    }();
+    const self = this;
+  }
+
+  ngOnInit() {
+    this.activatedRoute.data
+        .pipe(map(({article}) => article as Article))
+        .subscribe({
+          error: err => console.error(err),
+          next: article => {
+            this.article = article;
+            this.titleStrategy.updateTitle(null as any);
+          },
+        });
+  }
 }
