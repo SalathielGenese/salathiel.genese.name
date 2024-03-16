@@ -5,4 +5,5 @@ export const routes = {
     'fr-FR': `${languageTag}/recruter`,
   })[languageTag]!,
   blog: (languageTag: string) => `${languageTag}/blog`,
+  article: (languageTag: string, slug = ':slug') => `${languageTag}/blog/${slug}`,
 } as const;

@@ -11,6 +11,7 @@ import {COOKIE_LANGUAGE_TAG, LANGUAGES} from "../constant";
 import {REQUEST} from "@nguniversal/express-engine/tokens";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {routes} from "./routes";
+import {ArticleComponent} from "./pages/article.component";
 
 const NAVIGATION_END = new InjectionToken<Signal<NavigationEnd>>('NAVIGATION_END');
 
@@ -27,11 +28,17 @@ const NAVIGATION_END = new InjectionToken<Signal<NavigationEnd>>('NAVIGATION_END
         title: 'pages.blog.title',
         component: BlogComponent,
         path: routes.blog(tag),
+        pathMatch: 'full',
       } as const)),
       ...LANGUAGES.map(({tag}) => ({
         title: 'pages.hire.title',
         component: HireComponent,
         path: routes.hire(tag),
+      } as const)),
+      ...LANGUAGES.map(({tag}) => ({
+        // title: 'pages.hire.title',
+        component: ArticleComponent,
+        path: routes.article(tag),
       } as const)),
       {path: '**', component: NotFoundComponent},
     ], {
