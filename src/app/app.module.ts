@@ -90,7 +90,7 @@ export class AppModule {
       return `<h${level} id="${this.#toAnchor(text)}" class="${{
         3: 'text-xl',
         2: 'text-3xl',
-      }[level] ?? 'text-lg'} transition-all pt-4 group">${text}<a href="${this.#path + '#' + this.#toAnchor(text)}" class="group-hover:inline text-gray-400 hidden ml-4">#</a></h${level}>`;
+      }[level] ?? 'text-lg'} transition-all pt-4 group" tabindex="${1E4 + Math.round(1E6 * Math.random())}">${text}<a href="${this.#path + '#' + this.#toAnchor(text)}" class="group-focus:inline group-hover:inline text-gray-400 hidden ml-4">#</a></h${level}>`;
     };
     markdownService.renderer.link = (href, title, text) =>
         /^\^\d+$/.test(text)
