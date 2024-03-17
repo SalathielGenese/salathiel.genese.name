@@ -5,8 +5,8 @@ import {HttpClient} from "@angular/common/http";
 @Component({
   selector: 'section[path="/hire"]',
   template: `
-      <article class="px-center md:pt-56 pt-36 pb-36">
-          <header class="font-serif font-bold text-6xl mb-7">
+      <article class="px-center md:pt-56 pt-24 pb-24">
+          <header class="font-serif font-bold text-4xl mb-16">
               <h1 translate="pages.hire.title"></h1>
           </header>
 

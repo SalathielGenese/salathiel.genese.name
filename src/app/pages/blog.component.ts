@@ -5,8 +5,8 @@ import {routes} from "../routes";
 @Component({
   selector: 'section[path="/blog"]',
   template: `
-      <article class="px-center md:pt-56 pt-36 pb-36">
-          <header class="font-serif font-bold text-6xl mb-7">
+      <article class="px-center md:pt-56 pt-24 pb-24">
+          <header class="font-serif font-bold text-4xl mb-16">
               <h1 translate="pages.blog.title"></h1>
           </header>
 
