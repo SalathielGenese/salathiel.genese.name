@@ -14,10 +14,20 @@ import {Title} from "@angular/platform-browser";
           </header>
 
           <div markdown [textContent]="article?.content"></div>
+          
+          <footer *ngIf="article" class="mt-24">
+              <ul>
+                  <li *ngFor="let footnote of article.content.match(FOOTNOTE_REGEX)">
+                      <sup>[{{ footnote.replace(FOOTNOTE_REGEX, '$1') }}]</sup>
+                      <small> {{ footnote.replace(FOOTNOTE_REGEX, '$2') }}</small>
+                  </li>
+              </ul>
+          </footer>
       </article>
   `,
 })
 export class ArticleComponent implements OnInit {
+  protected readonly FOOTNOTE_REGEX = /\[\^(\d+)]: (.+)/gm;
   protected readonly titleStrategy: TitleStrategy;
   protected article?: Article;
 
