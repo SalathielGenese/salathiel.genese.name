@@ -13,7 +13,7 @@ import {Title} from "@angular/platform-browser";
               <h1>{{ article?.title }}</h1>
           </header>
 
-          <div>{{ article?.content }}</div>
+          <div markdown [textContent]="article?.content"></div>
       </article>
   `,
 })
