@@ -27,6 +27,7 @@ import {MainComponent} from './main.component';
 import {NavComponent} from "./nav.component";
 import {ArticleComponent} from "./pages/article.component";
 import {ArticleService} from "./services/article.service";
+import {MarkdownModule} from "ngx-markdown";
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import {ArticleService} from "./services/article.service";
     HttpClientModule,
     FontAwesomeModule,
     ReactiveFormsModule,
+    MarkdownModule.forRoot(),
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TargetInterceptor},
