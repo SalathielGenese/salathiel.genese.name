@@ -7,7 +7,7 @@ import {map} from "rxjs";
 
 import {SalathielTitleStrategy} from "../services/salathiel.title-strategy";
 import {Article} from "../services/article.service";
-import {LANGUAGE_TAG} from "../token";
+import {LANGUAGE_TAG, PATH, TO_ANCHOR} from "../token";
 
 @Component({
   selector: 'section[path="/blog/:slug"]',
@@ -31,10 +31,12 @@ import {LANGUAGE_TAG} from "../token";
           <ol *ngIf="article" class="mb-8">
               <li *ngFor="let heading of headingLines(article?.content)"
                   [ngClass]="{'ml-4': 3 === heading.level, 'ml-8': 4 === heading.level, 'ml-12': 5 === heading.level}">
-                  <a href="#aaa">{{ heading.content }}</a>
+                  <a [href]="path() + '#' + toAnchor(heading.content)">
+                      {{ heading.content }}
+                  </a>
               </li>
           </ol>
-          
+
           <div markdown [textContent]="article?.content"></div>
 
           <footer *ngIf="article" class="mt-24">
@@ -59,7 +61,9 @@ export class ArticleComponent implements OnInit {
               destroyRef: DestroyRef,
               titleStrategy: TitleStrategy,
               private readonly activatedRoute: ActivatedRoute,
-              @Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>) {
+              @Inject(PATH) protected readonly path: () => string,
+              @Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>,
+              @Inject(TO_ANCHOR) protected readonly toAnchor: (text: string) => string) {
     this.titleStrategy = new class extends SalathielTitleStrategy {
       constructor() {
         super(destroyRef, title, injector);
