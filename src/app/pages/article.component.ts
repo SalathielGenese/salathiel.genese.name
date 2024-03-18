@@ -28,6 +28,13 @@ import {LANGUAGE_TAG} from "../token";
               </hgroup>
           </header>
 
+          <ol *ngIf="article" class="mb-8">
+              <li *ngFor="let heading of headingLines(article?.content)"
+                  [ngClass]="{'ml-4': 3 === heading.level, 'ml-8': 4 === heading.level, 'ml-12': 5 === heading.level}">
+                  <a href="#aaa">{{ heading.content }}</a>
+              </li>
+          </ol>
+          
           <div markdown [textContent]="article?.content"></div>
 
           <footer *ngIf="article" class="mt-24">
@@ -75,5 +82,14 @@ export class ArticleComponent implements OnInit {
             this.titleStrategy.updateTitle(null as any);
           },
         });
+  }
+
+  protected headingLines(content = '') {
+    return content.split(/(?:\r?\n)+/gm)
+        .filter(line => line.match(/^#+\s*\S.*$/))
+        .map(line => ({
+          content: line.replace(/^#+\s*/g, ''),
+          level: line.replace(/^(#+)(.*)$/g, '$1').length,
+        }) as const);
   }
 }
