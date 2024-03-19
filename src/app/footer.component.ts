@@ -1,4 +1,4 @@
-import {Component, Inject, PLATFORM_ID, Signal} from "@angular/core";
+import {Component, Inject, Signal} from "@angular/core";
 import {faLinkedinIn} from "@fortawesome/free-brands-svg-icons/faLinkedinIn";
 import {faFacebook} from "@fortawesome/free-brands-svg-icons/faFacebook";
 import {faTwitter} from "@fortawesome/free-brands-svg-icons/faTwitter";
@@ -6,8 +6,7 @@ import {faGithub} from "@fortawesome/free-brands-svg-icons/faGithub";
 import {faTiktok} from "@fortawesome/free-brands-svg-icons/faTiktok";
 import {IconDefinition} from "@fortawesome/free-solid-svg-icons";
 import {COOKIE_LANGUAGE_TAG, LANGUAGES} from "../constant";
-import {LANGUAGE_TAG} from "./token";
-import {isPlatformBrowser} from "@angular/common";
+import {ALTERNATES, LANGUAGE_TAG} from "./token";
 import {Router} from "@angular/router";
 import {routes} from "./routes";
 
@@ -31,8 +30,9 @@ import {routes} from "./routes";
           </ul>
 
           <div class="text-center">
-              <select class="border-grey-700/50 bg-transparent text-grey-400 border p-1"
+              <select class="disabled:text-grey-700 border-grey-700/50 bg-transparent text-grey-400 border p-1"
                       (change)="setLanguageTag(languageTagRef.value)"
+                      [disabled]="!alternates.length"
                       #languageTagRef>
                   <option [selected]="language.tag === languageTag()"
                           *ngFor="let language of languages"
@@ -57,36 +57,20 @@ export class FooterComponent {
   protected readonly routes = routes;
 
   constructor(private readonly router: Router,
-              @Inject(PLATFORM_ID) private readonly platformId: object,
-              @Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>) {
+              @Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>,
+              @Inject(ALTERNATES) protected readonly alternates: Record<string, string>[]) {
   }
 
-  protected setLanguageTag(languageTag: string, previousLanguageTag: string = this.languageTag()) {
-    console.log({languageTag, previousLanguageTag})
-    if (isPlatformBrowser(this.platformId)) {
-      let nextUrl: string;
+  protected setLanguageTag(languageTag: string) {
+    const {[languageTag]: target} = this.alternates.at(-1) ?? {};
 
-      switch (location.pathname.substring(1)) {
-        case this.routes.home(previousLanguageTag):
-          nextUrl = this.routes.home(languageTag);
-          break;
-        case this.routes.hire(previousLanguageTag):
-          nextUrl = this.routes.hire(languageTag);
-          break;
-        case this.routes.blog(previousLanguageTag):
-          nextUrl = this.routes.blog(languageTag);
-          break;
-        default:
-          nextUrl = `/${languageTag}${this.router.url.substring(1 + previousLanguageTag.length)}`;
-          // TODO: Add case for blog article
-          break;
-      }
-
-      this.router.navigateByUrl(nextUrl, {onSameUrlNavigation: 'reload'})
+    if (target) {
+      this.router.navigateByUrl(target, {onSameUrlNavigation: 'reload'})
           .then(() => {
+            document.cookie = `${COOKIE_LANGUAGE_TAG}=${languageTag};SameSite=Strict;Max-Age=0;`;
             document.cookie = `${COOKIE_LANGUAGE_TAG}=${languageTag};SameSite=Strict;Max-Age=${365 * 86_400};`;
           })
-          .catch(console.error);
+          .catch(err => console.error(err));
     }
   }
 }

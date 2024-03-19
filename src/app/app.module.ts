@@ -30,7 +30,7 @@ import {ArticleService} from "./services/article.service";
 import {MarkdownModule, MarkdownService} from "ngx-markdown";
 import {REQUEST} from "@nguniversal/express-engine/tokens";
 import {isPlatformBrowser} from "@angular/common";
-import {ORIGIN, PATH, TO_ANCHOR} from "./token";
+import {ALTERNATES, ORIGIN, PATH, TO_ANCHOR} from "./token";
 import {filter} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
@@ -101,6 +101,7 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
         }
       }
     },
+    {provide: ALTERNATES, useValue: []},
     provideClientHydration(),
     ArticleService,
     I18nService,
