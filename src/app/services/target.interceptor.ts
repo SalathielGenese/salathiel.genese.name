@@ -1,25 +1,16 @@
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Request} from "express";
-import {Inject, Injectable, Optional, PLATFORM_ID, Signal} from "@angular/core";
-import {REQUEST} from "@nguniversal/express-engine/tokens";
-import {isPlatformBrowser} from "@angular/common";
+import {Inject, Injectable, Signal} from "@angular/core";
 import {LANGUAGES} from "../../constant";
-import {LANGUAGE_TAG} from "../token";
+import {LANGUAGE_TAG, ORIGIN} from "../token";
 
 @Injectable()
 export class TargetInterceptor implements HttpInterceptor {
   readonly #origin!: string;
 
   constructor(@Inject(LANGUAGE_TAG) private readonly languageTag: Signal<string>,
-              @Inject(REQUEST) @Optional() request: Request,
-              @Inject(PLATFORM_ID) platformId: object) {
-    if (request) {
-      const {headers: {'x-forwarded-host': xForwardedHost, origin, host}, protocol} = request;
-      this.#origin = origin ?? `${protocol}://${xForwardedHost ?? host}`;
-    } else if (isPlatformBrowser(platformId)) {
-      this.#origin = location.origin;
-    }
+              @Inject(ORIGIN) origin: () => string) {
+    this.#origin = origin();
   }
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {

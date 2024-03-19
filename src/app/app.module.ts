@@ -96,8 +96,9 @@ import {LANGUAGES} from "../constant";
 
             const request = inject(REQUEST);
             return () => {
-              const {headers: {'x-forwarded-host': xForwardedHost, origin, host}, protocol} = request;
-              return origin ?? `${protocol}://${xForwardedHost ?? host}`;
+              const {headers: {'x-forwarded-host': xForwardedHost, origin, host}, protocol, secure} = request;
+              console.log({xForwardedHost, origin, host, protocol, secure});
+              return origin ?? `${secure ? 'https' : protocol}://${xForwardedHost ?? host}`;
             };
         }
       }

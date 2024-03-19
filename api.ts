@@ -53,14 +53,14 @@ export const api = Router({strict: true, mergeParams: true, caseSensitive: true}
       const metadata = {links: {self: req.originalUrl}};
       const {contactPhoneNumber, contactEmail, contactName, proposal, company} = req.body;
       const data = {contactPhoneNumber, contactEmail, contactName, proposal, company};
-      const {headers: {'x-forwarded-host': xForwardedHost, origin, host}, protocol} = req;
+      const {headers: {'x-forwarded-host': xForwardedHost, origin, host}, protocol, secure} = req;
 
       datastore.upsert({
         data: {
           ...data,
           responded: false,
           now: now.toISOString(),
-          '@': (origin ?? `${protocol}://${xForwardedHost ?? host}`) + metadata.links.self,
+          '@': (origin ?? `${secure ? 'https' : protocol}://${xForwardedHost ?? host}`) + metadata.links.self,
         },
         key: datastore.key([
           'hires',
