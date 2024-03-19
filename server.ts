@@ -10,7 +10,6 @@ import * as cookieParser from "cookie-parser";
 import {COOKIE_LANGUAGE_TAG, HEADER_ACCEPT_LANGUAGE, LANGUAGES} from "./src/constant";
 import {DIST_FOLDER} from "./env";
 import {api} from "./api";
-import * as url from "url";
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -98,7 +97,9 @@ function resolveLanguageTag(acceptLanguage = ';') {
     ...acceptLanguage
         .substring(1 + acceptLanguage.indexOf(','))
         .split(',')
+        .filter(_ => _)
         .map(_ => _.trim().split(';'))
+        .filter(([languageTag, quantifier]) => languageTag && quantifier)
         .map(([languageTag, quantifier]) => [
           languageTag.trim(),
           parseFloat(quantifier.trim().substring(2)),
