@@ -10,6 +10,7 @@ import {Article} from "../services/article.service";
 import {ALTERNATES, LANGUAGE_TAG, PATH, TO_ANCHOR} from "../token";
 import {LANGUAGES} from "../../constant";
 import {routes} from "../routes";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'section[path="/blog/:slug"]',
@@ -81,6 +82,7 @@ export class ArticleComponent implements OnInit {
     this.meta.updateTag({property: 'og:type', content: 'article'});
     this.activatedRoute.data
         .pipe(map(({article}) => article as Article))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           error: err => console.error(err),
           next: article => {
