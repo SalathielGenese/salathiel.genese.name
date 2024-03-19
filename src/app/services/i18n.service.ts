@@ -74,8 +74,6 @@ export class I18nService {
     } else {
       this.#syncedClientCache || isPlatformBrowser(this.platformId) && this.#syncClientCache();
       const localizedCache = this.#cache[languageTag] ??= {};
-      this.#syncedClientCache = true;
-
       return localizedCache[key] ??= (() => {
         this.#pending.next({
           ...this.#pending.value,
@@ -90,6 +88,7 @@ export class I18nService {
     const script = document.querySelector('script#ng-state[type="application/json"]');
     const content = JSON.parse(script?.textContent!);
     const {origin} = location;
+    this.#syncedClientCache = true;
 
     Object.entries(content ?? {})
         .filter(([key]) => key == `${+key}`)

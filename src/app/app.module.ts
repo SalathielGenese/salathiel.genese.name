@@ -2,7 +2,7 @@ import {BrowserModule, Meta, provideClientHydration} from '@angular/platform-bro
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {NavigationEnd, Router, TitleStrategy} from "@angular/router";
-import {DestroyRef, effect, inject, Inject, NgModule, PLATFORM_ID, SecurityContext, Signal} from '@angular/core';
+import {DestroyRef, inject, Inject, NgModule, PLATFORM_ID, SecurityContext} from '@angular/core';
 
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
@@ -30,10 +30,9 @@ import {ArticleService} from "./services/article.service";
 import {MarkdownModule, MarkdownService} from "ngx-markdown";
 import {REQUEST} from "@nguniversal/express-engine/tokens";
 import {isPlatformBrowser} from "@angular/common";
-import {LANGUAGE_TAG, ORIGIN, PATH, TO_ANCHOR} from "./token";
+import {ORIGIN, PATH, TO_ANCHOR} from "./token";
 import {filter} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {LANGUAGES} from "../constant";
 
 @NgModule({
   declarations: [
@@ -117,50 +116,17 @@ export class AppModule {
               destroyRef: DestroyRef,
               private readonly meta: Meta,
               markdownService: MarkdownService,
-              private readonly i18nService: I18nService,
-              @Inject(LANGUAGE_TAG) languageTag: Signal<string>,
               @Inject(PATH) private readonly path: () => string,
               @Inject(ORIGIN) private readonly origin: () => string,
               @Inject(TO_ANCHOR) toAnchor: (text: string) => string) {
-    this.#updateMetadata();
-    this.#updateMedataOnce(languageTag);
     router.events
         .pipe(filter(_ => _ instanceof NavigationEnd))
         .pipe(takeUntilDestroyed(destroyRef))
-        .subscribe(() => this.#updateMetadata())
+        .subscribe(() => {
+          this.meta.updateTag({property: 'og:type', content: 'website'});
+          this.meta.updateTag({property: 'og:url', content: this.origin() + this.path()});
+        });
     this.#overrideMarkdownMarkupVisitor(markdownService, toAnchor, path);
-  }
-
-  #updateMetadata() {
-    this.meta.updateTag({property: 'og:type', content: 'website'});
-    this.meta.updateTag({property: 'og:url', content: this.origin() + this.path()});
-  }
-
-  #updateMedataOnce(languageTag: Signal<string>) {
-    const alt = this.i18nService.fetch('alt.landing.splash');
-    this.meta.updateTag({property: 'og:image:width', content: '2986'});
-    this.meta.updateTag({property: 'og:image:type', content: 'image/jpeg'});
-    effect(() => this.meta.updateTag({property: 'og:image:alt', content: alt()!}));
-    this.meta.updateTag({
-      property: 'og:image:url',
-      content: this.origin() + '/assets/images/landing/splash/eberhard-grossgasteiger-kD3NrRWlV6A-unsplash-2986.jpg'
-    });
-
-    effect(() => {
-      this.meta.updateTag({
-        property: 'og:locale',
-        content: languageTag().replaceAll('-', '_'),
-      });
-      LANGUAGES.forEach(() => {
-        try {
-          this.meta.removeTag('property=og:locale:alternate');
-        } catch (ignored) {
-        }
-      });
-      LANGUAGES
-          .filter(({tag}) => tag !== languageTag())
-          .forEach(({tag}) => this.meta.addTag({property: 'og:locale:alternate', content: tag.replaceAll('-', '_')}));
-    });
   }
 
   #overrideMarkdownMarkupVisitor(markdownService: MarkdownService, toAnchor: (text: string) => string, path: () => string) {

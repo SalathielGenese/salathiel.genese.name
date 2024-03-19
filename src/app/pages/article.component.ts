@@ -7,7 +7,7 @@ import {map} from "rxjs";
 
 import {SalathielTitleStrategy} from "../services/salathiel.title-strategy";
 import {Article} from "../services/article.service";
-import {LANGUAGE_TAG, ORIGIN, PATH, TO_ANCHOR} from "../token";
+import {LANGUAGE_TAG, PATH, TO_ANCHOR} from "../token";
 
 @Component({
   selector: 'section[path="/blog/:slug"]',
@@ -60,10 +60,8 @@ export class ArticleComponent implements OnInit {
               injector: Injector,
               destroyRef: DestroyRef,
               private readonly meta: Meta,
-              titleStrategy: TitleStrategy,
               private readonly activatedRoute: ActivatedRoute,
               @Inject(PATH) protected readonly path: () => string,
-              @Inject(ORIGIN) protected readonly origin: () => string,
               @Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>,
               @Inject(TO_ANCHOR) protected readonly toAnchor: (text: string) => string) {
     this.titleStrategy = new class extends SalathielTitleStrategy {
