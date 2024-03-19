@@ -26,18 +26,19 @@ const datastore = new Datastore({
 
 export const api = Router({strict: true, mergeParams: true, caseSensitive: true})
     .get('/articles/:slug', async (req, res) => {
-      const metadata = {links: {self: req.originalUrl} as Record<string, string>};
+      const metadata = {links: {self: req.originalUrl} as { self: string; alternates?: Record<string, string> }};
       const {slug, languageTag} = req.params as Record<string, string>;
 
       try {
         const article = await datastore.get(datastore.key(['articles', slug]))
-            .then(([article]: [null | Article & Partial<Record<'links', Record<string, string>>>]) => {
+            .then(([article]: [null | Article]) => {
               return languageTag === article?.languageTag ? article : null;
             });
 
         if (article) {
-          Object.entries(article.links ?? {}).forEach(([languageTag, slug]) => {
-            metadata.links[languageTag] = `/${languageTag}/~/articles/${slug}`;
+          metadata.links.alternates ??= {};
+          Object.entries(article.alternates ?? {}).forEach(([languageTag, slug]) => {
+            metadata.links.alternates![languageTag] = `/${languageTag}/~/articles/${slug}`;
           });
           res.json(success({...article, links: undefined}, metadata));
         } else {
@@ -95,10 +96,10 @@ export const api = Router({strict: true, mergeParams: true, caseSensitive: true}
           {
             links: {
               self: req.originalUrl,
-              localized: LANGUAGES.map(({tag}) => tag)
+              alternates: LANGUAGES.map(({tag}) => tag)
                   .filter(tag => languageTag !== tag)
                   .reduce((links, otherLanguageTag) => ({
-                    [otherLanguageTag]: `/~/${otherLanguageTag}/${req.path.substring(6)}`,
+                    [otherLanguageTag]: `/${otherLanguageTag}/~/i18n/${req.path.substring(6)}`,
                     ...links,
                   }), {}),
             },

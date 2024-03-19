@@ -16,6 +16,7 @@ export class ArticleService {
 }
 
 export interface Article {
+  alternates?: Record<string, string>;
   languageTag: string;
   publishedAt: string;
   description: string;
