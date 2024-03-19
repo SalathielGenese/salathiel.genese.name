@@ -77,6 +77,7 @@
               "node_modules/prismjs/plugins/command-line/prism-command-line.js",
               "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.js",
 
+              "node_modules/prismjs/components/prism-c.min.js",
               "node_modules/prismjs/components/prism-css.min.js",
               "node_modules/prismjs/components/prism-csv.min.js",
               "node_modules/prismjs/components/prism-git.min.js",
