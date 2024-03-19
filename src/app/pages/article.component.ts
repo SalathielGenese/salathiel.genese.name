@@ -20,12 +20,9 @@ import {routes} from "../routes";
                   <h1 class="font-serif font-bold text-4xl">
                       {{ article?.title }}
                   </h1>
-                  <p class="text-grey-500 italic mt-4">
-                      {{ DateTime.fromISO(article?.publishedAt!).setLocale(languageTag()).toFormat('yyyy LLL dd') }} @
-                      <ng-container *ngFor="let author of article?.authors ?? [];let last = last;">
-                          <strong>{{ author }}</strong>
-                          <span>{{ last ? '' : ' · ' }}</span>
-                      </ng-container>
+                  <p [innerHTML]="'pages.article.authorship' | translate:{authors: getAuthors(article), date: getDate(article)}"
+                     class="text-grey-500 italic mt-4"
+                     *ngIf="article">
                   </p>
               </hgroup>
           </header>
@@ -56,13 +53,12 @@ export class ArticleComponent implements OnInit {
   protected readonly FOOTNOTE_REGEX = /\[\^(\d+)]: (.+)/gm;
   protected readonly titleStrategy: TitleStrategy;
   protected alternate?: Record<string, string>;
-  protected readonly DateTime = DateTime;
   protected article?: Article;
 
   constructor(title: Title,
               injector: Injector,
-              destroyRef: DestroyRef,
               private readonly meta: Meta,
+              private readonly destroyRef: DestroyRef,
               private readonly activatedRoute: ActivatedRoute,
               @Inject(PATH) protected readonly path: () => string,
               @Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>,
@@ -110,6 +106,14 @@ export class ArticleComponent implements OnInit {
           content: line.replace(/^#+\s*/g, ''),
           level: line.replace(/^(#+)(.*)$/g, '$1').length,
         }) as const);
+  }
+
+  protected getAuthors(article: Article): string {
+    return article.authors.join(', ');
+  }
+
+  protected getDate(article: Article): string {
+    return DateTime.fromISO(article.publishedAt!).setLocale(this.languageTag()).toFormat('dd LLL yyy');
   }
 
   #removeAlternate() {

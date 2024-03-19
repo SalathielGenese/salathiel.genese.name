@@ -66,6 +66,9 @@
           }
         }
       }
+    },
+    "article": {
+      "authorship": "By <strong>{{authors}}</strong> at {{date}}"
     }
   },
   "alt": {
