@@ -1,9 +1,14 @@
-import {Component, DestroyRef, effect, Inject, Signal} from "@angular/core";
+import {Component, DestroyRef, effect, Inject, OnInit, Signal} from "@angular/core";
 import {ALTERNATES, LANGUAGE_TAG} from "../token";
 import {routes} from "../routes";
 import {Meta} from "@angular/platform-browser";
 import {I18nService} from "../services/i18n.service";
 import {LANGUAGES} from "../../constant";
+import {Article} from "../services/article.service";
+import {ActivatedRoute} from "@angular/router";
+import {map} from "rxjs";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {DateTime} from "luxon";
 
 @Component({
   selector: 'section[path="/blog"]',
@@ -14,8 +19,7 @@ import {LANGUAGES} from "../../constant";
           </header>
 
           <div class="lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 grid">
-              <a [routerLink]="['lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit']"
-                 *ngFor="let art of range(32)">
+              <a *ngFor="let article of articles" [routerLink]="[article.slug]">
                   <figure class="hover:shadow-lg hover:bg-brown transition-all shadow group p-1">
                       <picture class="contents">
                           <source srcset="/assets/images/landing/splash/eberhard-grossgasteiger-kD3NrRWlV6A-unsplash-2986.jpg"
@@ -31,9 +35,10 @@ import {LANGUAGES} from "../../constant";
                                [alt]="'alt.landing.splash' | translate">
                       </picture>
                       <figcaption class="group-hover:text-white transition-all mt-4">
-                          <p>
-                              Lorem ipsum dolor sit amet, consectetur adipisicing elit
-                          </p>
+                          <strong>{{ article.title }}</strong>
+                          <p>{{ article.description.split('\\f')[0] }} [...]</p>
+                          <small [innerHTML]="'pages.article.authorship' | translate:{authors: getAuthors(article), date: getDate(article)}"
+                             class="group-hover:text-grey-300 text-grey-500 italic mt-4"></small>
                       </figcaption>
                   </figure>
               </a>
@@ -41,14 +46,15 @@ import {LANGUAGES} from "../../constant";
       </article>
   `,
 })
-export class BlogComponent {
-  protected readonly routes = routes;
+export class BlogComponent implements OnInit {
+  protected articles: Article[] = [];
 
   constructor(meta: Meta,
-              destroyRef: DestroyRef,
               i18nService: I18nService,
+              private readonly destroyRef: DestroyRef,
+              private readonly activatedRoute: ActivatedRoute,
               @Inject(ALTERNATES) alternates: Record<string, string>[],
-              @Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>) {
+              @Inject(LANGUAGE_TAG) private readonly languageTag: Signal<string>) {
     let alternate: typeof alternates[0];
     const description = i18nService.fetch('pages.blog.description');
     effect(() => meta.updateTag({property: 'og:description', content: description()!}));
@@ -58,7 +64,21 @@ export class BlogComponent {
         .reduce((_, {tag}) => ({..._, [tag]: '/' + routes.blog(tag)}), {})));
   }
 
-  protected range(n: number) {
-    return [...Array(n)];
+  ngOnInit() {
+    this.activatedRoute.data
+        .pipe(map(({articles}) => articles as Article[]))
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          error: err => console.error(err),
+          next: articles => this.articles = articles,
+        });
+  }
+
+  protected getAuthors(article: Article): string {
+    return article.authors.join(', ');
+  }
+
+  protected getDate(article: Article): string {
+    return DateTime.fromISO(article.publishedAt!).setLocale(this.languageTag()).toFormat('dd LLL yyy');
   }
 }

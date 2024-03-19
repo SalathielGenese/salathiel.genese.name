@@ -19,8 +19,10 @@ export class TargetInterceptor implements HttpInterceptor {
     switch (true) {
       case url.startsWith('@api/articles/'):
         const articleLanguageTag = LANGUAGES.find(({tag}) => url.startsWith(`@api/articles/${tag}`))?.tag!;
+        let slug = url.substring(14 + articleLanguageTag.length);
+        slug = slug.startsWith('/') ? slug.substring(1) : slug;
         req = req.clone({
-          url: `${this.#origin}/${articleLanguageTag}/~/articles/${url.substring(15 + articleLanguageTag.length)}`,
+          url: `${this.#origin}/${articleLanguageTag}/~/articles${slug ? '/' : ''}${slug}`,
         });
         break;
       case url.startsWith('@api/i18n/'):

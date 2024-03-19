@@ -33,6 +33,12 @@ const NAVIGATION_END = new InjectionToken<Signal<NavigationEnd>>('NAVIGATION_END
         pathMatch: 'full',
       } as const)),
       ...LANGUAGES.map(({tag}) => ({
+        resolve: {
+          articles: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+            const languageTag = LANGUAGES.find(({tag}) => state.url.startsWith(`/${tag}/`))?.tag!;
+            return inject(ArticleService).find(languageTag);
+          },
+        },
         title: 'pages.blog.title',
         component: BlogComponent,
         path: routes.blog(tag),
