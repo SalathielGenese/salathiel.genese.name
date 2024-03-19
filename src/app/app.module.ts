@@ -96,7 +96,6 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
             const IS_PRODUCTION = 'production' === process.env['NODE_ENV'];
             return () => {
               const {headers: {'x-forwarded-host': xForwardedHost, origin, host}, protocol} = request;
-              console.log({xForwardedHost, origin, host, protocol, IS_PRODUCTION});
               return origin ?? `${IS_PRODUCTION ? 'https' : protocol}://${xForwardedHost ?? host}`;
             };
         }
