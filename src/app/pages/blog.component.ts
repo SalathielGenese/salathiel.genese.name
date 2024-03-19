@@ -1,6 +1,8 @@
-import {Component, Inject, Signal} from "@angular/core";
+import {Component, effect, Inject, Signal} from "@angular/core";
 import {LANGUAGE_TAG} from "../token";
 import {routes} from "../routes";
+import {Meta} from "@angular/platform-browser";
+import {I18nService} from "../services/i18n.service";
 
 @Component({
   selector: 'section[path="/blog"]',
@@ -41,7 +43,11 @@ import {routes} from "../routes";
 export class BlogComponent {
   protected readonly routes = routes;
 
-  constructor(@Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>) {
+  constructor(meta: Meta,
+              i18nService: I18nService,
+              @Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>) {
+    const description = i18nService.fetch('pages.hire.description');
+    effect(() => meta.updateTag({property: 'og:description', content: description()!}));
   }
 
   protected range(n: number) {

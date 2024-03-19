@@ -18,6 +18,7 @@ export class ArticleService {
 export interface Article {
   languageTag: string;
   publishedAt: string;
+  description: string;
   authors: string[];
   content: string;
   title: string;

@@ -42,9 +42,7 @@ export class SalathielTitleStrategy extends TitleStrategy {
       this.#titleEffectRef?.destroy();
       this.#titleEffectRef = effect(() => {
         const title = [...new Set([fetch(), common()])].filter(_ => _).join(' · ');
-        this.meta.updateTag({property: 'og:description', content: `[description] ${title}`});
         this.meta.updateTag({property: 'og:title', content: title});
-        // FIXME: Actually craft per-page description
         this.title.setTitle(title);
       }, {injector: this.injector});
     }

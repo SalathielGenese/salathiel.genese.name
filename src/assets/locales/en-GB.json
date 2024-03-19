@@ -2,10 +2,11 @@
   "pages": {
     "home": {
       "title": "At Salathiel's",
+      "description": "Software Engineer · CKA, Terraform, Spring, OCP Java, Big Data & ML, 4x Redis",
       "sections": {
         "landing": {
           "jobTitle": "Software Engineer · Individual Contributor · Freelancer",
-          "crafts": "Cloud · Data · DevOps · Architect · Full-Stack",
+          "crafts": "Cloud · Data · DevOps · Architecture · Full-Stack",
           "experience": "13 years in the Software Development"
         },
         "certified": {
@@ -30,10 +31,12 @@
       }
     },
     "blog": {
-      "title": "Blog"
+      "title": "Blog",
+      "description": "Cloud · Data · DevOps · Architect · Full-Stack"
     },
     "hire": {
       "title": "Hire",
+      "description": "Cloud · Data · DevOps · Architect · Full-Stack",
       "forms": {
         "hire": {
           "failure": "Something went wrong. Try again later or report to me via X or LinkedIn.",

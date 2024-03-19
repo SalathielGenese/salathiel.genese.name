@@ -85,7 +85,7 @@ export class ArticleComponent implements OnInit {
           next: article => {
             this.article = article;
             this.titleStrategy.updateTitle(null as any);
-            // this.meta.updateTag({property: 'og:site_name', content: this.origin()});
+            this.meta.updateTag({property: 'og:description', content: article.description});
             this.meta.updateTag({property: 'article:published_time', content: article.publishedAt});
             this.meta.updateTag({property: 'article:author', content: 'https://x.com/SalathielGenese'});
             this.meta.updateTag({property: 'article:publisher', content: 'https://x.com/SalathielGenese'});

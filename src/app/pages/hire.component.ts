@@ -1,6 +1,8 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, effect, OnInit} from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
+import {I18nService} from "../services/i18n.service";
+import {Meta} from "@angular/platform-browser";
 
 @Component({
   selector: 'section[path="/hire"]',
@@ -148,7 +150,12 @@ export class HireComponent implements OnInit {
   protected readonly MAX_PROPOSAL_LENGTH = 3_000;
   protected outcome?: 'SUCCESS' | 'ERROR';
 
-  constructor(private readonly fb: FormBuilder, private readonly http: HttpClient) {
+  constructor(meta: Meta,
+              i18nService: I18nService,
+              private readonly fb: FormBuilder,
+              private readonly http: HttpClient) {
+    const description = i18nService.fetch('pages.hire.description');
+    effect(() => meta.updateTag({property: 'og:description', content: description()!}));
   }
 
   ngOnInit() {

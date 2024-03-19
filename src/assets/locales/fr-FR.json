@@ -2,6 +2,7 @@
   "pages": {
     "home": {
       "title": "Chez Salathiel",
+      "description": "Ingénieur Logiciel · CKA, Terraform, Spring, OCP Java, Big Data & ML, 4x Redis",
       "sections": {
         "landing": {
           "jobTitle": "Ingénieur Logiciel · Contributeur Individuel · Indépendant",
@@ -30,10 +31,12 @@
       }
     },
     "blog": {
-      "title": "Blog"
+      "title": "Blog",
+      "description": "Cloud · Data · DevOps · Architecture · Full-Stack"
     },
     "hire": {
       "title": "Recruter",
+      "description": "Cloud · Data · DevOps · Architect · Full-Stack",
       "forms": {
         "hire": {
           "failure": "Something went wrong.",

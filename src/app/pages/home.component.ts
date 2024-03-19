@@ -1,6 +1,8 @@
-import {Component, DestroyRef, ElementRef, Inject, OnInit, PLATFORM_ID, ViewChild} from "@angular/core";
+import {Component, DestroyRef, effect, ElementRef, Inject, OnInit, PLATFORM_ID, ViewChild} from "@angular/core";
 import {faAward} from "@fortawesome/free-solid-svg-icons/faAward";
 import {isPlatformBrowser} from "@angular/common";
+import {Meta} from "@angular/platform-browser";
+import {I18nService} from "../services/i18n.service";
 
 @Component({
   selector: 'section[path="/"]',
@@ -159,12 +161,16 @@ export class HomeComponent implements OnInit {
 
   #activeCraftHandler?: any;
 
-  constructor(destroyRef: DestroyRef,
+  constructor(meta: Meta,
+              destroyRef: DestroyRef,
+              i18nService: I18nService,
               @Inject(PLATFORM_ID) private readonly platformId: object) {
     destroyRef.onDestroy(() => {
       clearInterval(this.#activeCraftHandler);
       clearTimeout(this.#activeCraftHandler);
     });
+    const description = i18nService.fetch('pages.home.description');
+    effect(() => meta.updateTag({property: 'og:description', content: description()!}));
   }
 
   ngOnInit() {
