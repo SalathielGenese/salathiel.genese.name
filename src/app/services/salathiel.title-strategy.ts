@@ -1,6 +1,6 @@
 import {DestroyRef, effect, EffectRef, Injectable, Injector, signal, Signal} from "@angular/core";
 import {RouterStateSnapshot, TitleStrategy} from "@angular/router";
-import {Title} from "@angular/platform-browser";
+import {Meta, Title} from "@angular/platform-browser";
 import {I18nService} from "./i18n.service";
 
 @Injectable()
@@ -9,6 +9,7 @@ export class SalathielTitleStrategy extends TitleStrategy {
   #effectRef?: EffectRef;
 
   constructor(destroyRef: DestroyRef,
+              private readonly meta: Meta,
               private readonly title: Title,
               private readonly injector: Injector) {
     super();
@@ -31,8 +32,10 @@ export class SalathielTitleStrategy extends TitleStrategy {
   }
 
   #setTitle(fetch: Signal<string | undefined>, common: Signal<string | undefined>) {
-    this.title.setTitle([fetch(), common()]
+    const title = [fetch(), common()]
         .filter((_, i, __) => _ && i === __.indexOf(_))
-        .join(' · '));
+        .join(' · ');
+    this.meta.updateTag({property: 'og:title', content: title});
+    this.title.setTitle(title);
   }
 }

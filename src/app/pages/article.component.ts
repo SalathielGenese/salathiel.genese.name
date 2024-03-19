@@ -1,13 +1,13 @@
 import {Component, DestroyRef, Inject, Injector, OnInit, Signal} from "@angular/core";
 import {ActivatedRoute, TitleStrategy} from "@angular/router";
-import {Title} from "@angular/platform-browser";
+import {Meta, Title} from "@angular/platform-browser";
 import {DateTime} from "luxon";
 
 import {map} from "rxjs";
 
 import {SalathielTitleStrategy} from "../services/salathiel.title-strategy";
 import {Article} from "../services/article.service";
-import {LANGUAGE_TAG, PATH, TO_ANCHOR} from "../token";
+import {LANGUAGE_TAG, ORIGIN, PATH, TO_ANCHOR} from "../token";
 
 @Component({
   selector: 'section[path="/blog/:slug"]',
@@ -59,14 +59,16 @@ export class ArticleComponent implements OnInit {
   constructor(title: Title,
               injector: Injector,
               destroyRef: DestroyRef,
+              private readonly meta: Meta,
               titleStrategy: TitleStrategy,
               private readonly activatedRoute: ActivatedRoute,
               @Inject(PATH) protected readonly path: () => string,
+              @Inject(ORIGIN) protected readonly origin: () => string,
               @Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>,
               @Inject(TO_ANCHOR) protected readonly toAnchor: (text: string) => string) {
     this.titleStrategy = new class extends SalathielTitleStrategy {
       constructor() {
-        super(destroyRef, title, injector);
+        super(destroyRef, meta, title, injector);
       }
 
       override buildTitle(): string | undefined {
@@ -77,6 +79,7 @@ export class ArticleComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.meta.updateTag({property: 'og:type', content: 'article'});
     this.activatedRoute.data
         .pipe(map(({article}) => article as Article))
         .subscribe({
@@ -84,6 +87,10 @@ export class ArticleComponent implements OnInit {
           next: article => {
             this.article = article;
             this.titleStrategy.updateTitle(null as any);
+            // this.meta.updateTag({property: 'og:site_name', content: this.origin()});
+            this.meta.updateTag({property: 'article:published_time', content: article.publishedAt});
+            this.meta.updateTag({property: 'article:author', content: 'https://x.com/SalathielGenese'});
+            this.meta.updateTag({property: 'article:publisher', content: 'https://x.com/SalathielGenese'});
           },
         });
   }
