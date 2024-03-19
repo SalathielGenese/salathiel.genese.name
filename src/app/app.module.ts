@@ -93,12 +93,12 @@ import {LANGUAGES} from "../constant";
           case isPlatformBrowser(platformId):
             return () => location.origin;
           default:
-
             const request = inject(REQUEST);
+            const IS_PRODUCTION = 'production' === process.env['NODE_ENV'];
             return () => {
-              const {headers: {'x-forwarded-host': xForwardedHost, origin, host}, protocol, secure} = request;
-              console.log({xForwardedHost, origin, host, protocol, secure});
-              return origin ?? `${secure ? 'https' : protocol}://${xForwardedHost ?? host}`;
+              const {headers: {'x-forwarded-host': xForwardedHost, origin, host}, protocol} = request;
+              console.log({xForwardedHost, origin, host, protocol, IS_PRODUCTION});
+              return origin ?? `${IS_PRODUCTION ? 'https' : protocol}://${xForwardedHost ?? host}`;
             };
         }
       }

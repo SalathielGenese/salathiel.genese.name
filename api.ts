@@ -51,16 +51,17 @@ export const api = Router({strict: true, mergeParams: true, caseSensitive: true}
     .post('/hires', async (req, res) => {
       const now = new Date();
       const metadata = {links: {self: req.originalUrl}};
+      const IS_PRODUCTION = 'production' === process.env['NODE_ENV'];
       const {contactPhoneNumber, contactEmail, contactName, proposal, company} = req.body;
       const data = {contactPhoneNumber, contactEmail, contactName, proposal, company};
-      const {headers: {'x-forwarded-host': xForwardedHost, origin, host}, protocol, secure} = req;
+      const {headers: {'x-forwarded-host': xForwardedHost, origin, host}, protocol} = req;
 
       datastore.upsert({
         data: {
           ...data,
           responded: false,
           now: now.toISOString(),
-          '@': (origin ?? `${secure ? 'https' : protocol}://${xForwardedHost ?? host}`) + metadata.links.self,
+          '@': (origin ?? `${IS_PRODUCTION ? 'https' : protocol}://${xForwardedHost ?? host}`) + metadata.links.self,
         },
         key: datastore.key([
           'hires',
