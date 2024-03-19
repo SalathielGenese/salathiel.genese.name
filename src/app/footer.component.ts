@@ -9,6 +9,7 @@ import {COOKIE_LANGUAGE_TAG, LANGUAGES} from "../constant";
 import {LANGUAGE_TAG} from "./token";
 import {isPlatformBrowser} from "@angular/common";
 import {Router} from "@angular/router";
+import {routes} from "./routes";
 
 @Component({
   host: {'[class]': `'justify-items-center place-items-center snap-always snap-center bg-grey-800 min-h-[50vh] grid p-8'`},
@@ -53,16 +54,35 @@ export class FooterComponent {
     {icon: faFacebook, uri: 'https://www.facebook.com/SalathielGenese'},
   ];
   protected readonly languages = LANGUAGES;
+  protected readonly routes = routes;
 
   constructor(private readonly router: Router,
               @Inject(PLATFORM_ID) private readonly platformId: object,
               @Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>) {
   }
 
-  protected setLanguageTag(languageTag: string) {
+  protected setLanguageTag(languageTag: string, previousLanguageTag: string = this.languageTag()) {
+    console.log({languageTag, previousLanguageTag})
     if (isPlatformBrowser(this.platformId)) {
-      const next = `/${languageTag}${this.router.url.substring(1 + this.languageTag().length)}`;
-      this.router.navigateByUrl(next, {onSameUrlNavigation: 'reload'})
+      let nextUrl: string;
+
+      switch (location.pathname.substring(1)) {
+        case this.routes.home(previousLanguageTag):
+          nextUrl = this.routes.home(languageTag);
+          break;
+        case this.routes.hire(previousLanguageTag):
+          nextUrl = this.routes.hire(languageTag);
+          break;
+        case this.routes.blog(previousLanguageTag):
+          nextUrl = this.routes.blog(languageTag);
+          break;
+        default:
+          nextUrl = `/${languageTag}${this.router.url.substring(1 + previousLanguageTag.length)}`;
+          // TODO: Add case for blog article
+          break;
+      }
+
+      this.router.navigateByUrl(nextUrl, {onSameUrlNavigation: 'reload'})
           .then(() => {
             document.cookie = `${COOKIE_LANGUAGE_TAG}=${languageTag};SameSite=Strict;Max-Age=${365 * 86_400};`;
           })

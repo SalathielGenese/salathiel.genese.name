@@ -3,4 +3,4 @@ export const LANGUAGES = [
   {tag: 'fr-FR', title: 'Français (France)'},
 ];
 export const COOKIE_LANGUAGE_TAG = 'x-language-tag';
-export const ACCEPT_LANGUAGE_HEADER = 'accept-language';
+export const HEADER_ACCEPT_LANGUAGE = 'accept-language';

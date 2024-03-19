@@ -2,10 +2,11 @@
   "pages": {
     "home": {
       "title": "At Salathiel's",
+      "description": "Software Engineer · CKA, Terraform, Spring, OCP Java, Big Data & ML, 4x Redis",
       "sections": {
         "landing": {
           "jobTitle": "Software Engineer · Individual Contributor · Freelancer",
-          "crafts": "Cloud · Data · DevOps · Architect · Full-Stack",
+          "crafts": "Cloud · Data · DevOps · Architecture · Full-Stack",
           "experience": "13 years in the Software Development"
         },
         "certified": {
@@ -30,12 +31,16 @@
       }
     },
     "blog": {
-      "title": "Blog"
+      "title": "Blog",
+      "description": "Cloud · Data · DevOps · Architect · Full-Stack"
     },
     "hire": {
       "title": "Hire",
+      "description": "Cloud · Data · DevOps · Architect · Full-Stack",
       "forms": {
         "hire": {
+          "failure": "Something went wrong. Try again later or report to me via X or LinkedIn.",
+          "success": "Your proposal made it through. I will reach back to you within 72H, latest.",
           "company": {
             "label": "Company",
             "placeholder": "Acme"
@@ -65,7 +70,6 @@
   },
   "alt": {
     "icon": "An icon that consists of two arrows and a slash in the center. The two arrows are the same size and thickness, and they slant in opposite directions, pointing diagonally left and right. The slash is vertical and bisects the center of the image. This icon is commonly used by software developers to represent divergence or branching, which is a fundamental concept in programming. It can also be used to signify separation or distinction.",
-    "hire": "Close-up of a white geometric pattern with interlocking triangles.",
     "landing": {
       "splash": "The image shows a majestic mountain peak capped with snow. The peak pierces through a layer of clouds, with some additional clouds visible above the peak. The lower slopes of the mountain are obscured by clouds. In the foreground, there are a few dark shapes that could be trees or rocks. Overall, the image creates a sense of awe and wonder at the beauty and power of nature."
     }

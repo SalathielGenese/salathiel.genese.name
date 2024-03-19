@@ -1,29 +1,14 @@
-import {Component, Inject, OnInit, Signal} from "@angular/core";
+import {Component, effect, OnInit} from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
-import {LANGUAGE_TAG} from "../token";
+import {I18nService} from "../services/i18n.service";
+import {Meta} from "@angular/platform-browser";
 
 @Component({
   selector: 'section[path="/hire"]',
   template: `
-      <header class="sm:min-h-[5.70rem] overflow-y-hidden drop-shadow-2xl
-                       min-h-[4.70rem] md:h-[33.33vh] h-[50vh] relative">
-          <picture class="contents">
-              <source srcset="/assets/images/hire/jj-ying-7JX0-bfiuxQ-unsplash-3905.jpg"
-                      media="(min-width: 3905px)">
-              <source srcset="/assets/images/hire/jj-ying-7JX0-bfiuxQ-unsplash-2400.jpg"
-                      media="(min-width: 2400px)">
-              <source srcset="/assets/images/hire/jj-ying-7JX0-bfiuxQ-unsplash-1920.jpg"
-                      media="(min-width: 1920px)">
-              <source srcset="/assets/images/hire/jj-ying-7JX0-bfiuxQ-unsplash-640.jpg"
-                      media="(min-width: 640px)">
-              <img class="pointer-events-none object-cover object-bottom min-w-full absolute left-0 h-full"
-                   src="/assets/images/hire/jj-ying-7JX0-bfiuxQ-unsplash-640.jpg"
-                   [alt]="'alt.hire' | translate">
-          </picture>
-      </header>
-      <article class="md:min-h-[66.67vh] min-h-[50vh] px-center md:py-64 py-24">
-          <header class="font-serif font-bold text-6xl mb-7">
+      <article class="px-center md:pt-56 pt-24 pb-24">
+          <header class="font-serif font-bold text-4xl mb-16">
               <h1 translate="pages.hire.title"></h1>
           </header>
 
@@ -133,6 +118,14 @@ import {LANGUAGE_TAG} from "../token";
               </label>
 
               <div class="text-right mt-12">
+                  <p class="transition-all opacity-0 pb-2" [ngClass]="{'opacity-100': outcome}">
+                      <small translate="pages.hire.forms.hire.success"
+                             *ngIf="'SUCCESS' === outcome"
+                             class="text-green-600"></small>
+                      <small translate="pages.hire.forms.hire.failure"
+                             *ngIf="'ERROR' === outcome"
+                             class="text-brown"></small>
+                  </p>
                   <button class="disabled:bg-grey-300 transition-all ring-white text-white
                                  cursor-pointer bg-brown rounded border shadow py-1 px-2"
                           translate="pages.hire.forms.hire.submit.label"
@@ -155,10 +148,14 @@ export class HireComponent implements OnInit {
     company: FormControl<string | null>;
   }>;
   protected readonly MAX_PROPOSAL_LENGTH = 3_000;
+  protected outcome?: 'SUCCESS' | 'ERROR';
 
-  constructor(private readonly fb: FormBuilder,
-              private readonly http: HttpClient,
-              @Inject(LANGUAGE_TAG) private readonly languageTag: Signal<string>) {
+  constructor(meta: Meta,
+              i18nService: I18nService,
+              private readonly fb: FormBuilder,
+              private readonly http: HttpClient) {
+    const description = i18nService.fetch('pages.hire.description');
+    effect(() => meta.updateTag({property: 'og:description', content: description()!}));
   }
 
   ngOnInit() {
@@ -173,10 +170,10 @@ export class HireComponent implements OnInit {
 
   submit() {
     this.form.disable();
-    this.http.post(`@api/${this.languageTag()}/hires`, this.form.value)
+    this.http.post(`@api/hires`, this.form.value)
         .subscribe({
-          error: console.error,
           next: () => {
+            this.#updateOutcome('SUCCESS');
             Object.assign(this.touched, {
               contactPhoneNumber: false,
               contactEmail: false,
@@ -192,7 +189,16 @@ export class HireComponent implements OnInit {
               company: null,
             });
             this.form.enable();
-          }
+          },
+          error: err => {
+            this.#updateOutcome('ERROR');
+            console.error(err);
+          },
         });
+  }
+
+  #updateOutcome(outcome: 'SUCCESS' | 'ERROR') {
+    setTimeout(() => this.outcome = undefined, 5_000);
+    this.outcome = outcome;
   }
 }

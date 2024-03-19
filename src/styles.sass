@@ -48,3 +48,6 @@ body
 
     > section[path]:not([path="/"])
       @apply snap-start flex-grow
+
+  li[data-task] > span:last-child > input[type="checkbox"][disabled]
+    @apply hidden
