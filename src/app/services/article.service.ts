@@ -9,8 +9,8 @@ export class ArticleService {
               @Inject(LANGUAGE_TAG) private readonly languageTag: Signal<string>) {
   }
 
-  find(slug: string): Observable<Article> {
-    return this.http.get<{ content: Article }>(`@api/articles/${slug}`)
+  findOneBySlug(slug: string, languageTag = this.languageTag()): Observable<Article> {
+    return this.http.get<{ content: Article }>(`@api/articles/${languageTag}/${slug}`)
         .pipe(map(({content}) => content));
   }
 }

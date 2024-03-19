@@ -45,8 +45,10 @@ const NAVIGATION_END = new InjectionToken<Signal<NavigationEnd>>('NAVIGATION_END
       } as const)),
       ...LANGUAGES.map(({tag}) => ({
         resolve: {
-          article: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
-              inject(ArticleService).find(route.params['slug']),
+          article: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+            const languageTag = LANGUAGES.find(({tag}) => state.url.startsWith(`/${tag}/`))?.tag!;
+            return inject(ArticleService).findOneBySlug(route.params['slug'], languageTag);
+          },
         },
         component: ArticleComponent,
         path: routes.article(tag),
