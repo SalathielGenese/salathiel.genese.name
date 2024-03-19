@@ -1,8 +1,11 @@
-import {Component, effect, OnInit} from "@angular/core";
+import {Component, DestroyRef, effect, Inject, OnInit, Signal} from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
 import {I18nService} from "../services/i18n.service";
 import {Meta} from "@angular/platform-browser";
+import {ALTERNATES, LANGUAGE_TAG} from "../token";
+import {LANGUAGES} from "../../constant";
+import {routes} from "../routes";
 
 @Component({
   selector: 'section[path="/hire"]',
@@ -151,11 +154,19 @@ export class HireComponent implements OnInit {
   protected outcome?: 'SUCCESS' | 'ERROR';
 
   constructor(meta: Meta,
+              destroyRef: DestroyRef,
               i18nService: I18nService,
               private readonly fb: FormBuilder,
-              private readonly http: HttpClient) {
+              private readonly http: HttpClient,
+              @Inject(LANGUAGE_TAG) languageTag: Signal<string>,
+              @Inject(ALTERNATES) alternates: Record<string, string>[]) {
+    let alternate: typeof alternates[0];
     const description = i18nService.fetch('pages.hire.description');
     effect(() => meta.updateTag({property: 'og:description', content: description()!}));
+    destroyRef.onDestroy(() => alternates.splice(alternates.indexOf(alternate), 1));
+    setTimeout(() => alternates.push(alternate = LANGUAGES
+        .filter(({tag}) => tag !== languageTag())
+        .reduce((_, {tag}) => ({..._, [tag]: '/' + routes.hire(tag)}), {})));
   }
 
   ngOnInit() {

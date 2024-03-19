@@ -1,8 +1,9 @@
-import {Component, effect, Inject, Signal} from "@angular/core";
-import {LANGUAGE_TAG} from "../token";
+import {Component, DestroyRef, effect, Inject, Signal} from "@angular/core";
+import {ALTERNATES, LANGUAGE_TAG} from "../token";
 import {routes} from "../routes";
 import {Meta} from "@angular/platform-browser";
 import {I18nService} from "../services/i18n.service";
+import {LANGUAGES} from "../../constant";
 
 @Component({
   selector: 'section[path="/blog"]',
@@ -44,10 +45,17 @@ export class BlogComponent {
   protected readonly routes = routes;
 
   constructor(meta: Meta,
+              destroyRef: DestroyRef,
               i18nService: I18nService,
+              @Inject(ALTERNATES) alternates: Record<string, string>[],
               @Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>) {
-    const description = i18nService.fetch('pages.hire.description');
+    let alternate: typeof alternates[0];
+    const description = i18nService.fetch('pages.blog.description');
     effect(() => meta.updateTag({property: 'og:description', content: description()!}));
+    destroyRef.onDestroy(() => alternates.splice(alternates.indexOf(alternate), 1));
+    setTimeout(() => alternates.push(alternate = LANGUAGES
+        .filter(({tag}) => tag !== languageTag())
+        .reduce((_, {tag}) => ({..._, [tag]: '/' + routes.blog(tag)}), {})));
   }
 
   protected range(n: number) {

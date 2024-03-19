@@ -7,7 +7,9 @@ import {map} from "rxjs";
 
 import {SalathielTitleStrategy} from "../services/salathiel.title-strategy";
 import {Article} from "../services/article.service";
-import {LANGUAGE_TAG, PATH, TO_ANCHOR} from "../token";
+import {ALTERNATES, LANGUAGE_TAG, PATH, TO_ANCHOR} from "../token";
+import {LANGUAGES} from "../../constant";
+import {routes} from "../routes";
 
 @Component({
   selector: 'section[path="/blog/:slug"]',
@@ -53,6 +55,7 @@ import {LANGUAGE_TAG, PATH, TO_ANCHOR} from "../token";
 export class ArticleComponent implements OnInit {
   protected readonly FOOTNOTE_REGEX = /\[\^(\d+)]: (.+)/gm;
   protected readonly titleStrategy: TitleStrategy;
+  protected alternate?: Record<string, string>;
   protected readonly DateTime = DateTime;
   protected article?: Article;
 
@@ -63,7 +66,9 @@ export class ArticleComponent implements OnInit {
               private readonly activatedRoute: ActivatedRoute,
               @Inject(PATH) protected readonly path: () => string,
               @Inject(LANGUAGE_TAG) protected readonly languageTag: Signal<string>,
-              @Inject(TO_ANCHOR) protected readonly toAnchor: (text: string) => string) {
+              @Inject(TO_ANCHOR) protected readonly toAnchor: (text: string) => string,
+              @Inject(ALTERNATES) private readonly alternates: Record<string, string>[]) {
+    destroyRef.onDestroy(() => this.#removeAlternate());
     this.titleStrategy = new class extends SalathielTitleStrategy {
       constructor() {
         super(destroyRef, meta, title, injector);
@@ -89,6 +94,11 @@ export class ArticleComponent implements OnInit {
             this.meta.updateTag({property: 'article:published_time', content: article.publishedAt});
             this.meta.updateTag({property: 'article:author', content: 'https://x.com/SalathielGenese'});
             this.meta.updateTag({property: 'article:publisher', content: 'https://x.com/SalathielGenese'});
+            this.#removeAlternate();
+            this.alternate = LANGUAGES
+                .filter(({tag}) => tag !== this.languageTag() && tag in (article.alternates ?? {}))
+                .reduce((_, {tag}) => ({..._, [tag]: '/' + routes.article(tag, article.alternates?.[tag])}), {});
+            this.alternates.push(this.alternate);
           },
         });
   }
@@ -100,5 +110,9 @@ export class ArticleComponent implements OnInit {
           content: line.replace(/^#+\s*/g, ''),
           level: line.replace(/^(#+)(.*)$/g, '$1').length,
         }) as const);
+  }
+
+  #removeAlternate() {
+    return this.alternate && this.alternates.splice(this.alternates.indexOf(this.alternate), 1);
   }
 }
