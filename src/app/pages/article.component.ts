@@ -47,11 +47,10 @@ import {routes} from "../routes";
                markdown
           ></div>
 
-          <h2 translate="pages.article.table-of-content" class="font-bold text-2xl mt-24 mb-8"></h2>
-
-          <nav class="border-l-4 shadow rounded text-sm ml-6 p-2" role="navigation">
+          <nav class="border-l-2 p-2" role="navigation">
+              <h2 translate="pages.article.table-of-content" class="font-bold text-2xl mb-8"></h2>
               <ol *ngFor="let entry of tableOfContentEntries ?? []"
-                  class="">
+                  class="text-sm">
                   <li class="py-1">
                       <a [href]="entry.anchor" [innerHTML]="entry.content"></a>
                   </li>
