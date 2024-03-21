@@ -68,6 +68,7 @@
       }
     },
     "article": {
+      "table-of-content": "Content",
       "authorship": "By <strong>{{authors}}</strong> at {{date}}"
     }
   },

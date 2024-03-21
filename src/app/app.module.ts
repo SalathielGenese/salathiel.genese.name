@@ -2,7 +2,7 @@ import {BrowserModule, Meta, provideClientHydration} from '@angular/platform-bro
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {NavigationEnd, Router, TitleStrategy} from "@angular/router";
-import {DestroyRef, inject, Inject, NgModule, PLATFORM_ID, SecurityContext} from '@angular/core';
+import {DestroyRef, ElementRef, inject, Inject, NgModule, PLATFORM_ID, SecurityContext, signal} from '@angular/core';
 
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
@@ -30,7 +30,7 @@ import {ArticleService} from "./services/article.service";
 import {MarkdownModule, MarkdownService} from "ngx-markdown";
 import {REQUEST} from "@nguniversal/express-engine/tokens";
 import {isPlatformBrowser} from "@angular/common";
-import {ALTERNATES, ORIGIN, PATH, TO_ANCHOR} from "./token";
+import {ALTERNATES, ORIGIN, PATH, TableOfContentEntry, TO_ANCHOR, TOC} from "./token";
 import {filter} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
@@ -69,7 +69,39 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
       provide: TO_ANCHOR, useValue: (text: string) => text
           .toLowerCase()
           .replace(/[^A-Za-z]+/g, '-')
-          .replace(/^-+/, ''),
+          .replace(/^-*/, '')
+          .replace(/-*$/, ''),
+    },
+    {
+      provide: TOC, useFactory: () => {
+        const toc = signal([] as TableOfContentEntry[]);
+        let content: HTMLDivElement | undefined;
+        const setToc = toc.set.bind(toc);
+        Reflect.set(toc, 'set', (ref: HTMLDivElement) => {
+          if (ref !== content) {
+            setToc((ref ? Array.from(ref.children) : [])
+                .filter(_ => _.nodeName.match(/^H[1-6]$/))
+                .map(_ => ({
+                  anchor: (_.children.item(0) as HTMLAnchorElement).getAttribute('href'),
+                  content: (_.children.item(1) as HTMLElement).innerHTML,
+                  level: +_.nodeName[1],
+                }) as TableOfContentEntry)
+                .reduce((toc, entry) => {
+                  if (!toc.length) {
+                    toc.push(entry);
+                  } else if (entry.level === 1 + toc.at(-1)!.level) {
+                    (toc.at(-1)!.children ??= []).push(entry);
+                  } else {
+                    toc.push(entry);
+                  }
+
+                  return toc;
+                }, [] as TableOfContentEntry[]));
+            content = ref;
+          }
+        });
+        return toc;
+      },
     },
     {
       provide: PATH, useFactory: () => {
@@ -118,7 +150,7 @@ export class AppModule {
               markdownService: MarkdownService,
               @Inject(PATH) private readonly path: () => string,
               @Inject(ORIGIN) private readonly origin: () => string,
-              @Inject(TO_ANCHOR) toAnchor: (text: string) => string) {
+              @Inject(TO_ANCHOR) private readonly toAnchor: (text: string) => string) {
     router.events
         .pipe(filter(_ => _ instanceof NavigationEnd))
         .pipe(takeUntilDestroyed(destroyRef))
@@ -126,36 +158,16 @@ export class AppModule {
           this.meta.updateTag({property: 'og:type', content: 'website'});
           this.meta.updateTag({property: 'og:url', content: this.origin() + this.path()});
         });
-    this.#overrideMarkdownMarkupVisitor(markdownService, toAnchor, path);
+    this.#overrideMarkdownMarkupVisitor(markdownService);
   }
 
-  #overrideMarkdownMarkupVisitor(markdownService: MarkdownService, toAnchor: (text: string) => string, path: () => string) {
-    markdownService.renderer.br = () => `<br class="block my-4">`;
-    markdownService.renderer.paragraph = text => `<p class="my-4">${text}</p>`;
-    markdownService.renderer.blockquote = quote =>
-        `<blockquote class="border-grey-500 border-l-2 ml-4 pl-4">${quote}</blockquote>`;
-    markdownService.renderer.list = (body, ordered, start) => {
-      const task = body.includes('<li data-task');
-      return ordered
-          ? `<ol class="${task ? 'ml-[2px] pl-4' : 'pl-8 list-decimal'}" start="${start}">${body}</ol>`
-          : `<ul class="${task ? 'ml-[2px] pl-4' : 'pl-8 list-disc'}">${body}</ul>`;
-    };
-    markdownService.renderer.heading = (text, level: number) => {
-      return `<h${level} id="${toAnchor(text)}" class="${{
-        3: 'text-xl',
-        2: 'text-3xl',
-      }[level] ?? 'text-lg'} transition-all pt-4 group" tabindex="${1E4 + Math.round(1E6 * Math.random())}">${text}<a href="${path() + '#' + toAnchor(text)}" class="group-focus:inline group-hover:inline text-gray-400 hidden ml-4">#</a></h${level}>`;
-    };
-    markdownService.renderer.link = (href, title, text) =>
-        /^\^\d+$/.test(text)
-            ? `<sup title="${href}">[${text.substring(1)}]</sup>`
-            : `<a href="${encodeURI(href ?? '#')}">${text}</a>`;
-    markdownService.renderer.listitem = (text, task, checked) =>
-        task
-            ? checked
-                ? `<li data-task><span class="bg-grey-500 aspect-square inline-block outline-offset-1 outline-1 outline h-3"></span><span class="ml-1">${text}</span></li>`
-                : `<li data-task><span class="outline-grey-400/50 bg-grey-400/30 aspect-square inline-block outline-offset-1 outline-1 outline h-3"></span><span class="ml-1">${text}</span></li>`
-            : `<li>${text}</li>`;
-    markdownService.renderer.codespan = code => `<span class="bg-grey-400 rounded px-1">${code}</span>`;
+  #overrideMarkdownMarkupVisitor(markdownService: MarkdownService) {
+    markdownService.renderer.heading = (text, level, raw) =>
+        `<h${level} tabindex="${Math.round(1E8 * Math.random())}" id="${this.toAnchor(raw)}" class="relative group">
+          <a class="group-focus:opacity-100 group-hover:opacity-100 text-grey-400 right-full opacity-0 absolute px-1"
+             href="${this.origin()}${this.path()}#${this.toAnchor(raw)}"
+          >#</a>
+          <span class="block">${text}</span>
+        </h${level}>`
   }
 }
