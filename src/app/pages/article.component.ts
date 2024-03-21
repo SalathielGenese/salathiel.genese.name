@@ -2,11 +2,9 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {ActivatedRoute, TitleStrategy} from "@angular/router";
 import {Meta, Title} from "@angular/platform-browser";
 import {
-  AfterViewChecked,
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  effect,
   ElementRef,
   Inject,
   InjectionToken,
@@ -78,7 +76,7 @@ import {routes} from "../routes";
       </article>
   `,
 })
-export class ArticleComponent implements OnInit, AfterViewChecked {
+export class ArticleComponent implements OnInit {
   protected tableOfContentEntries?: TableOfContentEntry[];
   protected readonly titleStrategy: TitleStrategy;
   protected alternate?: Record<string, string>;
@@ -87,7 +85,7 @@ export class ArticleComponent implements OnInit, AfterViewChecked {
   @ViewChild('content')
   protected contentRef?: ElementRef<HTMLDivElement>;
 
-  #content?: string;
+  #handle: any;
 
   constructor(title: Title,
               injector: Injector,
@@ -108,7 +106,6 @@ export class ArticleComponent implements OnInit, AfterViewChecked {
         return `\f${self.article?.title}`;
       }
     }();
-    effect(() => this.tableOfContentEntries = toc());
     const self = this;
   }
 
@@ -121,7 +118,13 @@ export class ArticleComponent implements OnInit, AfterViewChecked {
           error: err => console.error(err),
           next: article => {
             this.article = article;
+            clearTimeout(this.#handle);
             this.titleStrategy.updateTitle(null as any);
+            this.#handle = setTimeout(() => {
+              if (this.contentRef?.nativeElement) {
+                this.tableOfContentEntries = this.toc(this.contentRef.nativeElement);
+              }
+            });
             this.meta.updateTag({property: 'og:description', content: article.description});
             this.meta.updateTag({property: 'article:published_time', content: article.publishedAt});
             this.meta.updateTag({property: 'article:author', content: 'https://x.com/SalathielGenese'});
@@ -133,18 +136,6 @@ export class ArticleComponent implements OnInit, AfterViewChecked {
             this.alternates.push(this.alternate);
           },
         });
-  }
-
-  ngAfterViewChecked() {
-    if (this.#content !== this.article?.content) {
-      if (this.contentRef?.nativeElement) {
-        this.toc.set(this.contentRef.nativeElement);
-      } else {
-        this.tableOfContentEntries = [];
-      }
-      this.changeDetectorRef.detectChanges();
-      this.#content = this.article?.content;
-    }
   }
 
   protected getAuthors(article: Article): string {

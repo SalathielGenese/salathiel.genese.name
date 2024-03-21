@@ -5,17 +5,23 @@ import {NavigationEnd, Router, TitleStrategy} from "@angular/router";
 import {DestroyRef, inject, Inject, NgModule, PLATFORM_ID, SecurityContext, signal} from '@angular/core';
 
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {MarkdownModule, MarkdownService} from "ngx-markdown";
+import {REQUEST} from "@nguniversal/express-engine/tokens";
+import {filter} from "rxjs";
 
 import {AppRoutingModule} from './app-routing.module';
 
 import {HeaderComponent as HComponent} from "./components/header.component";
 import {TranslateComponent} from "./components/translate.component";
 
+import {ALTERNATES, ORIGIN, PATH, TableOfContentEntry, TO_ANCHOR, TOC} from "./token";
 import {SalathielTitleStrategy} from "./services/salathiel.title-strategy";
 import {TargetInterceptor} from "./services/target.interceptor";
+import {ArticleService} from "./services/article.service";
 import {I18nService} from "./services/i18n.service";
 
 import {NotFoundComponent} from "./pages/not-found.component";
+import {ArticleComponent} from "./pages/article.component";
 import {BlogComponent} from "./pages/blog.component";
 import {HireComponent} from "./pages/hire.component";
 import {HomeComponent} from "./pages/home.component";
@@ -25,14 +31,6 @@ import {HeaderComponent} from "./header.component";
 import {FooterComponent} from "./footer.component";
 import {MainComponent} from './main.component';
 import {NavComponent} from "./nav.component";
-import {ArticleComponent} from "./pages/article.component";
-import {ArticleService} from "./services/article.service";
-import {MarkdownModule, MarkdownService} from "ngx-markdown";
-import {REQUEST} from "@nguniversal/express-engine/tokens";
-import {isPlatformBrowser} from "@angular/common";
-import {ALTERNATES, ORIGIN, PATH, TableOfContentEntry, TO_ANCHOR, TOC} from "./token";
-import {filter} from "rxjs";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @NgModule({
   declarations: [
@@ -73,27 +71,22 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
           .replace(/-*$/, ''),
     },
     {
-      provide: TOC, useFactory: () => {
-        const toc = signal([] as TableOfContentEntry[]);
-        let content: HTMLDivElement | undefined;
-        const setToc = toc.set.bind(toc);
-        Reflect.set(toc, 'set', (ref: HTMLDivElement) => {
-          if (ref !== content) {
-            setToc((ref ? Array.from(ref.children) : [])
-                .filter(_ => _.nodeName.match(/^H[1-6]$/))
-                .map(_ => ({
-                  anchor: (_.children.item(0) as HTMLAnchorElement).getAttribute('href'),
-                  content: (_.children.item(1) as HTMLElement).innerHTML,
-                  level: +_.nodeName[1],
-                }) as TableOfContentEntry)
-                .reduce((toc, entry) => {
-                  if (!toc.length) {
-                    toc.push(entry);
-                  } else if (entry.level === 1 + toc.at(-1)!.level) {
-                    (toc.at(-1)!.children ??= []).push(entry);
-                  } else {
-                    toc.push(entry);
-                  }
+      provide: TOC, useValue: (ref: HTMLDivElement) => {
+        return Array.from(ref.children)
+            .filter(_ => _.nodeName.match(/^H[1-6]$/))
+            .map(_ => ({
+              anchor: (_.children.item(0) as HTMLAnchorElement).getAttribute('href'),
+              content: (_.children.item(1) as HTMLElement).innerHTML,
+              level: +_.nodeName[1],
+            }) as TableOfContentEntry)
+            .reduce((toc, entry) => {
+              if (!toc.length) {
+                toc.push(entry);
+              } else if (entry.level === 1 + toc.at(-1)!.level) {
+                (toc.at(-1)!.children ??= []).push(entry);
+              } else {
+                toc.push(entry);
+              }
 
                   return toc;
                 }, [] as TableOfContentEntry[]));
