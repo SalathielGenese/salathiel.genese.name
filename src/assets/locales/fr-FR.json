@@ -67,6 +67,10 @@
         }
       }
     },
+    "editor": {
+      "title": "Éditeur",
+      "description": "Prévisualiser un contenu d'article"
+    },
     "article": {
       "table-of-content": "Contenu",
       "authorship": "Par <strong>{{authors}}</strong> le {{date}}"

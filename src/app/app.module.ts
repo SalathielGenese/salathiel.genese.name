@@ -1,8 +1,10 @@
+import {DestroyRef, inject, Inject, NgModule, PLATFORM_ID, SecurityContext} from '@angular/core';
 import {BrowserModule, Meta, provideClientHydration} from '@angular/platform-browser';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {ReactiveFormsModule} from "@angular/forms";
 import {NavigationEnd, Router, TitleStrategy} from "@angular/router";
-import {DestroyRef, inject, Inject, NgModule, PLATFORM_ID, SecurityContext, signal} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {isPlatformBrowser} from "@angular/common";
 
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {MarkdownModule, MarkdownService} from "ngx-markdown";
@@ -22,6 +24,7 @@ import {I18nService} from "./services/i18n.service";
 
 import {NotFoundComponent} from "./pages/not-found.component";
 import {ArticleComponent} from "./pages/article.component";
+import {EditorComponent} from "./pages/editor.component";
 import {BlogComponent} from "./pages/blog.component";
 import {HireComponent} from "./pages/hire.component";
 import {HomeComponent} from "./pages/home.component";
@@ -47,10 +50,12 @@ import {NavComponent} from "./nav.component";
     HomeComponent,
     HireComponent,
     BlogComponent,
+    EditorComponent,
     ArticleComponent,
     NotFoundComponent,
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
@@ -88,12 +93,8 @@ import {NavComponent} from "./nav.component";
                 toc.push(entry);
               }
 
-                  return toc;
-                }, [] as TableOfContentEntry[]));
-            content = ref;
-          }
-        });
-        return toc;
+              return toc;
+            }, [] as TableOfContentEntry[]);
       },
     },
     {
