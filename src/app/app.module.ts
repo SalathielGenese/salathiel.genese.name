@@ -2,7 +2,7 @@ import {BrowserModule, Meta, provideClientHydration} from '@angular/platform-bro
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {NavigationEnd, Router, TitleStrategy} from "@angular/router";
-import {DestroyRef, ElementRef, inject, Inject, NgModule, PLATFORM_ID, SecurityContext, signal} from '@angular/core';
+import {DestroyRef, inject, Inject, NgModule, PLATFORM_ID, SecurityContext, signal} from '@angular/core';
 
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
@@ -169,5 +169,7 @@ export class AppModule {
           >#</a>
           <span class="block">${text}</span>
         </h${level}>`
+    markdownService.renderer.link = (href, title, text) =>
+        `<a${href?.startsWith(origin) ? '' : ' target="_blank"'}${title ? ' title="' + title + '"' : ''} href="${href}">${text}</a>`;
   }
 }
