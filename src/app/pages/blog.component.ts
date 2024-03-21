@@ -79,6 +79,6 @@ export class BlogComponent implements OnInit {
   }
 
   protected getDate(article: Article): string {
-    return DateTime.fromISO(article.publishedAt!).setLocale(this.languageTag()).toFormat('dd LLL yyy');
+    return DateTime.fromISO(article.publishedAt!).setLocale(this.languageTag()).toFormat('dd LLL yyyy');
   }
 }
