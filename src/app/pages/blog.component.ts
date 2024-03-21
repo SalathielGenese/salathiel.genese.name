@@ -36,7 +36,7 @@ import {DateTime} from "luxon";
                       </picture>
                       <figcaption class="group-hover:text-white transition-all mt-4">
                           <strong>{{ article.title }}</strong>
-                          <p>{{ article.description.split('\\f')[0] }} [...]</p>
+                          <p>{{ article.description.replace('\\\\f', '') }}</p>
                           <small [innerHTML]="'pages.article.authorship' | translate:{authors: getAuthors(article), date: getDate(article)}"
                              class="group-hover:text-grey-300 text-grey-500 italic mt-4"></small>
                       </figcaption>
