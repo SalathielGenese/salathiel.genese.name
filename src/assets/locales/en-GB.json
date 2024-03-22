@@ -66,6 +66,14 @@
           }
         }
       }
+    },
+    "editor": {
+      "title": "Editor",
+      "description": "Preview an article's content"
+    },
+    "article": {
+      "table-of-content": "Content",
+      "authorship": "By <strong>{{authors}}</strong> at {{date}}"
     }
   },
   "alt": {

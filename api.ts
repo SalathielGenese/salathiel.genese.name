@@ -1,7 +1,7 @@
 import {join} from "node:path";
 import {existsSync, readFileSync, statSync, symlinkSync} from "node:fs";
 
-import {Datastore} from "@google-cloud/datastore";
+import {Datastore, PropertyFilter} from "@google-cloud/datastore";
 import {Router} from "express";
 
 import {DIST_FOLDER, GCP_CREDENTIALS, GCP_DATASTORE_DATABASE, GCP_PROJECT_ID, NODE_ENV} from "./env";
@@ -25,19 +25,39 @@ const datastore = new Datastore({
 });
 
 export const api = Router({strict: true, mergeParams: true, caseSensitive: true})
+    .get('/articles', async (req, res) => {
+      const metadata = {links: {self: req.originalUrl} as { self: string; alternates?: Record<string, string> }}
+
+      try {
+        const {languageTag} = req.params as Record<string, string>;
+        const [articles] = await datastore.createQuery('articles')
+            .filter(new PropertyFilter('languageTag', '=', languageTag))
+            .run();
+        articles
+            .splice(0, articles.length, ...articles
+                .map(({slug, title, description, publishedAt, authors}) =>
+                    ({slug, title, description, publishedAt, authors}))
+                .sort(({publishedAt: a}, {publishedAt: b}) => b.localeCompare(a)));
+        res.json(success(articles, metadata));
+      } catch (err) {
+        console.error(err);
+        res.status(500).json(error('Internal Server Error', metadata));
+      }
+    })
     .get('/articles/:slug', async (req, res) => {
-      const metadata = {links: {self: req.originalUrl} as Record<string, string>};
+      const metadata = {links: {self: req.originalUrl} as { self: string; alternates?: Record<string, string> }};
       const {slug, languageTag} = req.params as Record<string, string>;
 
       try {
         const article = await datastore.get(datastore.key(['articles', slug]))
-            .then(([article]: [null | Article & Partial<Record<'links', Record<string, string>>>]) => {
+            .then(([article]: [null | Article]) => {
               return languageTag === article?.languageTag ? article : null;
             });
 
         if (article) {
-          Object.entries(article.links ?? {}).forEach(([languageTag, slug]) => {
-            metadata.links[languageTag] = `/${languageTag}/~/articles/${slug}`;
+          metadata.links.alternates ??= {};
+          Object.entries(article.alternates ?? {}).forEach(([languageTag, slug]) => {
+            metadata.links.alternates![languageTag] = `/${languageTag}/~/articles/${slug}`;
           });
           res.json(success({...article, links: undefined}, metadata));
         } else {
@@ -95,10 +115,10 @@ export const api = Router({strict: true, mergeParams: true, caseSensitive: true}
           {
             links: {
               self: req.originalUrl,
-              localized: LANGUAGES.map(({tag}) => tag)
+              alternates: LANGUAGES.map(({tag}) => tag)
                   .filter(tag => languageTag !== tag)
                   .reduce((links, otherLanguageTag) => ({
-                    [otherLanguageTag]: `/~/${otherLanguageTag}/${req.path.substring(6)}`,
+                    [otherLanguageTag]: `/${otherLanguageTag}/~/i18n/${req.path.substring(6)}`,
                     ...links,
                   }), {}),
             },

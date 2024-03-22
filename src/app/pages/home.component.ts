@@ -1,8 +1,11 @@
-import {Component, DestroyRef, effect, ElementRef, Inject, OnInit, PLATFORM_ID, ViewChild} from "@angular/core";
+import {Component, DestroyRef, effect, ElementRef, Inject, OnInit, PLATFORM_ID, Signal, ViewChild} from "@angular/core";
 import {faAward} from "@fortawesome/free-solid-svg-icons/faAward";
 import {isPlatformBrowser} from "@angular/common";
 import {Meta} from "@angular/platform-browser";
 import {I18nService} from "../services/i18n.service";
+import {ALTERNATES, LANGUAGE_TAG} from "../token";
+import {LANGUAGES} from "../../constant";
+import {routes} from "../routes";
 
 @Component({
   selector: 'section[path="/"]',
@@ -20,7 +23,7 @@ import {I18nService} from "../services/i18n.service";
               <h3 translate="pages.home.sections.landing.crafts" class="text-grey-500 my-2"></h3>
               <small translate="pages.home.sections.landing.experience" class="text-grey-500"></small>
           </header>
-          
+
           <picture class="contents">
               <source srcset="/assets/images/landing/splash/eberhard-grossgasteiger-kD3NrRWlV6A-unsplash-2986.jpg"
                       media="(min-width: 2986px)">
@@ -164,13 +167,20 @@ export class HomeComponent implements OnInit {
   constructor(meta: Meta,
               destroyRef: DestroyRef,
               i18nService: I18nService,
-              @Inject(PLATFORM_ID) private readonly platformId: object) {
+              @Inject(LANGUAGE_TAG) languageTag: Signal<string>,
+              @Inject(PLATFORM_ID) private readonly platformId: object,
+              @Inject(ALTERNATES) alternates: Record<string, string>[],) {
+    let alternate: typeof alternates[0];
     destroyRef.onDestroy(() => {
+      alternates.splice(alternates.indexOf(alternate), 1);
       clearInterval(this.#activeCraftHandler);
       clearTimeout(this.#activeCraftHandler);
     });
     const description = i18nService.fetch('pages.home.description');
     effect(() => meta.updateTag({property: 'og:description', content: description()!}));
+    setTimeout(() => alternates.push(alternate = LANGUAGES
+        .filter(({tag}) => tag !== languageTag())
+        .reduce((_, {tag}) => ({..._, [tag]: '/' + routes.home(tag)}), {})));
   }
 
   ngOnInit() {

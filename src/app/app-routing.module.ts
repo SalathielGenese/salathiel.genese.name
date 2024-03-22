@@ -20,6 +20,7 @@ import {toSignal} from "@angular/core/rxjs-interop";
 import {routes} from "./routes";
 import {ArticleComponent} from "./pages/article.component";
 import {ArticleService} from "./services/article.service";
+import {EditorComponent} from "./pages/editor.component";
 
 const NAVIGATION_END = new InjectionToken<Signal<NavigationEnd>>('NAVIGATION_END');
 
@@ -33,6 +34,12 @@ const NAVIGATION_END = new InjectionToken<Signal<NavigationEnd>>('NAVIGATION_END
         pathMatch: 'full',
       } as const)),
       ...LANGUAGES.map(({tag}) => ({
+        resolve: {
+          articles: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+            const languageTag = LANGUAGES.find(({tag}) => state.url.startsWith(`/${tag}/`))?.tag!;
+            return inject(ArticleService).find(languageTag);
+          },
+        },
         title: 'pages.blog.title',
         component: BlogComponent,
         path: routes.blog(tag),
@@ -45,12 +52,19 @@ const NAVIGATION_END = new InjectionToken<Signal<NavigationEnd>>('NAVIGATION_END
       } as const)),
       ...LANGUAGES.map(({tag}) => ({
         resolve: {
-          article: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
-              inject(ArticleService).find(route.params['slug']),
+          article: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+            const languageTag = LANGUAGES.find(({tag}) => state.url.startsWith(`/${tag}/`))?.tag!;
+            return inject(ArticleService).findOneBySlug(route.params['slug'], languageTag);
+          },
         },
         component: ArticleComponent,
         path: routes.article(tag),
       } as const)),
+      ...LANGUAGES.map(({tag}) => ({
+        title: 'pages.editor.title',
+        component: EditorComponent,
+        path: routes.editor(tag),
+      }) as const),
       {path: '**', component: NotFoundComponent},
     ], {
       initialNavigation: 'enabledBlocking',

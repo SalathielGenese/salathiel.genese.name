@@ -9,13 +9,19 @@ export class ArticleService {
               @Inject(LANGUAGE_TAG) private readonly languageTag: Signal<string>) {
   }
 
-  find(slug: string): Observable<Article> {
-    return this.http.get<{ content: Article }>(`@api/articles/${slug}`)
+  find(languageTag = this.languageTag()): Observable<Article[]> {
+    return this.http.get<{ content: Article[] }>(`@api/articles/${languageTag}`)
+        .pipe(map(({content}) => content));
+  }
+
+  findOneBySlug(slug: string, languageTag = this.languageTag()): Observable<Article> {
+    return this.http.get<{ content: Article }>(`@api/articles/${languageTag}/${slug}`)
         .pipe(map(({content}) => content));
   }
 }
 
 export interface Article {
+  alternates?: Record<string, string>;
   languageTag: string;
   publishedAt: string;
   description: string;

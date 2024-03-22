@@ -17,15 +17,18 @@ export class TargetInterceptor implements HttpInterceptor {
     const {url} = req;
 
     switch (true) {
-      case url.startsWith('@api/i18n/'):
-        const languageTag = LANGUAGES.find(({tag}) => url.startsWith(`@api/i18n/${tag}`))?.tag!;
+      case url.startsWith('@api/articles/'):
+        const articleLanguageTag = LANGUAGES.find(({tag}) => url.startsWith(`@api/articles/${tag}`))?.tag!;
+        let slug = url.substring(14 + articleLanguageTag.length);
+        slug = slug.startsWith('/') ? slug.substring(1) : slug;
         req = req.clone({
-          url: `${this.#origin}/${languageTag}/~/i18n/${url.substring(11 + languageTag.length)}`,
+          url: `${this.#origin}/${articleLanguageTag}/~/articles${slug ? '/' : ''}${slug}`,
         });
         break;
-      case url.startsWith('@api/articles/'):
+      case url.startsWith('@api/i18n/'):
+        const i18nLanguageTag = LANGUAGES.find(({tag}) => url.startsWith(`@api/i18n/${tag}`))?.tag!;
         req = req.clone({
-          url: `${this.#origin}/${this.languageTag()}/~/articles/${url.substring(14)}`,
+          url: `${this.#origin}/${i18nLanguageTag}/~/i18n/${url.substring(11 + i18nLanguageTag.length)}`,
         });
         break;
       case url.startsWith('@api/'):
