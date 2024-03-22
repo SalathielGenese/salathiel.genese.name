@@ -67,6 +67,8 @@ import {routes} from "../routes";
                       [&_code]:bg-grey-400 [&_code]:rounded-sm [&_code]:text-sm [&_code]:pb-0.5 [&_code]:pt-1 [&_code]:px-1
                       [&>h2]:font-bold [&>h2]:text-2xl [&>h2]:mt-24 [&>h2]:mb-8
                       [&>h3]:font-bold [&>h3]:text-xl [&>h3]:mt-12 [&>h3]:mb-6
+                      [&_ol]:ml-2 [&_ol]:pl-4 [&_ol]:list-decimal
+                      [&_ul]:ml-2 [&_ul]:pl-4 [&_ul]:list-disc
                       [&_p]:my-4
                       pb-24"
                [innerHTML]="article.content | markdown:{decodeHtml:true}"

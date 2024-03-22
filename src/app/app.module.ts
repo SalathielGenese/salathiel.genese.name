@@ -1,4 +1,4 @@
-import {DestroyRef, inject, Inject, NgModule, PLATFORM_ID, SecurityContext} from '@angular/core';
+import {DestroyRef, inject, Inject, NgModule, PLATFORM_ID} from '@angular/core';
 import {BrowserModule, Meta, provideClientHydration} from '@angular/platform-browser';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {NavigationEnd, Router, TitleStrategy} from "@angular/router";
@@ -61,9 +61,7 @@ import {NavComponent} from "./nav.component";
     HttpClientModule,
     FontAwesomeModule,
     ReactiveFormsModule,
-    MarkdownModule.forRoot({
-      sanitize: SecurityContext.NONE,
-    }),
+    MarkdownModule.forRoot(),
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TargetInterceptor},
@@ -156,6 +154,30 @@ export class AppModule {
   }
 
   #overrideMarkdownMarkupVisitor(markdownService: MarkdownService) {
+    markdownService.renderer.listitem = (text, task, checked) => {
+      const checkedListItemClasses = 'list-none relative';
+      const uncheckedTaskClasses = 'outline-grey-400/30 bg-grey-400/30 outline-2';
+      const checkedTaskClasses = 'outline-offset-1 outline-grey-400 bg-grey-400 outline-1';
+      const taskClasses = 'right-[calc(100%+0.5rem)] aspect-square inline-block top-1.5 absolute outline h-3';
+
+      return task
+          ? checked
+              ? `<li data-task class="${checkedListItemClasses}">
+                  <span class="${checkedTaskClasses} ${taskClasses}"></span>
+                  <span>${text}</span>
+                </li>`
+              : `<li data-task class="${checkedListItemClasses}">
+                  <span class="${uncheckedTaskClasses} ${taskClasses}"></span>
+                  <span>${text}</span>
+                </li>`
+          : `<li>${text}</li>`;
+    };
+    markdownService.renderer.list = (body, ordered, start) => {
+      const task = body.includes('<li data-task');
+      return ordered
+          ? `<ol start="${start}">${body}</ol>`
+          : `<ul${task ? ' data-task' : ''} class="relative">${body}</ul>`;
+    };
     markdownService.renderer.heading = (text, level, raw) =>
         `<h${level} tabindex="${Math.round(1E8 * Math.random())}" id="${this.toAnchor(raw)}" class="relative group">
           <a class="group-focus:opacity-100 group-hover:opacity-100 text-grey-400 right-full opacity-0 absolute px-1"
