@@ -38,7 +38,6 @@ import {routes} from "../routes";
                   </p>
               </hgroup>
           </header>
-
           <div [textContent]="article.description.replace('\\\\f', '')"
                *ngIf="article"
                class="my-8"
@@ -69,6 +68,7 @@ import {routes} from "../routes";
                       [&>h3]:font-bold [&>h3]:text-xl [&>h3]:mt-12 [&>h3]:mb-6
                       [&_ol]:ml-2 [&_ol]:pl-4 [&_ol]:list-decimal
                       [&_ul]:ml-2 [&_ul]:pl-4 [&_ul]:list-disc
+                      [&_hr]:opacity-0 [&_hr]:mt-24
                       [&_p]:my-4
                       pb-24"
                [innerHTML]="article.content | markdown:{decodeHtml:true}"

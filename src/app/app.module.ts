@@ -1,4 +1,4 @@
-import {DestroyRef, inject, Inject, NgModule, PLATFORM_ID} from '@angular/core';
+import {DestroyRef, inject, Inject, NgModule, PLATFORM_ID, SecurityContext} from '@angular/core';
 import {BrowserModule, Meta, provideClientHydration} from '@angular/platform-browser';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {NavigationEnd, Router, TitleStrategy} from "@angular/router";
@@ -61,7 +61,9 @@ import {NavComponent} from "./nav.component";
     HttpClientModule,
     FontAwesomeModule,
     ReactiveFormsModule,
-    MarkdownModule.forRoot(),
+    MarkdownModule.forRoot({
+      sanitize: SecurityContext.NONE,
+    }),
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TargetInterceptor},
