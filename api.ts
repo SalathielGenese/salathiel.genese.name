@@ -37,7 +37,7 @@ export const api = Router({strict: true, mergeParams: true, caseSensitive: true}
             .splice(0, articles.length, ...articles
                 .map(({slug, title, description, publishedAt, authors}) =>
                     ({slug, title, description, publishedAt, authors}))
-                .sort(({publishedAt: a}, {publishedAt: b}) => b.localeCompare(a)));
+                .sort(({publishedAt: a}, {publishedAt: b}) => +b-(+a)));
         res.json(success(articles, metadata));
       } catch (err) {
         console.error(err);
