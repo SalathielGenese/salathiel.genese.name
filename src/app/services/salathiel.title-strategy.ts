@@ -72,7 +72,7 @@ export class SalathielTitleStrategy extends TitleStrategy {
     this.meta.updateTag({property: 'og:image:type', content: 'image/jpeg'});
     this.meta.updateTag({
       property: 'og:image',
-      content: origin() + '/assets/images/landing/splash/eberhard-grossgasteiger-kD3NrRWlV6A-unsplash-640.jpg'
+      content: origin() + '/assets/images/article/meta-og.jpg'
     });
     this.meta.updateTag({
       property: 'og:image:url',
