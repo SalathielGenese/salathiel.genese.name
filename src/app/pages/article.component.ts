@@ -127,7 +127,10 @@ export class ArticleComponent implements OnInit {
                 this.tableOfContentEntries = this.toc(this.contentRef.nativeElement);
               }
             });
-            this.meta.updateTag({property: 'og:description', content: article.description});
+            this.meta.updateTag({
+              property: 'og:description',
+              content: article.description.replace('\\f', ''),
+            });
             this.meta.updateTag({property: 'article:published_time', content: article.publishedAt});
             this.meta.updateTag({property: 'article:author', content: 'https://x.com/SalathielGenese'});
             this.meta.updateTag({property: 'article:publisher', content: 'https://x.com/SalathielGenese'});
